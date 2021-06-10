@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.gtoa.VerControlDeliveryMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.model_name modelName,  -- 机型
+            t.customer customer,  -- 客户
+            t.ver ver,  -- 版本
+            t.agree_flag agreeFlag,  -- 是否同意
+            t.according_for_disagree accordingForDisagree,  -- 禁发依据(文件初始为空)
+            t.create_name createName,  -- 
+            t.create_time createTime,  -- 
+            t.update_name updateName,  -- 
+            t.update_time updateTime,  -- 
+            t.is_del isDel  --
+        from ver_control_delivery t
+        where t.is_del=0
+        <if test="p.modelName != null and p.modelName != ''">
+            and t.model_name LIKE '%${p.modelName}%'
+        </if>
+        <if test="p.customer != null and p.customer != ''">
+            and t.customer LIKE '%${p.customer}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

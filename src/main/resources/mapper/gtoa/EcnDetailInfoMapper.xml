@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.gtoa.EcnDetailInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.ecn_no ecnNo,  -- ECN
+            t.ecn_no_cust ecnNoCust,  -- 外部ECN编号
+            t.reason_of_change reasonOfChange,  -- 变更原因
+            t.according according,  -- 变更依据
+            t.feasibility_type feasibilityType, -- 变更可行性评审类型（1，正式评审（见《ECN可行性评审表》Gt-4-QC-120)  2，一般评审（沟通后可执行））
+            t.notice_flag noticeFlag,  -- 是否通知相关人员
+            t.update_bom_flag updateBomFlag,  -- 更新纸质BOM
+            t.notice_cus_flag noticeCusFlag,  -- 是否通知客户
+            t.cost_increase_flag costIncreaseFlag,  -- 成本增加标识
+            t.type_of_change typeOfChange,  -- 变更类型(tciIds 使用,分割)
+            t.item_of_change itemOfChange,  -- 变更项目(iciIds 使用,分割)
+            t.executed_mode executedMode,  -- 执行方式(emiIds 使用,分割)
+            t.distributed_dept distributedDept,  -- 分发部门（depaCodes 使用,分割）
+            t.accessory accessory,
+            t.create_name createName,  -- 创建人
+            t.create_time createTime,  -- 创建时间
+            t.update_name updateName,  -- 编辑人
+            t.update_time updateTime,  -- 编辑时间
+            t.audit_name auditName,  -- 审核人
+            t.audit_time auditTime,  -- 审核时间
+            t.audit_status auditStatus,  -- 审核状态(0,草稿 1，未审核 2，审核通过 3，审核不通过 4，信息完善)
+            t.audit_remark auditRemark,  -- 审核原因
+            t.valid_begin_date validBeginDate,  -- 生效时间
+            t.valid_end_date validEndDate,  -- 截至时间(2999-12-31 23:59:59永久有效)
+            t.valid_time validTime, -- 时间完善时间
+            t.valid_delivery_ver validDeliveryVer,  -- 可发货版本
+            t.has_fai hasFai, -- 是否需要fai
+            t.is_hang_up isHangUp, -- 是否挂起
+            t.batch batch,  -- 批次
+            i.model_name modelName, -- 机型
+            (select before_change from ecn_detail_discription_info eddi where eddi.edi_id=t.id and eddi.item_name = 'PCBA版本') pcbaBefore, -- PCBA版本
+            (select after_change from ecn_detail_discription_info eddi where eddi.edi_id=t.id and eddi.item_name = 'PCBA版本') pcbaAfter, -- PCBA版本
+            i.exe_state exeState,
+            i.quick_close_flag quickCloseFlag -- 快速关闭标识
+        from ecn_detail_info t
+        LEFT JOIN ecn_doc_info i ON i.ecn_no=t.ecn_no
+        where i.is_del=0
+        <if test="p.exeState != null and p.exeState != ''">
+            and i.exe_state ${p.exeState}
+        </if>
+        <if test="p.ecnNo != null and p.ecnNo != ''">
+            and t.ecn_no LIKE '%${p.ecnNo}%'
+        </if>
+        <if test="p.modelName != null and p.modelName != ''">
+            and i.model_name LIKE '%${p.modelName}%'
+        </if>
+        <if test="p.pcbaAfter != null and p.pcbaAfter != ''">
+            and (select after_change from ecn_detail_discription_info eddi where eddi.edi_id=t.id and eddi.item_name = 'PCBA版本') like '%${p.pcbaAfter}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

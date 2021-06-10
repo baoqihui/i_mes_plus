@@ -1,0 +1,12 @@
+#设置生效环境配置
+spring:
+  profiles:
+    active: "@profileActive@"
+#swagger配置
+Swagger:
+  description: (mes_plus-接口文档) restful 风格接口
+  title: mes_plus
+  version: 1.0
+#端口配置
+server:
+  port: 8084

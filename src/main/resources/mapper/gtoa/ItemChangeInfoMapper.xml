@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.gtoa.ItemChangeInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.desc_eng descEng,  -- 英文名
+            t.desc_chn descChn,  -- 中文名
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime  -- 更新时间
+        from item_change_info t
+        order by t.id desc
+    </select>
+</mapper>

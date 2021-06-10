@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.gtoa.EcnDocInfoMapper">
+    <select id="findList" resultType="map">
+        select
+        t.id id,  --
+        t.ecn_no ecnNo,  -- ECN编号
+        t.ecn_no_cust ecnNoCust,  -- 外部ECN编号
+        t.customer customer,  -- 客户名称
+        t.model_name modelName,  -- 适用机型
+        t.file_path filePath,  -- 文件路径(前端用文件名作超链接)
+        t.create_name createName,  -- 创建人
+        t.create_time createTime,  -- 创建时间
+        t.update_name updateName,  -- 更新人
+        t.update_time updateTime,  -- 更新时间
+        t.exe_state exeState,  -- 执行状态(0.新建 1.草稿  2.ECR审核（已提交未审核） 3.ECR审核（已通过，时间未完善） 4.ECR审核（未通过） 5.子任务执行中 6. QA验收（未验收） 7.QA验收(已通过)  8. QA验收（未通过）9.已导入)
+        t.quick_close_flag quickCloseFlag,-- 快速关闭标识
+        t.is_roll_back isRollBack,  -- 回退为真时可编辑（0,1）
+        t.is_del isDel,  --
+        i.valid_begin_date validBeginDate, -- 生效时间
+        i.valid_end_date validEndDate,  -- 截至时间(2099-12-31 23:59:59永久有效)
+        i.has_fai hasFai,
+        i.accessory accessory,
+        i.audit_name auditName,
+        i.audit_time auditTime,
+
+        i.audit_status auditStatus,
+        i.is_hang_up isHangUp, -- 是否挂起
+        i.batch batch  -- 批次
+        from ecn_doc_info t
+        LEFT JOIN ecn_detail_info i ON i.ecn_no=t.ecn_no
+        where t.is_del=0
+        <if test="p.exeState != null and p.exeState != ''">
+            and t.exe_state ${p.exeState}
+        </if>
+        <if test="p.hasFai != null and p.hasFai != ''">
+            and i.has_fai = #{p.hasFai}
+        </if>
+        <if test="p.ecnNo != null and p.ecnNo != ''">
+            and t.ecn_no LIKE '%${p.ecnNo}%'
+        </if>
+        <if test="p.modelName != null and p.modelName != ''">
+            and t.model_name LIKE '%${p.modelName}%'
+        </if>
+        <if test="p.ecnNoCust != null and p.ecnNoCust != ''">
+            and t.ecn_no_cust LIKE '%${p.ecnNoCust}%'
+        </if>
+        order by t.exe_state asc,t.id desc
+    </select>
+    <select id="getNoCust" resultType="java.lang.String">
+        SELECT MAX(ecn_no_cust) FROM ecn_doc_info WHERE ecn_no_cust LIKE '${ecnNoCust}%'
+    </select>
+    <select id="selCustomerAndBeginDateByEcnNo" resultType="java.util.Map">
+        SELECT
+            i.customer customer,
+            i.model_name modelName,
+            t.before_change beforeVer,
+            t.after_change afterVer
+        FROM
+            ecn_doc_info i,
+            ecn_detail_info d,
+            ecn_detail_discription_info	t
+        WHERE
+            i.ecn_no = d.ecn_no
+          and d.id=t.edi_id
+          and i.ecn_no = #{ecnNo}
+          and t.item_name='PCBA版本'
+    </select>
+    <select id="getEcnDocInfoList" resultType="com.rh.i_mes_plus.model.gtoa.EcnDocInfo">
+        SELECT
+            t.*
+        FROM
+            ecn_doc_info t
+                LEFT JOIN ecn_detail_info i ON t.ecn_no = i.ecn_no
+        WHERE
+            t.is_del = 0
+          AND t.model_name = #{modelName}
+          AND i.is_hang_up = 0
+          AND i.valid_time IS NOT NULL
+        ORDER BY
+            i.valid_time
+    </select>
+    <select id="getMaxEcnNo" resultType="com.rh.i_mes_plus.model.gtoa.EcnDocInfo">
+        SELECT * FROM ecn_doc_info WHERE ecn_no like '${prefix}%' order by ecn_no desc limit 1
+    </select>
+</mapper>

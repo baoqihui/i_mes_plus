@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.gtoa.FaiInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.ecn_no ecnNo,  -- ecn编号
+            t.ecn_import_time ecnImportTime,  -- 导入时间
+            t.ecn_release_time ecnReleaseTime,  -- 发布时间
+            t.pcba_ver pcbaVer,  -- 变更后版本
+            t.ecn_purpose ecnPurpose,  -- ecn目的
+            t.pic_lable picLable,  -- 条码图片
+            t.pic_top picTop,  -- 正面图片
+            t.pic_bot picBot,  -- 方面图片
+            t.pic_c_r picCR,  -- 3C或ROHS图片
+            t.pics_add picsAdd,  -- 附加图片
+            t.mfg_chanage_flag mfgChanageFlag,  -- 生产治具、工艺流程是否需要变更
+            t.btf_chanage_flag btfChanageFlag,  -- btf测试程序是否变更
+            t.create_name createName,  -- 创建人
+            t.create_time createTime,  -- 创建时间
+            t.audit_name auditName,  -- 审核人
+            t.audit_time auditTime,  -- 审核时间
+            t.audit_state auditState  -- 审核状态
+        from fai_info t
+        left join ecn_doc_info i on i.ecn_no=t.ecn_no
+        order by t.id desc
+    </select>
+</mapper>

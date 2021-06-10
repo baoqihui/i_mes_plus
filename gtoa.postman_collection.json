@@ -1,0 +1,3449 @@
+{
+	"info": {
+		"_postman_id": "2380e112-4608-4143-802e-d80a9edeb227",
+		"name": "gtoa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item":[
+		{
+		"name":"gtoa",
+		"item":[
+			{
+				"name": "ECN主页面",
+				"item": [
+					{
+						"name": "新增",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "formdata",
+								"formdata": [
+									{
+										"key": "ecnNo",
+										"value": "ENG-ECN-0004",
+										"description": "ecn",
+										"type": "text"
+									},
+									{
+										"key": "customer",
+										"value": "hui",
+										"type": "text"
+									},
+									{
+										"key": "ecnNoCust",
+										"value": "E001",
+										"type": "text"
+									},
+									{
+										"key": "file",
+										"type": "file",
+										"src": "/C:/Users/hui/Desktop/服务器-配置.txt"
+									},
+									{
+										"key": "modelName",
+										"value": "机型一",
+										"type": "text"
+									},
+									{
+										"key": "createName",
+										"value": "hui",
+										"type": "text"
+									}
+								]
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDocInfo/saveFile",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDocInfo",
+									"saveFile"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "查询将要生成的ECN编号",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDocInfo/selMaxEcnNo",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDocInfo",
+									"selMaxEcnNo"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "查询将要生成的ECN编号是否存在",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDocInfo/selExistEcnNo/ECN-ENG-0001",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDocInfo",
+									"selExistEcnNo",
+									"ECN-ENG-0001"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "查询列表",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"exeState\":\">=0\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDocInfo/list",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDocInfo",
+									"list"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "查询列表",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "{\r\n    \r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDocInfo/list",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"ecn",
+											"ecnDocInfo",
+											"list"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "json",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Mon, 19 Oct 2020 12:51:11 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "t.id id,  -- \nt.ecn_no ecnNo,  -- ECN编号\nt.customer_no customerNo,  -- 客供编号\nt.customer customer,  -- 客户名称\nt.model_name modelName,  -- 适用机型\nt.psfi_id psfiId,  -- 所替换的机型任务id\nt.file_path filePath,  -- 文件路径(前端用文件名作超链接)\nt.create_name createName,  -- 创建人\nt.create_time createTime,  -- 创建时间\nt.update_name updateName,  -- 更新人\nt.update_time updateTime,  -- 更新时间\nt.exe_state exeState,  -- 执行状态(1.新建  2.ECR审核（已提交未审核） 3.ECR审核（已通过，时间未完善） 4.ECR审核（未通过） 5.子任务执行中 6. QA验收（未验收） 7.QA验收(已通过)  8. QA验收（未通过）9.已导入)\nt.is_roll_back isRollBack,  -- 回退为真时可编辑（0,1）\nt.is_del isDel  --\n\n{\n    \"datas\": {\n        \"pageNum\": 1,\n        \"pageSize\": -1,\n        \"totalPage\": 0,\n        \"total\": 0,\n        \"list\": [\n            {\n                \"isRollBack\": 0,\n                \"psfiId\": 5,\n                \"filePath\": \"Z:\\\\file\\\\机型一\\\\b4e714720d0740a5af636952343f530e-服务器-配置.txt\",\n                \"updateTime\": \"2020-10-19\",\n                \"ecnNo\": \"ENG-ECN-0002\",\n                \"updateName\": null,\n                \"modelName\": \"机型一\",\n                \"createTime\": \"2020-10-19\",\n                \"id\": 2,\n                \"exeState\": 1,\n                \"isDel\": 0,\n                \"customerNo\": \"E001\",\n                \"createName\": \"hui\",\n                \"customer\": \"hui\"\n            },\n            {\n                \"isRollBack\": 0,\n                \"psfiId\": 0,\n                \"filePath\": \"Z:\\\\file\\\\机型一\\\\3ea2d8c50f0f42d8b6ddba21f5c9abd5-服务器-配置.txt\",\n                \"updateTime\": \"2020-10-19\",\n                \"ecnNo\": \"ENG-ECN-0001\",\n                \"updateName\": null,\n                \"modelName\": \"机型一\",\n                \"createTime\": \"2020-10-19\",\n                \"id\": 1,\n                \"exeState\": 1,\n                \"isDel\": 0,\n                \"customerNo\": \"E001\",\n                \"createName\": \"hui\",\n                \"customer\": \"hui\"\n            }\n        ]\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"查询成功\"\n}"
+							}
+						]
+					},
+					{
+						"name": "批量删除",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"ids\":[2]\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDocInfo/del",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDocInfo",
+									"del"
+								]
+							}
+						},
+						"response": []
+					}
+				]
+			},
+			{
+				"name": "文件管理",
+				"item": [
+					{
+						"name": "查询列表",
+						"request": {
+							"method": "POST",
+							"header": [
+								{
+									"key": "GTOA",
+									"value": "202cb962ac59075b964b07152d234b70",
+									"type": "text"
+								}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"validFlag\":\"=0\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/pdt/pdtStandardFileInfo/list",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"pdt",
+									"pdtStandardFileInfo",
+									"list"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "查询列表",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "{\r\n    \"validFlag\":\"0\" //0，历史版本 1，现行版本（进入页面默认为 1） 不传为所有版本\r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/pdt/pdtStandardFileInfo/list",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"pdt",
+											"pdtStandardFileInfo",
+											"list"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "json",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Fri, 23 Oct 2020 10:59:36 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "t.id id,  -- \n            t.model_name modelName,  -- 机型\n            t.ver ver,  -- 发行版本\n            t.bom bom,  -- BOM\n            t.feelder feelder,  -- 料站表\n            t.instruction instruction,  -- 作业指导\n            t.ecn ecn,  -- ECN编号\n            t.fai fai,  -- 规格书\n            t.mark mark,  -- MARK图\n            t.gerber gerber,  -- Gerber\n            t.place place,  -- Place\n            t.dfm dfm,  -- DFM\n            t.file1 file1,  -- 预留\n            t.file2 file2,  -- 预留\n            t.file3 file3,  -- 预留\n            t.valid_flag validFlag,  -- 发行版本标识(0,已弃用 1,在用 2,即将引用)\n            t.create_time createTime,  -- 创建时间\n            t.update_time updateTime,  -- 更新时间\n            t.is_del isDel  -- 状态 0 禁用 1 启用\n{\n    \"datas\": {\n        \"pageNum\": 1,\n        \"pageSize\": -1,\n        \"totalPage\": 0,\n        \"total\": 0,\n        \"list\": [\n            {\n                \"bom\": null,\n                \"ver\": null,\n                \"validFlag\": 1,\n                \"dfm\": null,\n                \"updateTime\": \"2020-10-23\",\n                \"fai\": null,\n                \"modelName\": \"shanghai\",\n                \"ecn\": \"Z:\\\\file\\\\shanghai\\\\72fc31c8b628411cb9ca0e0bb69207a8-服务器-配置.txt\",\n                \"createTime\": \"2020-10-23\",\n                \"instruction\": null,\n                \"file2\": null,\n                \"file3\": null,\n                \"id\": 2,\n                \"place\": null,\n                \"file1\": null,\n                \"gerber\": null,\n                \"feelder\": null,\n                \"isDel\": false,\n                \"mark\": null\n            },\n            {\n                \"bom\": null,\n                \"ver\": null,\n                \"validFlag\": 0,\n                \"dfm\": null,\n                \"updateTime\": \"2020-10-23\",\n                \"fai\": null,\n                \"modelName\": \"shanghai\",\n                \"ecn\": \"Z:\\\\file\\\\shanghai\\\\edf2fa71c75845d1bd70e1d1021415de-response.json\",\n                \"createTime\": \"2020-10-23\",\n                \"instruction\": null,\n                \"file2\": null,\n                \"file3\": null,\n                \"id\": 1,\n                \"place\": null,\n                \"file1\": null,\n                \"gerber\": null,\n                \"feelder\": null,\n                \"isDel\": false,\n                \"mark\": null\n            }\n        ]\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"查询成功\"\n}"
+							}
+						]
+					}
+				]
+			},
+			{
+				"name": "ECN通知单详情",
+				"item": [
+					{
+						"name": "新增或保存",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n  \"according\": \"string\",\r\n  \"auditName\": \"string\",\r\n  \"auditStatus\": 0,\r\n  \"auditTime\": \"2020-10-22 19:59:07\",\r\n  \"costIncreaseFlag\": true,\r\n  \"createName\": \"string\",\r\n  \"createTime\": \"2020-10-22 19:59:07\",\r\n  \"distributedDept\": \"string\",\r\n  \"ecnNo\": 0,\r\n  \"encNoGt\": \"string\",\r\n  \"executedMode\": \"string\",\r\n  \"id\": 0,\r\n  \"itemOfChange\": \"string\",\r\n  \"noticeCusFlag\": true,\r\n  \"noticeFlag\": true,\r\n  \"reasonOfChange\": \"string\",\r\n  \"typeOfChange\": \"string\",\r\n  \"updateBomFlag\": true,\r\n  \"updateName\": \"string\",\r\n  \"updateTime\": \"2020-10-22 19:59:07\",\r\n  \"validBeginDate\": \"2020-10-22 19:59:07\",\r\n  \"validDeliveryVer\": \"string\",\r\n  \"validEndDate\": \"2020-10-22 19:59:07\",\r\n  \"ecnDetailDiscriptionInfos\": [\r\n    {\r\n      \"afterChange\": \"string\",\r\n      \"beforeChange\": \"string\",\r\n      \"remark\":\"\",\r\n      \"ediId\": 0,\r\n      \"id\": 0,\r\n      \"itemId\": 0,\r\n      \"itemName\": \"string\"\r\n    }\r\n  ]\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailInfo/saveOrUpdateAll",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDetailInfo",
+									"saveOrUpdateAll"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "新增或保存",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "t.id id,  -- \r\nt.ecn_no ecnNo,  -- ECN\r\nt.enc_no_gt encNoGt,  -- 内部ECN编号\r\nt.reason_of_change reasonOfChange,  -- 变更原因\r\nt.according according,  -- 变更依据\r\nt.feasibility_type feasibilityType, -- 变更可行性评审类型（1，正式评审（见《ECN可行性评审表》Gt-4-QC-120)  2，一般评审（沟通后可执行））\r\nt.notice_flag noticeFlag,  -- 是否通知相关人员\r\nt.update_bom_flag updateBomFlag,  -- 更新纸质BOM\r\nt.notice_cus_flag noticeCusFlag,  -- 是否通知客户\r\nt.cost_increase_flag costIncreaseFlag,  -- 成本增加标识\r\nt.type_of_change typeOfChange,  -- 变更类型(tciIds 使用,分割)\r\nt.item_of_change itemOfChange,  -- 变更项目(iciIds 使用,分割)\r\nt.executed_mode executedMode,  -- 执行方式(emiIds 使用,分割)\r\nt.distributed_dept distributedDept,  -- 分发部门（depaCodes 使用,分割）\r\nt.create_name createName,  -- 创建人\r\nt.create_time createTime,  -- 创建时间\r\nt.update_name updateName,  -- 编辑人\r\nt.update_time updateTime,  -- 编辑时间\r\nt.audit_name auditName,  -- 审核人\r\nt.audit_time auditTime,  -- 审核时间\r\nt.audit_status auditStatus,  -- 审核状态(0,草稿 1，未审核 2，审核通过 3，审核不通过 4，信息完善)\r\nt.valid_begin_date validBeginDate,  -- 生效时间\r\nt.valid_end_date validEndDate,  -- 截至时间(2099-12-31 23:59:59永久有效)\r\nt.valid_delivery_ver validDeliveryVer  -- 可发货版本\r\n\r\necnDetailDiscriptionInfos：\r\n  t.id id,  -- \r\n  t.edi_id ediId,  -- ecn详情主键\r\n  t.item_id itemId,  -- 项目id\r\n  t.item_name itemName,  -- 变更名称\r\n  t.before_change beforeChange,  -- 变更前内容\r\n  t.after_change afterChange,  -- 变更后内容\r\n  t.valid_flag validFlag  -- 有效标识(审核不通过重新提交时过期)\r\n\r\n\r\n{\r\n  \"according\": \"string\",\r\n  \"auditName\": \"string\",\r\n  \"auditStatus\": 0,\r\n  \"auditTime\": \"2020-10-22 19:59:07\",\r\n  \"costIncreaseFlag\": true,\r\n  \"createName\": \"string\",\r\n  \"createTime\": \"2020-10-22 19:59:07\",\r\n  \"distributedDept\": \"string\",\r\n  \"ecnNo\": 0,\r\n  \"encNoGt\": \"string\",\r\n  \"executedMode\": \"string\",\r\n  \"id\": 0,\r\n  \"itemOfChange\": \"string\",\r\n  \"noticeCusFlag\": true,\r\n  \"noticeFlag\": true,\r\n  \"reasonOfChange\": \"string\",\r\n  \"typeOfChange\": \"string\",\r\n  \"updateBomFlag\": true,\r\n  \"updateName\": \"string\",\r\n  \"updateTime\": \"2020-10-22 19:59:07\",\r\n  \"validBeginDate\": \"2020-10-22 19:59:07\",\r\n  \"validDeliveryVer\": \"string\",\r\n  \"validEndDate\": \"2020-10-22 19:59:07\",\r\n  \"ecnDetailDiscriptionInfos\": [\r\n    {\r\n      \"afterChange\": \"string\",\r\n      \"beforeChange\": \"string\",\r\n      \"ediId\": 0,\r\n      \"id\": 0,\r\n      \"itemId\": 0,\r\n      \"itemName\": \"string\"\r\n    }\r\n  ]\r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailInfo/saveOrUpdateAll",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"ecn",
+											"ecnDetailInfo",
+											"saveOrUpdateAll"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "JSON",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Thu, 22 Oct 2020 13:05:42 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "{\"datas\":null,\"resp_code\":0,\"resp_msg\":\"保存或更新成功\"}"
+							}
+						]
+					},
+					{
+						"name": "审核",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"id\":1,\r\n    \"auditName\":\"回\",\r\n    \"auditStatus\":3,\r\n    \"auditRemark\":\"不好看\",\r\n    \"rollBackStep\":1\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailInfo/audit",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDetailInfo",
+									"audit"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "审核",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "{\r\n    \"id\":1,\r\n    \"auditName\":\"回\",\r\n    \"auditStatus\":3,        //审核结果\r\n    \"auditRemark\":\"不好看\", //审核原因 审核失败时填写\r\n    \"rollBackStep\":1        //审核失败回退到步数（1.新建  4.ECR审核（未通过））\r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailInfo/audit",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"ecn",
+											"ecnDetailInfo",
+											"audit"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "JSON",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Mon, 26 Oct 2020 11:30:37 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "{\"datas\":null,\"resp_code\":0,\"resp_msg\":\"审核成功\"}"
+							}
+						]
+					},
+					{
+						"name": "完善剩余时间信息",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"id\":1,\r\n    \"auditStatus\":4,\r\n    \"updateName\":\"回\",\r\n    \"validBeginDate\":\"\",\r\n    \"validEndDate\":\"\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailInfo/perfect",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDetailInfo",
+									"perfect"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "审核",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "{\r\n    \"id\":1,\r\n    \"auditName\":\"回\",\r\n    \"auditStatus\":3,        //审核结果\r\n    \"auditRemark\":\"不好看\", //审核原因 审核失败时填写\r\n    \"rollBackStep\":1        //审核失败回退到步数（1.新建  4.ECR审核（未通过））\r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailInfo/audit",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"ecn",
+											"ecnDetailInfo",
+											"audit"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "JSON",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Mon, 26 Oct 2020 11:30:37 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "{\"datas\":null,\"resp_code\":0,\"resp_msg\":\"审核成功\"}"
+							}
+						]
+					},
+					{
+						"name": "修改时查询",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailInfo/sel/ENG-ECN-0001",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDetailInfo",
+									"sel",
+									"ENG-ECN-0001"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "修改时查询",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailInfo/sel/ENG-ECN-0001",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"ecn",
+											"ecnDetailInfo",
+											"sel",
+											"ENG-ECN-0001"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "json",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Thu, 05 Nov 2020 12:36:08 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "            t.id id,  -- \n            t.edi_id ediId,  -- ecn详情主键\n            t.item_id itemId,  -- 项目id\n            t.item_name itemName,  -- 变更项目名称\n            t.before_change beforeChange,  -- 变更前内容\n            t.after_change afterChange,  -- 变更后内容\n            t.valid_flag validFlag,  -- 有效标识(是否已执行)\n            t.create_time createTime,  -- 创建时间\n            t.update_time updateTime,  -- 更新时间\n            t.date_introduct dateIntroduct,  -- 导入日期\n            t.introduct_mo introductMo,  -- 导入工单\n            t.usr_verify usrVerify,  -- 确认人\n            t.cover_area coverArea,  -- 涉及区域\n            t.remark remark,  -- 备注\n            t.is_draft isDraft  -- 是否为草稿\n{\n    \"datas\": {\n        \"id\": 23,\n        \"createTime\": \"2020-11-04 18:15:25\",\n        \"updateTime\": \"2020-11-05 19:34:42\",\n        \"ecnNo\": \"ENG-ECN-0001\",\n        \"ecnNoCust\": \"123\",\n        \"reasonOfChange\": \"\",\n        \"according\": null,\n        \"feasibilityType\": 1,\n        \"noticeFlag\": true,\n        \"updateBomFlag\": true,\n        \"noticeCusFlag\": false,\n        \"costIncreaseFlag\": false,\n        \"typeOfChange\": \"1\",\n        \"itemOfChange\": \"3,2\",\n        \"executedMode\": \"2\",\n        \"distributedDept\": \"T1310,T1210\",\n        \"createName\": \"sx\",\n        \"updateName\": \"苏鑫\",\n        \"auditName\": \"苏鑫\",\n        \"auditTime\": \"2020-11-05 19:34:27\",\n        \"auditStatus\": 4,\n        \"auditRemark\": \"sx\",\n        \"validBeginDate\": \"2020-11-05 19:34:38\",\n        \"validEndDate\": \"2020-11-30 00:00:00\",\n        \"validDeliveryVer\": null,\n        \"hasFai\": null,\n        \"ecnDetailDiscriptionInfos\": [\n            {\n                \"id\": 11,\n                \"createTime\": \"2020-11-04 18:15:27\",\n                \"updateTime\": \"2020-11-04 20:05:38\",\n                \"ediId\": 23,\n                \"itemId\": null,\n                \"itemName\": \"1\",\n                \"beforeChange\": \"2\",\n                \"afterChange\": \"3\",\n                \"validFlag\": false,\n                \"dateIntroduct\": null,\n                \"introductMo\": null,\n                \"usrVerify\": null,\n                \"coverArea\": null,\n                \"remark\": null,\n                \"isDraft\": false\n            }\n        ]\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"查询成功\"\n}"
+							}
+						]
+					},
+					{
+						"name": "ecn通知单查询",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"pageNum\": 1,\r\n    \"pageSize\": 10\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailInfo/list",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDetailInfo",
+									"list"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "ecn通知单查询",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "{\r\n    \"pageNum\": 1,\r\n    \"pageSize\": 10\r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailInfo/list",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"ecn",
+											"ecnDetailInfo",
+											"list"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "json",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Tue, 03 Nov 2020 10:49:34 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "t.id id,  -- \nt.ecn_no ecnNo,  -- ECN\nt.ecn_no_cust ecnNoCust,  -- 外部ECN编号\nt.reason_of_change reasonOfChange,  -- 变更原因\nt.according according,  -- 变更依据\nt.feasibility_type feasibilityType, -- 变更可行性评审类型（1，正式评审（见《ECN可行性评审表》Gt-4-QC-120)  2，一般评审（沟通后可执行））\nt.notice_flag noticeFlag,  -- 是否通知相关人员\nt.update_bom_flag updateBomFlag,  -- 更新纸质BOM\nt.notice_cus_flag noticeCusFlag,  -- 是否通知客户\nt.cost_increase_flag costIncreaseFlag,  -- 成本增加标识\nt.type_of_change typeOfChange,  -- 变更类型(tciIds 使用,分割)\nt.item_of_change itemOfChange,  -- 变更项目(iciIds 使用,分割)\nt.executed_mode executedMode,  -- 执行方式(emiIds 使用,分割)\nt.distributed_dept distributedDept,  -- 分发部门（depaCodes 使用,分割）\nt.create_name createName,  -- 创建人\nt.create_time createTime,  -- 创建时间\nt.update_name updateName,  -- 编辑人\nt.update_time updateTime,  -- 编辑时间\nt.audit_name auditName,  -- 审核人\nt.audit_time auditTime,  -- 审核时间\nt.audit_status auditStatus,  -- 审核状态(0,草稿 1，未审核 2，审核通过 3，审核不通过 4，信息完善)\nt.audit_remark auditRemark,  -- 审核原因\nt.valid_begin_date validBeginDate,  -- 生效时间\nt.valid_end_date validEndDate,  -- 截至时间(2099-12-31 23:59:59永久有效)\nt.valid_delivery_ver validDeliveryVer,  -- 可发货版本\ni.model_name modelName, -- 机型\nPCBA -- PCBA版本\n\n{\n    \"datas\": {\n        \"pageNum\": 1,\n        \"pageSize\": 10,\n        \"totalPage\": 1,\n        \"total\": 9,\n        \"list\": [\n            {\n                \"updateBomFlag\": 0,\n                \"according\": null,\n                \"ecnNo\": \"ENG-ECN-0010\",\n                \"validDeliveryVer\": null,\n                \"validBeginDate\": \"2020-11-03\",\n                \"noticeCusFlag\": 1,\n                \"itemOfChange\": \"3\",\n                \"PCBA\": \"2\",\n                \"id\": 20,\n                \"distributedDept\": \"T1312\",\n                \"costIncreaseFlag\": 0,\n                \"executedMode\": \"2\",\n                \"updateTime\": \"2020-11-03\",\n                \"auditRemark\": null,\n                \"typeOfChange\": \"\",\n                \"updateName\": \"\",\n                \"noticeFlag\": 1,\n                \"createTime\": \"2020-11-03\",\n                \"auditTime\": null,\n                \"feasibilityType\": 1,\n                \"auditStatus\": 0,\n                \"ecnNoCust\": \"7k7k7k7kk7k\",\n                \"validEndDate\": \"2020-11-28\",\n                \"auditName\": null,\n                \"reasonOfChange\": \"\",\n                \"createName\": \"ooooo\"\n            },\n            {\n                \"updateBomFlag\": 1,\n                \"according\": null,\n                \"ecnNo\": \"ENG-ECN-0009\",\n                \"validDeliveryVer\": null,\n                \"validBeginDate\": \"2020-11-03\",\n                \"noticeCusFlag\": 1,\n                \"itemOfChange\": \"3\",\n                \"PCBA\": null,\n                \"id\": 19,\n                \"distributedDept\": \"T1310\",\n                \"costIncreaseFlag\": 1,\n                \"executedMode\": \"2\",\n                \"updateTime\": \"2020-11-03\",\n                \"auditRemark\": null,\n                \"typeOfChange\": \"1\",\n                \"updateName\": \"\",\n                \"noticeFlag\": 1,\n                \"createTime\": \"2020-11-03\",\n                \"auditTime\": null,\n                \"feasibilityType\": 1,\n                \"auditStatus\": 0,\n                \"ecnNoCust\": \"a11111\",\n                \"validEndDate\": \"2020-11-27\",\n                \"auditName\": null,\n                \"reasonOfChange\": \"\",\n                \"createName\": \"sxsxsx\"\n            },\n            {\n                \"updateBomFlag\": 1,\n                \"according\": null,\n                \"ecnNo\": \"ENG-ECN-0008\",\n                \"validDeliveryVer\": null,\n                \"validBeginDate\": \"2020-11-03\",\n                \"noticeCusFlag\": 1,\n                \"itemOfChange\": \"1,2\",\n                \"PCBA\": null,\n                \"id\": 15,\n                \"distributedDept\": \"T1312\",\n                \"costIncreaseFlag\": 0,\n                \"executedMode\": \"1\",\n                \"updateTime\": \"2020-11-03\",\n                \"auditRemark\": null,\n                \"typeOfChange\": \"1,2\",\n                \"updateName\": \"\",\n                \"noticeFlag\": 1,\n                \"createTime\": \"2020-11-03\",\n                \"auditTime\": null,\n                \"feasibilityType\": 1,\n                \"auditStatus\": 0,\n                \"ecnNoCust\": \"11111111\",\n                \"validEndDate\": \"2020-11-28\",\n                \"auditName\": null,\n                \"reasonOfChange\": \"\",\n                \"createName\": \"suxin\"\n            },\n            {\n                \"updateBomFlag\": 1,\n                \"according\": null,\n                \"ecnNo\": \"ENG-ECN-0006\",\n                \"validDeliveryVer\": null,\n                \"validBeginDate\": \"2020-11-03\",\n                \"noticeCusFlag\": 1,\n                \"itemOfChange\": \"1\",\n                \"PCBA\": null,\n                \"id\": 14,\n                \"distributedDept\": \"T1321\",\n                \"costIncreaseFlag\": 1,\n                \"executedMode\": \"1\",\n                \"updateTime\": \"2020-11-03\",\n                \"auditRemark\": \"\",\n                \"typeOfChange\": \"1\",\n                \"updateName\": \"\",\n                \"noticeFlag\": 1,\n                \"createTime\": \"2020-11-03\",\n                \"auditTime\": \"2020-11-03\",\n                \"feasibilityType\": 1,\n                \"auditStatus\": 3,\n                \"ecnNoCust\": \"44445\",\n                \"validEndDate\": \"2020-11-20\",\n                \"auditName\": \"苏鑫\",\n                \"reasonOfChange\": \"\",\n                \"createName\": \"xiao x\"\n            },\n            {\n                \"updateBomFlag\": null,\n                \"according\": null,\n                \"ecnNo\": \"ENG-ECN-0007\",\n                \"validDeliveryVer\": null,\n                \"validBeginDate\": \"2020-11-03\",\n                \"noticeCusFlag\": null,\n                \"itemOfChange\": \"2\",\n                \"PCBA\": null,\n                \"id\": 13,\n                \"distributedDept\": \"T1312\",\n                \"costIncreaseFlag\": null,\n                \"executedMode\": \"0\",\n                \"updateTime\": \"2020-11-03\",\n                \"auditRemark\": \"信息不完善\",\n                \"typeOfChange\": \"1\",\n                \"updateName\": \"\",\n                \"noticeFlag\": 1,\n                \"createTime\": \"2020-11-03\",\n                \"auditTime\": \"2020-11-03\",\n                \"feasibilityType\": 1,\n                \"auditStatus\": 3,\n                \"ecnNoCust\": \"a123\",\n                \"validEndDate\": \"2020-11-19\",\n                \"auditName\": \"苏鑫\",\n                \"reasonOfChange\": \"\",\n                \"createName\": \"eeee\"\n            },\n            {\n                \"updateBomFlag\": 1,\n                \"according\": null,\n                \"ecnNo\": \"ENG-ECN-0004\",\n                \"validDeliveryVer\": null,\n                \"validBeginDate\": \"2020-10-19\",\n                \"noticeCusFlag\": 1,\n                \"itemOfChange\": \"1\",\n                \"PCBA\": null,\n                \"id\": 12,\n                \"distributedDept\": \"T1321\",\n                \"costIncreaseFlag\": 1,\n                \"executedMode\": \"1\",\n                \"updateTime\": \"2020-11-02\",\n                \"auditRemark\": null,\n                \"typeOfChange\": \"1\",\n                \"updateName\": \"\",\n                \"noticeFlag\": 1,\n                \"createTime\": \"2020-10-30\",\n                \"auditTime\": \"2020-11-02\",\n                \"feasibilityType\": 1,\n                \"auditStatus\": 2,\n                \"ecnNoCust\": \"111111\",\n                \"validEndDate\": \"2020-12-19\",\n                \"auditName\": \"苏鑫\",\n                \"reasonOfChange\": \"\",\n                \"createName\": \"caca\"\n            },\n            {\n                \"updateBomFlag\": 1,\n                \"according\": null,\n                \"ecnNo\": \"ENG-ECN-0003\",\n                \"validDeliveryVer\": null,\n                \"validBeginDate\": \"2020-10-19\",\n                \"noticeCusFlag\": 0,\n                \"itemOfChange\": \"8,7\",\n                \"PCBA\": null,\n                \"id\": 10,\n                \"distributedDept\": \"T1411,T1431\",\n                \"costIncreaseFlag\": 0,\n                \"executedMode\": \"2\",\n                \"updateTime\": \"2020-10-30\",\n                \"auditRemark\": null,\n                \"typeOfChange\": \"8,7\",\n                \"updateName\": \"\",\n                \"noticeFlag\": 0,\n                \"createTime\": \"2020-10-30\",\n                \"auditTime\": null,\n                \"feasibilityType\": 1,\n                \"auditStatus\": 0,\n                \"ecnNoCust\": \"789\",\n                \"validEndDate\": \"2021-10-19\",\n                \"auditName\": null,\n                \"reasonOfChange\": \"\",\n                \"createName\": \"xxxx\"\n            },\n            {\n                \"updateBomFlag\": 1,\n                \"according\": null,\n                \"ecnNo\": \"ENG-ECN-0002\",\n                \"validDeliveryVer\": null,\n                \"validBeginDate\": \"2020-10-01\",\n                \"noticeCusFlag\": 1,\n                \"itemOfChange\": \"8,7\",\n                \"PCBA\": null,\n                \"id\": 6,\n                \"distributedDept\": \"T1411,T1431\",\n                \"costIncreaseFlag\": 1,\n                \"executedMode\": \"3\",\n                \"updateTime\": \"2020-11-02\",\n                \"auditRemark\": \"不正确\",\n                \"typeOfChange\": \"8,7\",\n                \"updateName\": \"\",\n                \"noticeFlag\": 1,\n                \"createTime\": \"2020-10-29\",\n                \"auditTime\": \"2020-11-02\",\n                \"feasibilityType\": 1,\n                \"auditStatus\": 2,\n                \"ecnNoCust\": \"999\",\n                \"validEndDate\": \"2020-10-30\",\n                \"auditName\": \"苏鑫\",\n                \"reasonOfChange\": \"\",\n                \"createName\": \"sxc\"\n            },\n            {\n                \"updateBomFlag\": 0,\n                \"according\": null,\n                \"ecnNo\": \"ENG-ECN-0001\",\n                \"validDeliveryVer\": null,\n                \"validBeginDate\": \"2019-10-19\",\n                \"noticeCusFlag\": 0,\n                \"itemOfChange\": \"8,6\",\n                \"PCBA\": null,\n                \"id\": 5,\n                \"distributedDept\": \"T1411,T1431\",\n                \"costIncreaseFlag\": 0,\n                \"executedMode\": \"2\",\n                \"updateTime\": \"2020-10-29\",\n                \"auditRemark\": null,\n                \"typeOfChange\": \"8,7\",\n                \"updateName\": \"\",\n                \"noticeFlag\": 0,\n                \"createTime\": \"2020-10-29\",\n                \"auditTime\": null,\n                \"feasibilityType\": 1,\n                \"auditStatus\": 0,\n                \"ecnNoCust\": \"123\",\n                \"validEndDate\": \"2019-10-30\",\n                \"auditName\": null,\n                \"reasonOfChange\": \"\",\n                \"createName\": \"sx\"\n            }\n        ]\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"查询成功\"\n}"
+							}
+						]
+					},
+					{
+						"name": "更新挂起状态",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"ecnNo\":\"ECN-ENG-0009\",\r\n    \"isHangUp\":true\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailInfo/updateIsHangUp",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDetailInfo",
+									"updateIsHangUp"
+								]
+							}
+						},
+						"response": []
+					}
+				]
+			},
+			{
+				"name": "子任务",
+				"item": [
+					{
+						"name": "通过部门查询用户列表",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"depaCode\":\"006\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ums/umsUser/list",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ums",
+									"umsUser",
+									"list"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "通过部门查任务列表",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"depaCode\":\"T1321\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/tas/taskBaseInfo/list",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"tas",
+									"taskBaseInfo",
+									"list"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "任务分配保存",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "[\r\n    {\r\n        \"taskId\": \"1\",\r\n        \"ecnNo\": \"ENG-ECN-0001\",\r\n        \"depaCode\":\"T1321\",\r\n        \"depaName\":\"产品部\",\r\n        \"executeName\": \"执行人\",\r\n        \"createName\": \"创建人\",\r\n        \"state\": 0\r\n    }\r\n]",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/tas/taskExecuteInfo/save",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"tas",
+									"taskExecuteInfo",
+									"save"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "任务分配保存",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "[\r\n    {\r\n        \"taskId\": \"1\", //子任务id\r\n        \"ecnNo\": \"ENG-ECN-0001\",\r\n        \"depaCode\":\"T1321\", //部门编号\r\n        \"depaName\":\"产品部\",    //部门名称\r\n        \"executeName\": \"执行人\", //执行人姓名\r\n        \"createName\": \"创建人\", //登录人姓名\r\n        \"state\": 0 //状态（0，新建/1，执行完成,2，审核通过） 此处固定0\r\n    }\r\n]",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/tas/taskExecuteInfo/save",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"tas",
+											"taskExecuteInfo",
+											"save"
+										]
+									}
+								},
+								"_postman_previewlanguage": null,
+								"header": null,
+								"cookie": [],
+								"body": "{\r\n    \"datas\": null,\r\n    \"resp_code\": 0,\r\n    \"resp_msg\": \"保存成功\"\r\n}"
+							}
+						]
+					},
+					{
+						"name": "任务执行保存",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n  \"taskExecuteInfo\": {\r\n    \"id\": 1,\r\n    \"executeFile\": \"Z:%5Cfile%5CBOM变更%5C09f759c497a64bb4bf448e298fc07c8b-服务器-配置.txt\",\r\n    \"state\": 1\r\n  },\r\n  \"verControlDeliveryS\": [\r\n    {\r\n      \"accordingForDisagree\": \"string\",\r\n      \"agreeFlag\": true,\r\n      \"modelName\": \"string\",\r\n      \"ver\": \"string\"\r\n    }\r\n  ]\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/tas/taskExecuteInfo/execute",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"tas",
+									"taskExecuteInfo",
+									"execute"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "查询子任务列表",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"depaCode\":\"\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/tas/ecnDocInfo/listTaskExecuteInfo",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"tas",
+									"ecnDocInfo",
+									"listTaskExecuteInfo"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "任务审核保存(state=0 审核失败 state =2 审核成功)",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"id\":1,\r\n    \"auditName\":\"审核人\",\r\n    \"state\":2\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/tas/taskExecuteInfo/audit",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"tas",
+									"taskExecuteInfo",
+									"audit"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "通过ecn号查询客户和版本信息",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDocInfo/selCustomerAndBeginDateByEcnNo/ECN-ENG-0007",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDocInfo",
+									"selCustomerAndBeginDateByEcnNo",
+									"ECN-ENG-0007"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "文件编辑",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"id\":1,\r\n    \"executeFile\":\"\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/tas//taskExecuteInfo/updateFile",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"tas",
+									"",
+									"taskExecuteInfo",
+									"updateFile"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "查询子任务列表2",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"depaCode\":\"T1321\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/tas/ecnDocInfo/getTaskExecuteInfo",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"tas",
+									"ecnDocInfo",
+									"getTaskExecuteInfo"
+								]
+							}
+						},
+						"response": []
+					}
+				]
+			},
+			{
+				"name": "QA检验",
+				"item": [
+					{
+						"name": "保存或保存草稿（聊表内isDraft统一；true为草稿）",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"models\": [\r\n        {\r\n            \"id\": 3,\r\n            \"dateIntroduct\":\"\",\r\n            \"introductMo\":\"\",\r\n            \"usrVerify\":\"\",\r\n            \"coverArea\":\"\",\r\n            \"validFlag\": true,\r\n            \"isDraft\": false\r\n        },\r\n        {\r\n            \"id\": 4,\r\n            \"dateIntroduct\":\"\",\r\n            \"introductMo\":\"\",\r\n            \"usrVerify\":\"\",\r\n            \"coverArea\":\"\",\r\n            \"validFlag\": true,\r\n            \"isDraft\": false\r\n        }\r\n    ]\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailDiscriptionInfo/QAcheck",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDetailDiscriptionInfo",
+									"QAcheck"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "保存或保存草稿（聊表内isDraft统一；true为草稿）",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "{\r\n    \"models\": [\r\n        {\r\n            \"id\": 3,\r\n            \"validFlag\": true,  //true为已执行\r\n            \"isDraft\": true //true为草稿，false为正式保存\r\n        },\r\n        {\r\n            \"id\": 4,\r\n            \"validFlag\": true,\r\n            \"isDraft\": true\r\n        }\r\n    ]\r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailDiscriptionInfo/saveBatch",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"ecn",
+											"ecnDetailDiscriptionInfo",
+											"saveBatch"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "JSON",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Wed, 04 Nov 2020 11:38:11 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "{\"datas\":null,\"resp_code\":0,\"resp_msg\":\"保存成功\"}"
+							}
+						]
+					},
+					{
+						"name": "QA手动审核通过",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"models\": [\r\n        {\r\n            \"id\": 3,\r\n            \"dateIntroduct\":\"\",\r\n            \"introductMo\":\"\",\r\n            \"usrVerify\":\"\",\r\n            \"coverArea\":\"\",\r\n            \"validFlag\": true,\r\n            \"isDraft\": false\r\n        },\r\n        {\r\n            \"id\": 4,\r\n            \"dateIntroduct\":\"\",\r\n            \"introductMo\":\"\",\r\n            \"usrVerify\":\"\",\r\n            \"coverArea\":\"\",\r\n            \"validFlag\": true,\r\n            \"isDraft\": false\r\n        }\r\n    ]\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailDiscriptionInfo/QAcheckSuccess",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ecnDetailDiscriptionInfo",
+									"QAcheckSuccess"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "保存或保存草稿（聊表内isDraft统一；true为草稿）",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "{\r\n    \"models\": [\r\n        {\r\n            \"id\": 3,\r\n            \"validFlag\": true,  //true为已执行\r\n            \"isDraft\": true //true为草稿，false为正式保存\r\n        },\r\n        {\r\n            \"id\": 4,\r\n            \"validFlag\": true,\r\n            \"isDraft\": true\r\n        }\r\n    ]\r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDetailDiscriptionInfo/saveBatch",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"ecn",
+											"ecnDetailDiscriptionInfo",
+											"saveBatch"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "JSON",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Wed, 04 Nov 2020 11:38:11 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "{\"datas\":null,\"resp_code\":0,\"resp_msg\":\"保存成功\"}"
+							}
+						]
+					}
+				]
+			},
+			{
+				"name": "fai",
+				"item": [
+					{
+						"name": "根据ecnNo查询fai",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/fai/faiInfo/sel/ENG-ECN-0009",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"fai",
+									"faiInfo",
+									"sel",
+									"ENG-ECN-0009"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "根据ecnNo查询fai",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "{\r\n    \r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/fai/faiInfo/sel/ENG-ECN-0009",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"fai",
+											"faiInfo",
+											"sel",
+											"ENG-ECN-0009"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "json",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Mon, 09 Nov 2020 09:01:34 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "            t.id id,  -- \n            t.ecn_no ecnNo,  -- ecn编号\n            t.ecn_import_time ecnImportTime,  -- 导入时间\n            t.ecn_release_time ecnReleaseTime,  -- 发布时间\n            t.pcba_ver pcbaVer,  -- 变更后版本\n            t.ecn_purpose ecnPurpose,  -- ecn目的\n            t.pic_lable picLable,  -- 条码图片\n            t.pic_top picTop,  -- 正面图片\n            t.pic_bot picBot,  -- 方面图片\n            t.pic_c_r picCR,  -- 3C或ROHS图片\n            t.pics_add picsAdd,  -- 附加图片\n            t.mfg_chanage_flag mfgChanageFlag,  -- 生产治具、工艺流程是否需要变更\n            t.btf_chanage_flag btfChanageFlag,  -- btf测试程序是否变更\n            t.create_name createName,  -- 创建人\n            t.create_time createTime,  -- 创建时间\n            t.audit_name auditName,  -- 审核人\n            t.audit_time auditTime,  -- 审核时间\n            t.audit_state auditState  -- 审核状态       \n{\n    \"datas\": {\n        \"id\": 1,\n        \"createTime\": \"2020-11-07 16:49:43\",\n        \"updateTime\": \"2020-11-07 16:49:43\",\n        \"ecnNo\": \"ENG-ECN-0009\",\n        \"ecnImportTime\": null,\n        \"ecnReleaseTime\": null,\n        \"pcbaVer\": null,\n        \"ecnPurpose\": null,\n        \"picLable\": null,\n        \"picTop\": null,\n        \"picBot\": null,\n        \"picCR\": null,\n        \"picsAdd\": null,\n        \"mfgChanageFlag\": null,\n        \"btfChanageFlag\": null,\n        \"createName\": null,\n        \"auditName\": null,\n        \"auditTime\": null,\n        \"auditState\": null\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"查询成功\"\n}"
+							}
+						]
+					},
+					{
+						"name": "fai完善",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n  \"id\": 0,\r\n  \"auditName\": \"string\",\r\n  \"auditState\": 0,\r\n  \"auditTime\": \"2020-11-09T09:03:24.103Z\",\r\n  \"btfChanageFlag\": true,\r\n  \"createName\": \"string\",\r\n  \"createTime\": \"2020-11-09T09:03:24.103Z\",\r\n  \"ecnImportTime\": \"2020-11-09T09:03:24.103Z\",\r\n  \"ecnNo\": \"string\",\r\n  \"ecnPurpose\": \"string\",\r\n  \"ecnReleaseTime\": \"2020-11-09T09:03:24.103Z\",\r\n  \"mfgChanageFlag\": true,\r\n  \"pcbaVer\": \"string\",\r\n  \"picBot\": \"string\",\r\n  \"picCR\": \"string\",\r\n  \"picLable\": \"string\",\r\n  \"picTop\": \"string\",\r\n  \"picsAdd\": \"string\",\r\n  \"updateTime\": \"2020-11-09T09:03:24.103Z\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/fai/faiInfo/save",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"fai",
+									"faiInfo",
+									"save"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "根据ecnNo查询fai",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "{\r\n    \r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/fai/faiInfo/sel/ENG-ECN-0009",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"fai",
+											"faiInfo",
+											"sel",
+											"ENG-ECN-0009"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "json",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Mon, 09 Nov 2020 09:01:34 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "            t.id id,  -- \n            t.ecn_no ecnNo,  -- ecn编号\n            t.ecn_import_time ecnImportTime,  -- 导入时间\n            t.ecn_release_time ecnReleaseTime,  -- 发布时间\n            t.pcba_ver pcbaVer,  -- 变更后版本\n            t.ecn_purpose ecnPurpose,  -- ecn目的\n            t.pic_lable picLable,  -- 条码图片\n            t.pic_top picTop,  -- 正面图片\n            t.pic_bot picBot,  -- 方面图片\n            t.pic_c_r picCR,  -- 3C或ROHS图片\n            t.pics_add picsAdd,  -- 附加图片\n            t.mfg_chanage_flag mfgChanageFlag,  -- 生产治具、工艺流程是否需要变更\n            t.btf_chanage_flag btfChanageFlag,  -- btf测试程序是否变更\n            t.create_name createName,  -- 创建人\n            t.create_time createTime,  -- 创建时间\n            t.audit_name auditName,  -- 审核人\n            t.audit_time auditTime,  -- 审核时间\n            t.audit_state auditState  -- 审核状态       \n{\n    \"datas\": {\n        \"id\": 1,\n        \"createTime\": \"2020-11-07 16:49:43\",\n        \"updateTime\": \"2020-11-07 16:49:43\",\n        \"ecnNo\": \"ENG-ECN-0009\",\n        \"ecnImportTime\": null,\n        \"ecnReleaseTime\": null,\n        \"pcbaVer\": null,\n        \"ecnPurpose\": null,\n        \"picLable\": null,\n        \"picTop\": null,\n        \"picBot\": null,\n        \"picCR\": null,\n        \"picsAdd\": null,\n        \"mfgChanageFlag\": null,\n        \"btfChanageFlag\": null,\n        \"createName\": null,\n        \"auditName\": null,\n        \"auditTime\": null,\n        \"auditState\": null\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"查询成功\"\n}"
+							}
+						]
+					},
+					{
+						"name": "导出",
+						"request": {
+							"method": "GET",
+							"header": [],
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/fai/faiInfo/leadOut?id=1",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"fai",
+									"faiInfo",
+									"leadOut"
+								],
+								"query": [
+									{
+										"key": "id",
+										"value": "1"
+									}
+								]
+							}
+						},
+						"response": []
+					}
+				]
+			},
+			{
+				"name": "用户",
+				"item": [
+					{
+						"name": "修改密码",
+						"request": {
+							"method": "POST",
+							"header": [
+								{
+									"key": "GTOA",
+									"value": "202cb962ac59075b964b07152d234b70",
+									"type": "text"
+								}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"userAccount\":\"123\",\r\n    \"userPwd\":\"000000\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ums/umsUser/updatePwd",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ums",
+									"umsUser",
+									"updatePwd"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "查询用户列表",
+						"request": {
+							"method": "POST",
+							"header": [
+								{
+									"key": "GTOA",
+									"value": "202cb962ac59075b964b07152d234b70",
+									"type": "text"
+								}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ums/umsUser/list",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ums",
+									"umsUser",
+									"list"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "登录",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"userAccount\":\"052495\",\r\n    \"userPwd\":\"000000\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ums/umsUser/login",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ums",
+									"umsUser",
+									"login"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "查询全部树状权限列表",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ums/umsPermission/allTree",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ums",
+									"umsPermission",
+									"allTree"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "查询全部树状权限列表",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/ums/umsPermission/allTree",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"ums",
+											"umsPermission",
+											"allTree"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "json",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Access-Control-Allow-Methods",
+										"value": "POST, GET, OPTIONS, DELETE"
+									},
+									{
+										"key": "Access-Control-Max-Age",
+										"value": "7200"
+									},
+									{
+										"key": "Access-Control-Allow-Credentials",
+										"value": "true"
+									},
+									{
+										"key": "Access-Control-Allow-Headers",
+										"value": "Accept,X-Requested-With,Content-Type,GTOA"
+									},
+									{
+										"key": "Access-Control-Allow-Origin",
+										"value": "*"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Wed, 09 Dec 2020 13:16:47 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "{\n    \"datas\": [\n        {\n            \"id\": 13,\n            \"perName\": \"操作说明\",\n            \"perUrl\": \"/gtoa/toPlay\",\n            \"perType\": 0,\n            \"parentId\": null,\n            \"icon\": \"fa fa-truck\",\n            \"status\": 1,\n            \"remark\": null,\n            \"child\": null\n        },\n        {\n            \"id\": 15,\n            \"perName\": \"烧录文件管理\",\n            \"perUrl\": \"/gtoa/burnManagement\",\n            \"perType\": 0,\n            \"parentId\": null,\n            \"icon\": \"fa fa-truck\",\n            \"status\": 1,\n            \"remark\": null,\n            \"child\": null\n        },\n        {\n            \"id\": 16,\n            \"perName\": \"ECN通知管理\",\n            \"perUrl\": \"/gtoa/ecn\",\n            \"perType\": 0,\n            \"parentId\": 16,\n            \"icon\": null,\n            \"status\": 1,\n            \"remark\": null,\n            \"child\": [\n                {\n                    \"id\": 1,\n                    \"perName\": \"ECR导入\",\n                    \"perUrl\": \"/gtoa/home\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-database\",\n                    \"status\": 1,\n                    \"remark\": \"基础数据-1\",\n                    \"child\": null\n                },\n                {\n                    \"id\": 2,\n                    \"perName\": \"文件管理\",\n                    \"perUrl\": \"/gtoa/filePage\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-cog\",\n                    \"status\": 1,\n                    \"remark\": \"基本数据-2\",\n                    \"child\": null\n                },\n                {\n                    \"id\": 3,\n                    \"perName\": \"ECN变更通知\",\n                    \"perUrl\": \"/gtoa/ecnInfo\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-folder\",\n                    \"status\": 1,\n                    \"remark\": \"基本数据-2\",\n                    \"child\": null\n                },\n                {\n                    \"id\": 4,\n                    \"perName\": \"子任务页面\",\n                    \"perUrl\": \"/gtoa/subtaskPage\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-sitemap\",\n                    \"status\": 1,\n                    \"remark\": \"基本信息-3\",\n                    \"child\": null\n                },\n                {\n                    \"id\": 5,\n                    \"perName\": \"FAI通知页面\",\n                    \"perUrl\": \"/gtoa/falReport\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-user-circle\",\n                    \"status\": 1,\n                    \"remark\": \"基本信息-3\",\n                    \"child\": null\n                },\n                {\n                    \"id\": 6,\n                    \"perName\": \"ECN 验收单\",\n                    \"perUrl\": \"/gtoa/ECNTrack\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-th-list\",\n                    \"status\": 1,\n                    \"remark\": \"基本信息-3\",\n                    \"child\": null\n                },\n                {\n                    \"id\": 11,\n                    \"perName\": \"ECN影响范围\",\n                    \"perUrl\": \"/gtoa/sphere\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-truck\",\n                    \"status\": 1,\n                    \"remark\": \"基本信息-3\",\n                    \"child\": null\n                },\n                {\n                    \"id\": 12,\n                    \"perName\": \"成品发货版本控制\",\n                    \"perUrl\": \"/gtoa/verControl\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-truck\",\n                    \"status\": 1,\n                    \"remark\": null,\n                    \"child\": null\n                }\n            ]\n        },\n        {\n            \"id\": 20,\n            \"perName\": \"日常工作\",\n            \"perUrl\": \"/gtoa/work\",\n            \"perType\": 0,\n            \"parentId\": 20,\n            \"icon\": null,\n            \"status\": 1,\n            \"remark\": null,\n            \"child\": [\n                {\n                    \"id\": 14,\n                    \"perName\": \"任务管理\",\n                    \"perUrl\": \"/gtoa/taskManagement\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-truck\",\n                    \"status\": 1,\n                    \"remark\": null,\n                    \"child\": null\n                },\n                {\n                    \"id\": 17,\n                    \"perName\": \"生产进度\",\n                    \"perUrl\": \"/gtoa/schedule\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": null,\n                    \"status\": 1,\n                    \"remark\": null,\n                    \"child\": null\n                },\n                {\n                    \"id\": 18,\n                    \"perName\": \"产能查询\",\n                    \"perUrl\": \"/gtoa/capacity\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": null,\n                    \"status\": 1,\n                    \"remark\": null,\n                    \"child\": null\n                },\n                {\n                    \"id\": 19,\n                    \"perName\": \"下线品查询\",\n                    \"perUrl\": \"/gtoa/ReferrerBoard\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": null,\n                    \"status\": 1,\n                    \"remark\": null,\n                    \"child\": null\n                }\n            ]\n        },\n        {\n            \"id\": 21,\n            \"perName\": \"基本设置\",\n            \"perUrl\": \"/gtoa/basic\",\n            \"perType\": 0,\n            \"parentId\": 21,\n            \"icon\": null,\n            \"status\": 1,\n            \"remark\": \"基本设置\",\n            \"child\": [\n                {\n                    \"id\": 7,\n                    \"perName\": \"部门管理\",\n                    \"perUrl\": \"/gtoa/RhDeptManage\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-truck\",\n                    \"status\": 1,\n                    \"remark\": null,\n                    \"child\": null\n                },\n                {\n                    \"id\": 8,\n                    \"perName\": \"权限管理\",\n                    \"perUrl\": \"/gtoa/RhAuthorityManage\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-truck\",\n                    \"status\": 1,\n                    \"remark\": null,\n                    \"child\": null\n                },\n                {\n                    \"id\": 9,\n                    \"perName\": \"用户角色\",\n                    \"perUrl\": \"/gtoa/RhUserRole\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-truck\",\n                    \"status\": 1,\n                    \"remark\": null,\n                    \"child\": null\n                },\n                {\n                    \"id\": 10,\n                    \"perName\": \"用户管理\",\n                    \"perUrl\": \"/gtoa/RhUsermessage\",\n                    \"perType\": 0,\n                    \"parentId\": null,\n                    \"icon\": \"fa fa-truck\",\n                    \"status\": 1,\n                    \"remark\": null,\n                    \"child\": null\n                }\n            ]\n        }\n    ],\n    \"resp_code\": 0,\n    \"resp_msg\": \"查询成功\"\n}"
+							}
+						]
+					}
+				]
+			},
+			{
+				"name": "版本控制",
+				"item": [
+					{
+						"name": " 查询列表",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"modelName\":\"\",\r\n    \"customer\":\"\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ver/verControlDelivery/list",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ver",
+									"verControlDelivery",
+									"list"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "批量删除",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"ids\":[1,2]\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:808/ver//verControlDelivery/del",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "808",
+								"path": [
+									"ver",
+									"",
+									"verControlDelivery",
+									"del"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "更新",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"accordingForDisagree\": \"string\",\r\n    \"agreeFlag\": true,\r\n    \"modelName\": \"string\",\r\n    \"ver\": \"string\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip]}:8080/ver/verControlDelivery/update",
+								"host": [
+									"{{ip]}"
+								],
+								"port": "8080",
+								"path": [
+									"ver",
+									"verControlDelivery",
+									"update"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "保存",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"accordingForDisagree\": \"string\",\r\n    \"agreeFlag\": true,\r\n    \"modelName\": \"string\",\r\n    \"ver\": \"string\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ver/verControlDelivery/saveAll",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ver",
+									"verControlDelivery",
+									"saveAll"
+								]
+							}
+						},
+						"response": []
+					}
+				]
+			},
+			{
+				"name": "烧录文件",
+				"item": [
+					{
+						"name": " 查询列表",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"pageNum\":1,\r\n    \"pageSize\":10\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/fms/fmsBurnFile/list",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"fms",
+									"fmsBurnFile",
+									"list"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "新增or更新",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n  \"id\": 0,\r\n  \"afterItemCode\": \"string\",\r\n  \"beforeItemCode\": \"string\",\r\n  \"createName\": \"string\",\r\n  \"ecnNo\": \"string\",\r\n  \"filePath\": \"string\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/fms/fmsBurnFile/save",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"fms",
+									"fmsBurnFile",
+									"save"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "新增or更新",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "t.id id,  -- \r\nt.ecn_no ecnNo,  -- ecn号\r\nt.before_item_code beforeItemCode,  -- 烧录前料号\r\nt.after_item_code afterItemCode,  -- 烧录后料号\r\nt.create_name createName,  -- 上传人\r\nt.update_time updateTime,  -- 上传时间\r\nt.file_path filePath,  -- 文件路径\r\nt.create_time createTime  -- 创建时间\r\n\r\n\r\n{\r\n  \"id\": 0,\r\n  \"afterItemCode\": \"string\",\r\n  \"beforeItemCode\": \"string\",\r\n  \"createName\": \"string\",\r\n  \"ecnNo\": \"string\",\r\n  \"filePath\": \"string\"\r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/fms/fmsBurnFile/save",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"fms",
+											"fmsBurnFile",
+											"save"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "JSON",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Wed, 02 Dec 2020 01:23:05 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "{\"datas\":null,\"resp_code\":0,\"resp_msg\":\"保存成功\"}"
+							}
+						]
+					},
+					{
+						"name": "批量删除",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"ids\":[1,2]\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/fms/fmsBurnFile/del",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"fms",
+									"fmsBurnFile",
+									"del"
+								]
+							}
+						},
+						"response": []
+					}
+				]
+			},
+			{
+				"name": "任务管理",
+				"item": [
+					{
+						"name": "新增或关结（closeFlag新增\"1\",关结 是\"4\" 否 \"2\"）",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n  \"id\":\"\",\r\n  \"closeFalg\": \"string\",\r\n  \"excuteDept\": \"string\",\r\n  \"excutor\": \"string\",\r\n  \"expectDate\": \"2020-12-02T08:08:32.253Z\",\r\n  \"name\": \"string\",\r\n  \"realFinishDate\": \"2020-12-02T08:08:32.253Z\",\r\n  \"reason\": \"string\",\r\n  \"result\": \"string\",\r\n  \"sponseDate\": \"2020-12-02T08:08:32.253Z\",\r\n  \"sponseDept\": \"string\",\r\n  \"sponsor\": \"string\",\r\n  \"target\": \"string\",\r\n  \"workDesc\": \"string\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/wms/wmsWorkTracingMain/save",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"wms",
+									"wmsWorkTracingMain",
+									"save"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "新增",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "t.name name,  -- 任务名称\r\nt.work_desc workDesc,  -- 任务描述\r\nt.reason reason,  -- 发起原因\r\nt.target target,  -- 预期结果\r\nt.sponsor sponsor,  -- 发起人\r\nt.sponse_date sponseDate,  -- 发起日期\r\nt.sponse_dept sponseDept,  -- 发起部门\r\nt.excutor excutor,  -- 执行人\r\nt.excute_dept excuteDept,  -- 执行部门\r\nt.expect_date expectDate,  -- 预计完成时间\r\nt.real_finish_date realFinishDate,  -- 实际完成时间\r\nt.result result,  -- 结案描述\r\nt.close_falg closeFalg,  -- 状态(1: 新建 2: 进行中 3: 关结申请中4: 已关结 5: 超期未完成)\r\nt.create_time createTime,  -- 创建时间\r\nt.update_time updateTime  -- 更新时间\r\n{\r\n  \"closeFalg\": \"string\",\r\n  \"excuteDept\": \"string\",\r\n  \"excutor\": \"string\",\r\n  \"expectDate\": \"2020-12-02T08:08:32.253Z\",\r\n  \"name\": \"string\",\r\n  \"realFinishDate\": \"2020-12-02T08:08:32.253Z\",\r\n  \"reason\": \"string\",\r\n  \"result\": \"string\",\r\n  \"sponseDate\": \"2020-12-02T08:08:32.253Z\",\r\n  \"sponseDept\": \"string\",\r\n  \"sponsor\": \"string\",\r\n  \"target\": \"string\",\r\n  \"workDesc\": \"string\"\r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/wms/wmsWorkTracingMain/save",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"wms",
+											"wmsWorkTracingMain",
+											"save"
+										]
+									}
+								},
+								"_postman_previewlanguage": null,
+								"header": null,
+								"cookie": [],
+								"body": null
+							}
+						]
+					},
+					{
+						"name": "批量删除",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"ids\":[1,2]\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/wms/wmsWorkTracingMain/del",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"wms",
+									"wmsWorkTracingMain",
+									"del"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "列表",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"pageNum\":1,\r\n    \"pageSize\":10\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/wms/wmsWorkTracingMain/list",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"wms",
+									"wmsWorkTracingMain",
+									"list"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "更新",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n  \"workId\": 0,\r\n  \"content\": \"string\",\r\n  \"contentTime\": \"2020-12-02T08:18:22.479Z\",\r\n  \"contentUsr\": \"string\",\r\n  \"closeFlag\":\"\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/wms/wmsWorkTrackingDetail/save",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"wms",
+									"wmsWorkTrackingDetail",
+									"save"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "更新",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "t.work_id workId,  -- work表主键\r\nt.content content,  -- 更新内容\r\nt.content_time contentTime,  -- 更新时间\r\nt.content_usr contentUsr,  -- 更新人\r\nt.create_time createTime,  -- 创建时间\r\nt.update_time updateTime  -- 更新时间\r\nclose_flag -- 状态(1: 新建 2: 进行中 3: 关结申请中4: 已关结 5: 超期未完成)\r\n{\r\n  \"workId\": 0,\r\n  \"content\": \"string\",\r\n  \"contentTime\": \"2020-12-02T08:18:22.479Z\",\r\n  \"contentUsr\": \"string\"\r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/wms/wmsWorkTrackingDetail/save",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"wms",
+											"wmsWorkTrackingDetail",
+											"save"
+										]
+									}
+								},
+								"_postman_previewlanguage": null,
+								"header": null,
+								"cookie": [],
+								"body": null
+							}
+						]
+					},
+					{
+						"name": "查询更新列表",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"workId\":3\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/wms/wmsWorkTrackingDetail/list",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"wms",
+									"wmsWorkTrackingDetail",
+									"list"
+								]
+							}
+						},
+						"response": []
+					}
+				]
+			},
+			{
+				"name": "客诉",
+				"item": [
+					{
+						"name": "查询列表",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"pageNum\": 1,\r\n    \"pageSize\": 10\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/cus/cusComplaint/list",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"cus",
+									"cusComplaint",
+									"list"
+								]
+							}
+						},
+						"response": [
+							{
+								"name": "查询列表",
+								"originalRequest": {
+									"method": "POST",
+									"header": [],
+									"body": {
+										"mode": "raw",
+										"raw": "{\r\n    \"pageNum\": 1,\r\n    \"pageSize\": 10\r\n}",
+										"options": {
+											"raw": {
+												"language": "json"
+											}
+										}
+									},
+									"url": {
+										"raw": "{{ip}}:{{Mes2Port}}/cus/cusComplaint/list",
+										"host": [
+											"{{ip}}"
+										],
+										"port": "{{Mes2Port}}",
+										"path": [
+											"cus",
+											"cusComplaint",
+											"list"
+										]
+									}
+								},
+								"status": "OK",
+								"code": 200,
+								"_postman_previewlanguage": "json",
+								"header": [
+									{
+										"key": "Vary",
+										"value": "Origin"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Method"
+									},
+									{
+										"key": "Vary",
+										"value": "Access-Control-Request-Headers"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Transfer-Encoding",
+										"value": "chunked"
+									},
+									{
+										"key": "Date",
+										"value": "Wed, 23 Dec 2020 11:29:27 GMT"
+									},
+									{
+										"key": "Keep-Alive",
+										"value": "timeout=60"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									}
+								],
+								"cookie": [],
+								"body": "            t.id id,  -- \n            t.customer customer,  -- 客户名称\n            t.date_ask dateAsk,  -- 反馈日期\n            t.no_8d no_8d,  -- 8D编号\n            t.model_name modelName,  -- 产品型号\n            t.occure occure,  -- 发生地\n            t.phase phase,  -- 产品阶段\n            t.exp_appearance expAppearance,  -- 不良现象\n            t.exp_loc expLoc,  -- 不良位置\n            t.sn sn,  -- 批次/SN/QN信息\n            t.pic pic,  -- 不良图片\n            t.repeat_flag repeatFlag,  -- 是否重复发生（0/1）\n            t.input_qty inputQty,  -- 投入数\n            t.err_qty errQty,  -- 不良数量\n            t.err_percentage errPercentage,  -- 不良率\n            t.short_period shortPeriod,  -- 临时对策（库存产品的挑选及其不良率）\n            t.exp_reason expReason,  -- 原因分析\n            t.long_period longPeriod,  -- 改善对策\n            t.date_period datePeriod,  -- 对策落实时间\n            t.rsp rsp,  -- 发生原因归属\n            t.rsp_dept rspDept,  -- 责任部门\n            t.rsp_usr rspUsr,  -- 责任人\n            t.status status,  -- 状态\n            t.close_flag closeFlag,  -- 客户是否同意关闭(0/1)\n            t.remark remark,  -- 备注\n            t.create_time createTime,  -- 创建时间\n            t.update_time updateTime  -- 更新时间\n{\n    \"datas\": {\n        \"pageNum\": 1,\n        \"pageSize\": 10,\n        \"totalPage\": 1,\n        \"total\": 2,\n        \"list\": [\n            {\n                \"inputQty\": 0,\n                \"shortPeriod\": \"string\",\n                \"errQty\": 0,\n                \"remark\": \"string\",\n                \"expLoc\": \"string\",\n                \"pic\": \"string\",\n                \"datePeriod\": \"2020-12-23 00:00:00\",\n                \"longPeriod\": \"string\",\n                \"rsp\": \"string\",\n                \"expAppearance\": \"string\",\n                \"rspUsr\": \"string\",\n                \"id\": 2,\n                \"sn\": \"string\",\n                \"errPercentage\": 0,\n                \"phase\": \"string\",\n                \"updateTime\": \"2020-12-23 19:12:58\",\n                \"no_8d\": \"string\",\n                \"dateAsk\": \"2020-12-23 00:00:00\",\n                \"repeatFlag\": 1,\n                \"expReason\": \"string\",\n                \"modelName\": \"string\",\n                \"occure\": \"string\",\n                \"closeFlag\": 1,\n                \"createTime\": \"2020-12-23 19:12:58\",\n                \"rspDept\": \"string\",\n                \"customer\": \"string\",\n                \"status\": \"string\"\n            },\n            {\n                \"inputQty\": 0,\n                \"shortPeriod\": \"string\",\n                \"errQty\": 0,\n                \"remark\": \"string\",\n                \"expLoc\": \"string\",\n                \"pic\": \"string\",\n                \"datePeriod\": \"2020-12-23 00:00:00\",\n                \"longPeriod\": \"string\",\n                \"rsp\": \"string\",\n                \"expAppearance\": \"string\",\n                \"rspUsr\": \"string\",\n                \"id\": 1,\n                \"sn\": \"string\",\n                \"errPercentage\": 0,\n                \"phase\": \"string\",\n                \"updateTime\": \"2020-12-23 19:12:34\",\n                \"no_8d\": null,\n                \"dateAsk\": \"2020-12-23 00:00:00\",\n                \"repeatFlag\": 1,\n                \"expReason\": \"string\",\n                \"modelName\": \"string\",\n                \"occure\": \"string\",\n                \"closeFlag\": 1,\n                \"createTime\": \"2020-12-23 19:12:34\",\n                \"rspDept\": \"string\",\n                \"customer\": \"string\",\n                \"status\": \"string\"\n            }\n        ]\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"查询成功\"\n}"
+							}
+						]
+					},
+					{
+						"name": " 新增or更新",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n  \"closeFlag\": true,\r\n  \"customer\": \"string\",\r\n  \"dateAsk\": \"2020-12-23 00:00:00\",\r\n  \"datePeriod\": \"2020-12-23 00:00:00\",\r\n  \"errQty\": 0,\r\n  \"expAppearance\": \"string\",\r\n  \"expLoc\": \"string\",\r\n  \"expReason\": \"string\",\r\n  \"id\": 0,\r\n  \"inputQty\": 0,\r\n  \"longPeriod\": \"string\",\r\n  \"modelName\": \"string\",\r\n  \"noD8\": \"string\",\r\n  \"occure\": \"string\",\r\n  \"phase\": \"string\",\r\n  \"pic\": \"string\",\r\n  \"remark\": \"string\",\r\n  \"repeatFlag\": true,\r\n  \"rsp\": \"string\",\r\n  \"rspDept\": \"string\",\r\n  \"rspUsr\": \"string\",\r\n  \"shortPeriod\": \"string\",\r\n  \"sn\": \"string\",\r\n  \"status\": \"string\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/cus/cusComplaint/save",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"cus",
+									"cusComplaint",
+									"save"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "查询",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/cus/cusComplaint/sel/2",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"cus",
+									"cusComplaint",
+									"sel",
+									"2"
+								]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "批量删除",
+						"request": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"ids\":[1,2]\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/cus/cusComplaint/del",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"cus",
+									"cusComplaint",
+									"del"
+								]
+							}
+						},
+						"response": []
+					}
+				]
+			},
+			{
+				"name": "上传文件以便打开",
+				"request": {
+					"method": "POST",
+					"header": [],
+					"body": {
+						"mode": "formdata",
+						"formdata": [
+							{
+								"key": "file",
+								"type": "file",
+								"src": "/C:/Users/hui/Desktop/联通大象卡.png"
+							},
+							{
+								"key": "modelName",
+								"value": "img",
+								"type": "text"
+							}
+						]
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/uploadToNginxForOpen",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"uploadToNginxForOpen"
+						]
+					}
+				},
+				"response": []
+			},
+			{
+				"name": "上传文件以便下载",
+				"request": {
+					"method": "POST",
+					"header": [],
+					"body": {
+						"mode": "formdata",
+						"formdata": [
+							{
+								"key": "file",
+								"type": "file",
+								"src": "/C:/Users/hui/Desktop/联通大象卡.png"
+							},
+							{
+								"key": "modelName",
+								"value": "img",
+								"type": "text"
+							}
+						]
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/uploadToNginxForDownload",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"uploadToNginxForDownload"
+						]
+					}
+				},
+				"response": []
+			},
+			{
+				"name": "下载文件",
+				"request": {
+					"method": "GET",
+					"header": [],
+					"url": {
+						"raw": "192.168.50.96:{{Mes2Port}}/download?fileName=E:%5Cfile%5CJavaBarTenderPrint%5C6e30f788b58b40329f56f8e7dac351be-JavaBarTenderPrint.zip",
+						"host": [
+							"192",
+							"168",
+							"50",
+							"96"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"download"
+						],
+						"query": [
+							{
+								"key": "fileName",
+								"value": "E:%5Cfile%5CJavaBarTenderPrint%5C6e30f788b58b40329f56f8e7dac351be-JavaBarTenderPrint.zip"
+							}
+						]
+					}
+				},
+				"response": []
+			},
+			{
+				"name": "查询时间节点",
+				"request": {
+					"method": "POST",
+					"header": [],
+					"body": {
+						"mode": "raw",
+						"raw": "{\r\n    \"ecnNo\":\"ENG-ECN-0005\"\r\n}",
+						"options": {
+							"raw": {
+								"language": "json"
+							}
+						}
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/tim/timeLog/list",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"tim",
+							"timeLog",
+							"list"
+						]
+					}
+				},
+				"response": []
+			},
+			{
+				"name": "获取看板信息1",
+				"request": {
+					"method": "POST",
+					"header": [
+						{
+							"key": "GTOA",
+							"value": "202cb962ac59075b964b07152d234b70",
+							"type": "text"
+						}
+					],
+					"body": {
+						"mode": "raw",
+						"raw": "{\r\n    \"modelName\":\"YZBB-00765-102\",\r\n    \"ver\":\"A01\",\r\n    \"createTime\": \"\"\r\n}",
+						"options": {
+							"raw": {
+								"language": "json"
+							}
+						}
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiEcnGetAffectedInfo",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"ecn",
+							"ApiEcnGetAffectedInfo"
+						]
+					}
+				},
+				"response": [
+					{
+						"name": "获取看板信息",
+						"originalRequest": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"modelName\":\"YZBB-00765-102\",\r\n    \"ver\":\"A01\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiEcnGetStockInfo",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ApiEcnGetStockInfo"
+								]
+							}
+						},
+						"status": "OK",
+						"code": 200,
+						"_postman_previewlanguage": "json",
+						"header": [
+							{
+								"key": "Vary",
+								"value": "Origin"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Method"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Headers"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Transfer-Encoding",
+								"value": "chunked"
+							},
+							{
+								"key": "Date",
+								"value": "Thu, 05 Nov 2020 11:39:29 GMT"
+							},
+							{
+								"key": "Keep-Alive",
+								"value": "timeout=60"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"cookie": [],
+						"body": "{\n    \"datas\": {\n        \"detail\": [\n            {\n                \"msg\": \"Expecting value: line 1 column 1 (char 0)\",\n                \"loc\": [\n                    \"body\",\n                    0\n                ],\n                \"ctx\": {\n                    \"msg\": \"Expecting value\",\n                    \"lineno\": 1,\n                    \"pos\": 0,\n                    \"colno\": 1,\n                    \"doc\": \"modelName=YZBB-00765-102&ver=A01\"\n                },\n                \"type\": \"value_error.jsondecode\"\n            }\n        ]\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"成功\"\n}"
+					}
+				]
+			},
+			{
+				"name": "获取看板信息2",
+				"request": {
+					"method": "POST",
+					"header": [
+						{
+							"key": "GTOA",
+							"value": "202cb962ac59075b964b07152d234b70",
+							"type": "text"
+						}
+					],
+					"body": {
+						"mode": "raw",
+						"raw": "{\r\n    \"startDate\":\"2020-10-10\"\r\n}",
+						"options": {
+							"raw": {
+								"language": "json"
+							}
+						}
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiGetCapacityInfo",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"ecn",
+							"ApiGetCapacityInfo"
+						]
+					}
+				},
+				"response": [
+					{
+						"name": "获取看板信息",
+						"originalRequest": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"modelName\":\"YZBB-00765-102\",\r\n    \"ver\":\"A01\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiEcnGetStockInfo",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ApiEcnGetStockInfo"
+								]
+							}
+						},
+						"status": "OK",
+						"code": 200,
+						"_postman_previewlanguage": "json",
+						"header": [
+							{
+								"key": "Vary",
+								"value": "Origin"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Method"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Headers"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Transfer-Encoding",
+								"value": "chunked"
+							},
+							{
+								"key": "Date",
+								"value": "Thu, 05 Nov 2020 11:39:29 GMT"
+							},
+							{
+								"key": "Keep-Alive",
+								"value": "timeout=60"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"cookie": [],
+						"body": "{\n    \"datas\": {\n        \"detail\": [\n            {\n                \"msg\": \"Expecting value: line 1 column 1 (char 0)\",\n                \"loc\": [\n                    \"body\",\n                    0\n                ],\n                \"ctx\": {\n                    \"msg\": \"Expecting value\",\n                    \"lineno\": 1,\n                    \"pos\": 0,\n                    \"colno\": 1,\n                    \"doc\": \"modelName=YZBB-00765-102&ver=A01\"\n                },\n                \"type\": \"value_error.jsondecode\"\n            }\n        ]\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"成功\"\n}"
+					}
+				]
+			},
+			{
+				"name": "获取看板信息3",
+				"request": {
+					"method": "POST",
+					"header": [
+						{
+							"key": "GTOA",
+							"value": "202cb962ac59075b964b07152d234b70",
+							"type": "text"
+						}
+					],
+					"body": {
+						"mode": "raw",
+						"raw": "{\r\n    \"modelName\":\"YZBB-00765-102\"\r\n}",
+						"options": {
+							"raw": {
+								"language": "json"
+							}
+						}
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiGetCapacityTrendInfo",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"ecn",
+							"ApiGetCapacityTrendInfo"
+						]
+					}
+				},
+				"response": [
+					{
+						"name": "获取看板信息",
+						"originalRequest": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"modelName\":\"YZBB-00765-102\",\r\n    \"ver\":\"A01\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiEcnGetStockInfo",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ApiEcnGetStockInfo"
+								]
+							}
+						},
+						"status": "OK",
+						"code": 200,
+						"_postman_previewlanguage": "json",
+						"header": [
+							{
+								"key": "Vary",
+								"value": "Origin"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Method"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Headers"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Transfer-Encoding",
+								"value": "chunked"
+							},
+							{
+								"key": "Date",
+								"value": "Thu, 05 Nov 2020 11:39:29 GMT"
+							},
+							{
+								"key": "Keep-Alive",
+								"value": "timeout=60"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"cookie": [],
+						"body": "{\n    \"datas\": {\n        \"detail\": [\n            {\n                \"msg\": \"Expecting value: line 1 column 1 (char 0)\",\n                \"loc\": [\n                    \"body\",\n                    0\n                ],\n                \"ctx\": {\n                    \"msg\": \"Expecting value\",\n                    \"lineno\": 1,\n                    \"pos\": 0,\n                    \"colno\": 1,\n                    \"doc\": \"modelName=YZBB-00765-102&ver=A01\"\n                },\n                \"type\": \"value_error.jsondecode\"\n            }\n        ]\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"成功\"\n}"
+					}
+				]
+			},
+			{
+				"name": "获取看板信息4",
+				"request": {
+					"method": "POST",
+					"header": [
+						{
+							"key": "GTOA",
+							"value": "202cb962ac59075b964b07152d234b70",
+							"type": "text"
+						}
+					],
+					"body": {
+						"mode": "raw",
+						"raw": "{\r\n    \"startDate\":\"2020-10-10\"\r\n}",
+						"options": {
+							"raw": {
+								"language": "json"
+							}
+						}
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiGetProjectProcessInfo",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"ecn",
+							"ApiGetProjectProcessInfo"
+						]
+					}
+				},
+				"response": [
+					{
+						"name": "获取看板信息",
+						"originalRequest": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"modelName\":\"YZBB-00765-102\",\r\n    \"ver\":\"A01\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiEcnGetStockInfo",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ApiEcnGetStockInfo"
+								]
+							}
+						},
+						"status": "OK",
+						"code": 200,
+						"_postman_previewlanguage": "json",
+						"header": [
+							{
+								"key": "Vary",
+								"value": "Origin"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Method"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Headers"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Transfer-Encoding",
+								"value": "chunked"
+							},
+							{
+								"key": "Date",
+								"value": "Thu, 05 Nov 2020 11:39:29 GMT"
+							},
+							{
+								"key": "Keep-Alive",
+								"value": "timeout=60"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"cookie": [],
+						"body": "{\n    \"datas\": {\n        \"detail\": [\n            {\n                \"msg\": \"Expecting value: line 1 column 1 (char 0)\",\n                \"loc\": [\n                    \"body\",\n                    0\n                ],\n                \"ctx\": {\n                    \"msg\": \"Expecting value\",\n                    \"lineno\": 1,\n                    \"pos\": 0,\n                    \"colno\": 1,\n                    \"doc\": \"modelName=YZBB-00765-102&ver=A01\"\n                },\n                \"type\": \"value_error.jsondecode\"\n            }\n        ]\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"成功\"\n}"
+					}
+				]
+			},
+			{
+				"name": "获取看板信息5",
+				"request": {
+					"method": "POST",
+					"header": [
+						{
+							"key": "GTOA",
+							"value": "202cb962ac59075b964b07152d234b70",
+							"type": "text"
+						}
+					],
+					"body": {
+						"mode": "raw",
+						"raw": "{\r\n    \"startDate\":\"2020-10-10\"\r\n}",
+						"options": {
+							"raw": {
+								"language": "json"
+							}
+						}
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiGetProjectSummaryInfo",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"ecn",
+							"ApiGetProjectSummaryInfo"
+						]
+					}
+				},
+				"response": [
+					{
+						"name": "获取看板信息",
+						"originalRequest": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"modelName\":\"YZBB-00765-102\",\r\n    \"ver\":\"A01\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiEcnGetStockInfo",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ApiEcnGetStockInfo"
+								]
+							}
+						},
+						"status": "OK",
+						"code": 200,
+						"_postman_previewlanguage": "json",
+						"header": [
+							{
+								"key": "Vary",
+								"value": "Origin"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Method"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Headers"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Transfer-Encoding",
+								"value": "chunked"
+							},
+							{
+								"key": "Date",
+								"value": "Thu, 05 Nov 2020 11:39:29 GMT"
+							},
+							{
+								"key": "Keep-Alive",
+								"value": "timeout=60"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"cookie": [],
+						"body": "{\n    \"datas\": {\n        \"detail\": [\n            {\n                \"msg\": \"Expecting value: line 1 column 1 (char 0)\",\n                \"loc\": [\n                    \"body\",\n                    0\n                ],\n                \"ctx\": {\n                    \"msg\": \"Expecting value\",\n                    \"lineno\": 1,\n                    \"pos\": 0,\n                    \"colno\": 1,\n                    \"doc\": \"modelName=YZBB-00765-102&ver=A01\"\n                },\n                \"type\": \"value_error.jsondecode\"\n            }\n        ]\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"成功\"\n}"
+					}
+				]
+			},
+			{
+				"name": "获取看板信息6",
+				"request": {
+					"method": "POST",
+					"header": [
+						{
+							"key": "GTOA",
+							"value": "202cb962ac59075b964b07152d234b70",
+							"type": "text"
+						}
+					],
+					"body": {
+						"mode": "raw",
+						"raw": "",
+						"options": {
+							"raw": {
+								"language": "json"
+							}
+						}
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiGetFaultInfo",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"ecn",
+							"ApiGetFaultInfo"
+						]
+					}
+				},
+				"response": [
+					{
+						"name": "获取看板信息",
+						"originalRequest": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"modelName\":\"YZBB-00765-102\",\r\n    \"ver\":\"A01\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiEcnGetStockInfo",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ApiEcnGetStockInfo"
+								]
+							}
+						},
+						"status": "OK",
+						"code": 200,
+						"_postman_previewlanguage": "json",
+						"header": [
+							{
+								"key": "Vary",
+								"value": "Origin"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Method"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Headers"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Transfer-Encoding",
+								"value": "chunked"
+							},
+							{
+								"key": "Date",
+								"value": "Thu, 05 Nov 2020 11:39:29 GMT"
+							},
+							{
+								"key": "Keep-Alive",
+								"value": "timeout=60"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"cookie": [],
+						"body": "{\n    \"datas\": {\n        \"detail\": [\n            {\n                \"msg\": \"Expecting value: line 1 column 1 (char 0)\",\n                \"loc\": [\n                    \"body\",\n                    0\n                ],\n                \"ctx\": {\n                    \"msg\": \"Expecting value\",\n                    \"lineno\": 1,\n                    \"pos\": 0,\n                    \"colno\": 1,\n                    \"doc\": \"modelName=YZBB-00765-102&ver=A01\"\n                },\n                \"type\": \"value_error.jsondecode\"\n            }\n        ]\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"成功\"\n}"
+					}
+				]
+			},
+			{
+				"name": "检验是否需要fai",
+				"request": {
+					"method": "POST",
+					"header": [],
+					"body": {
+						"mode": "raw",
+						"raw": "{\r\n    \"modelName\":\"YZCA-00431-103\",\r\n    \"ver\":\"A35\"\r\n}",
+						"options": {
+							"raw": {
+								"language": "json"
+							}
+						}
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiEcnCheckFai",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"ecn",
+							"ApiEcnCheckFai"
+						]
+					}
+				},
+				"response": []
+			},
+			{
+				"name": "关结",
+				"request": {
+					"method": "POST",
+					"header": [],
+					"body": {
+						"mode": "raw",
+						"raw": "{\r\n    \"ecnNo\":\"ENG-ECN-0006\",\r\n    \"batch\":\"\"\r\n}",
+						"options": {
+							"raw": {
+								"language": "json"
+							}
+						}
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/ecn/ecnDocInfo/close",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"ecn",
+							"ecnDocInfo",
+							"close"
+						]
+					}
+				},
+				"response": []
+			},
+			{
+				"name": "通过工单号查询时间",
+				"request": {
+					"method": "POST",
+					"header": [],
+					"body": {
+						"mode": "raw",
+						"raw": "{\r\n    \"mo\":\"29603\"\r\n}",
+						"options": {
+							"raw": {
+								"language": "json"
+							}
+						}
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiEcnGetMoDtInfo",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"ecn",
+							"ApiEcnGetMoDtInfo"
+						]
+					}
+				},
+				"response": []
+			},
+			{
+				"name": "邮箱测试",
+				"request": {
+					"method": "POST",
+					"header": [],
+					"body": {
+						"mode": "raw",
+						"raw": ""
+					},
+					"url": {
+						"raw": "192.168.50.96:{{Mes2Port}}/ecn/ecnDocInfo/send",
+						"host": [
+							"192",
+							"168",
+							"50",
+							"96"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"ecn",
+							"ecnDocInfo",
+							"send"
+						]
+					}
+				},
+				"response": []
+			},
+			{
+				"name": "获取看板信息7",
+				"request": {
+					"method": "POST",
+					"header": [
+						{
+							"key": "GTOA",
+							"value": "202cb962ac59075b964b07152d234b70",
+							"type": "text"
+						}
+					],
+					"body": {
+						"mode": "raw",
+						"raw": "",
+						"options": {
+							"raw": {
+								"language": "json"
+							}
+						}
+					},
+					"url": {
+						"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiGetFaultInfo",
+						"host": [
+							"{{ip}}"
+						],
+						"port": "{{Mes2Port}}",
+						"path": [
+							"ecn",
+							"ApiGetFaultInfo"
+						]
+					}
+				},
+				"response": [
+					{
+						"name": "获取看板信息",
+						"originalRequest": {
+							"method": "POST",
+							"header": [],
+							"body": {
+								"mode": "raw",
+								"raw": "{\r\n    \"modelName\":\"YZBB-00765-102\",\r\n    \"ver\":\"A01\"\r\n}",
+								"options": {
+									"raw": {
+										"language": "json"
+									}
+								}
+							},
+							"url": {
+								"raw": "{{ip}}:{{Mes2Port}}/ecn/ApiEcnGetStockInfo",
+								"host": [
+									"{{ip}}"
+								],
+								"port": "{{Mes2Port}}",
+								"path": [
+									"ecn",
+									"ApiEcnGetStockInfo"
+								]
+							}
+						},
+						"status": "OK",
+						"code": 200,
+						"_postman_previewlanguage": "json",
+						"header": [
+							{
+								"key": "Vary",
+								"value": "Origin"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Method"
+							},
+							{
+								"key": "Vary",
+								"value": "Access-Control-Request-Headers"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Transfer-Encoding",
+								"value": "chunked"
+							},
+							{
+								"key": "Date",
+								"value": "Thu, 05 Nov 2020 11:39:29 GMT"
+							},
+							{
+								"key": "Keep-Alive",
+								"value": "timeout=60"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							}
+						],
+						"cookie": [],
+						"body": "{\n    \"datas\": {\n        \"detail\": [\n            {\n                \"msg\": \"Expecting value: line 1 column 1 (char 0)\",\n                \"loc\": [\n                    \"body\",\n                    0\n                ],\n                \"ctx\": {\n                    \"msg\": \"Expecting value\",\n                    \"lineno\": 1,\n                    \"pos\": 0,\n                    \"colno\": 1,\n                    \"doc\": \"modelName=YZBB-00765-102&ver=A01\"\n                },\n                \"type\": \"value_error.jsondecode\"\n            }\n        ]\n    },\n    \"resp_code\": 0,\n    \"resp_msg\": \"成功\"\n}"
+					}
+				]
+			}
+		]
+		}
+	],
+
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{gtoa}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "GTOA",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

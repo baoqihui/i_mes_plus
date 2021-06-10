@@ -1,0 +1,62 @@
+#spring
+spring:
+  datasource:                   #mysql
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mysql://192.168.50.74:3306/gtoa?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: Muyuer1986
+    hikari:
+      max-lifetime: 500000
+  jackson:                     #时间格式化
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  redis:
+    host: 192.168.50.96 # Redis服务器地址
+    database: 0 # Redis数据库索引（默认为0）
+    port: 6379 # Redis服务器连接端口
+    password: # Redis服务器连接密码（默认为空）
+    timeout: 3000ms # 连接超时时间（毫秒）
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 0KB
+      max-file-size: 500MB
+      max-request-size: 500MB
+  thymeleaf:
+    mode: HTML
+    encoding: utf-8
+    cache: false
+#mybatis配置逻辑删除
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    call-setters-on-nulls: true   #配置返回结果集为空时仍返回字段
+
+#fastDFS配置
+FastDFS:
+  imgPrefixPath: http://120.27.244.176/
+  propertiesPath: /D:/config/fastdfs.properties
+
+#oss配置
+Oos:
+  accessKeyId: LTAI4FoAmdJuwmE5Q6RHffBc
+  accessKeySecret: pMWwp6eiqGrnPTYqk2aHn8Q4AVheTs
+  bucketName: idse-oss
+  endpoint: oss-cn-hangzhou.aliyuncs.com
+  filedir: image/
+
+#swagger配置
+Swagger:
+  description: (gtoa-接口文档) restful 风格接口
+  title: gtoa
+  version: 1.0
+
+#nginx文件上传路径
+nginxFilePath: E:\file/
+#nginx文件上传路径（下载）
+nginxFilePathForDownload: E:\file/download/
+
+zhaoIpAndPort: 192.168.50.97:8003

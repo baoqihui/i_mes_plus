@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.gtoa.EcnDetailAuditLogMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.ecn_no ecnNo,  -- ECN
+            t.ecn_no_cust ecnNoCust,  -- 外部ECN编号
+            t.reason_of_change reasonOfChange,  -- 变更原因
+            t.according according,  -- 变更依据
+            t.notice_flag noticeFlag,  -- 是否通知相关人员
+            t.update_bom_flag updateBomFlag,  -- 更新纸质BOM
+            t.notice_cus_flag noticeCusFlag,  -- 是否通知客户
+            t.cost_increase_flag costIncreaseFlag,  -- 成本增加标识
+            t.type_of_change typeOfChange,  -- 变更类型(tciIds 使用,分割)
+            t.item_of_change itemOfChange,  -- 变更项目(iciIds 使用,分割)
+            t.executed_mode executedMode,  -- 执行方式(emiIds 使用,分割)
+            t.distributed_dept distributedDept,  -- 分发部门（depaCodes 使用,分割）
+            t.create_name createName,  -- 创建人
+            t.create_time createTime,  -- 创建时间
+            t.update_name updateName,  -- 编辑人
+            t.update_time updateTime,  -- 编辑时间
+            t.audit_name auditName,  -- 审核人
+            t.audit_time auditTime,  -- 审核时间
+            t.audit_status auditStatus,  -- 审核状态(0,草稿 1，未审核 2，审核通过 3，审核不通过 4，信息完善)
+            t.audit_remark auditRemark,  -- 审核原因
+            t.valid_begin_date validBeginDate,  -- 生效时间
+            t.valid_end_date validEndDate,  -- 截至时间(2099-12-31 23:59:59永久有效)
+            t.valid_delivery_ver validDeliveryVer  -- 可发货版本
+        from ecn_detail_audit_log t
+        order by t.id desc
+    </select>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.gtoa.TaskBaseInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.name name,  -- 任务名
+            t.task_desc taskDesc,  -- 描述（对应file_info表中的字段名，不可更改）
+            t.depa_code depaCode,  -- 任务所属部门
+            t.depa_name depaName,    -- 任务所属部门名
+            t.has_file hasFile  -- 是否需要文件
+        from task_base_info t
+        where 1=1
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code = #{p.depaCode}
+        </if>
+        order by t.id desc
+    </select>
+    <select id="getDepaCount" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT depa_code) FROM task_base_info;
+    </select>
+</mapper>

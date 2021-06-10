@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsPermissionMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.ums.UmsPermission">
+            select
+                t.id id,  -- 主键
+                t.per_name perName,  -- 权限名
+                t.path path,  -- 权限路径
+                t.component component,  -- 组件路径
+                t.icon icon,  -- 图标
+                t.per_sort perSort,  -- 排序
+                t.per_type perType,  -- 权限类型 例如 0 菜单 1按钮
+                t.parent_id parentId,  -- 上级权限 默认 0
+                t.status status,  -- 状态 0 禁用 1 启用
+                t.remark remark,  -- 描述
+                t.create_time createTime,  -- 创建时间
+                t.update_time updateTime  -- 更新时间
+            from ums_permission t
+            where 1=1
+            <if test="p.perName != null and p.perName != ''">
+                and t.per_name LIKE '%${p.perName}%'
+            </if>
+            <if test="p.path != null and p.path != ''">
+                and t.path LIKE '%${p.path}%'
+            </if>
+            <if test="p.component != null and p.component != ''">
+                and t.component LIKE '%${p.component}%'
+            </if>
+            <if test="p.icon != null and p.icon != ''">
+                and t.icon LIKE '%${p.icon}%'
+            </if>
+            <if test="p.perSort != null and p.perSort != ''">
+                and t.per_sort LIKE '%${p.perSort}%'
+            </if>
+            <if test="p.perType != null and p.perType != ''">
+                and t.per_type LIKE '%${p.perType}%'
+            </if>
+            <if test="p.parentId != null and p.parentId != ''">
+                and t.parent_id LIKE '%${p.parentId}%'
+            </if>
+            <if test="p.status != null and p.status != ''">
+                and t.status LIKE '%${p.status}%'
+            </if>
+            <if test="p.remark != null and p.remark != ''">
+                and t.remark LIKE '%${p.remark}%'
+            </if>
+            order by t.per_sort asc,t.id asc
+    </select>
+    <select id="selectPermissionTreeByParentId" resultType="com.rh.i_mes_plus.vo.PermissionTreeVO" parameterType="long">
+        SELECT DISTINCT
+            t.id id,
+            t.per_name perName,
+            t.component component,
+            t.path path,
+            t.per_type perType,
+            t.per_sort perSort,
+            t.icon icon,
+            t.status status,
+            t.remark remark,
+            t.parent_id parentId
+        FROM
+            ums_permission t
+        WHERE
+            t.parent_id = #{parentId}
+        order by t.id
+    </select>
+
+    <select id="getUserButtonPermission" resultType="string">
+        SELECT
+            p.path button
+        FROM
+            ums_permission p
+        LEFT JOIN ums_role_per rp ON rp.per_id = p.id
+        LEFT JOIN ums_role ro ON ro.id = rp.role_id
+        LEFT JOIN ums_user_role ur ON ur.role_id = ro.id
+        LEFT JOIN ums_user uu on ur.user_id=uu.id
+        WHERE
+            ro.status = 1
+          and uu.user_account = #{userAccount}
+          and uu.state = 1
+          and p.status = 1
+          and p.per_type = 1
+        order by p.per_sort asc,p.id asc
+    </select>
+    <select id="getUserPermission" resultType="com.rh.i_mes_plus.vo.PermissionTreeVO">
+            SELECT
+                t.id id,
+                t.per_name perName,
+                t.component component,
+                t.path path,
+                t.per_type perType,
+                t.icon icon,
+                t.status status,
+                t.remark remark,
+                t.parent_id parentId
+            FROM
+                ums_permission t
+            LEFT JOIN ums_role_per rp ON rp.per_id = t.id
+            LEFT JOIN ums_role ro ON ro.id = rp.role_id
+            LEFT JOIN ums_user_role ur ON ur.role_id = ro.id
+            LEFT JOIN ums_user uu on ur.user_id=uu.id
+            WHERE
+                ro.status = 1
+                and t.status = 1
+                and t.per_type = 0
+                and uu.user_account = #{userAccount}
+                and uu.state = 1
+                and t.parent_id = #{parentId}
+            order by t.per_sort asc,t.id asc
+    </select>
+</mapper>

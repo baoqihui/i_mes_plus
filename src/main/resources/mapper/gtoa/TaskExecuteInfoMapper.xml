@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.gtoa.TaskExecuteInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.ecn_no ecnNo,  -- ecn编号
+            t.task_id taskId,  -- 任务id
+            t.create_name createName,  -- 创建人
+            t.create_time createTime,  -- 创建时间
+            t.execute_account executeAccount, -- 执行人账号
+            t.execute_name executeName,  -- 执行人
+            t.execute_time executeTime,  -- 执行时间
+            t.execute_file executeFile, -- 执行文件路径
+            t.audit_name auditName,  -- 审核人
+            t.audit_time auditTime,  -- 审核时间
+            t.audit_remark auditRemark,  -- 审核原因
+            t.state state  -- 状态（0，新建/1，执行完成,2，审核通过 ）
+        from task_execute_info t
+        order by t.id desc
+    </select>
+    <select id="getTaskExecuteInfo" resultType="map">
+        SELECT
+            t.id id,  --
+            t.ecn_no ecnNo,  -- ecn编号
+            t.task_id taskId,  -- 任务id
+            t.create_name createName,  -- 创建人
+            t.create_time createTime,  -- 创建时间
+            t.execute_account executeAccount, -- 执行人账号
+            t.execute_name executeName,  -- 执行人
+            t.execute_time executeTime,  -- 执行时间
+            t.execute_file executeFile, -- 执行文件路径
+            t.audit_name auditName,  -- 审核人
+            t.audit_time auditTime,  -- 审核时间
+            t.audit_remark auditRemark,  -- 审核原因
+            t.state state,  -- 状态（0，新建/1，执行完成,2，审核通过 ）
+            t.depa_code depaCode, --
+            bi.`name`,
+            bi.has_file hasFile,
+            i.exe_state exeState
+        FROM
+            task_execute_info t
+        LEFT JOIN ecn_doc_info i ON i.ecn_no = t.ecn_no
+        LEFT JOIN task_base_info bi ON bi.id = t.task_id
+        WHERE
+            t.depa_code = #{depaCode} and i.exe_state!='9' and i.exe_state!='-2' and i.exe_state!='-1'
+        order by t.id desc
+    </select>
+</mapper>

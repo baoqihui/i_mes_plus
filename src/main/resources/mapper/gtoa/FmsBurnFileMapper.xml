@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.gtoa.FmsBurnFileMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.ecn_no ecnNo,  -- ecn号
+            t.before_item_code beforeItemCode,  -- 烧录前料号
+            t.after_item_code afterItemCode,  -- 烧录后料号
+            t.create_name createName,  -- 上传人
+            t.update_time updateTime,  -- 上传时间
+            t.file_path filePath,  -- 文件路径
+            t.create_time createTime,  -- 创建时间
+            t.model_name modelName, -- 机型名称
+            t.ic ic, -- ic脚位
+            t.ver_before verBefore, -- 变更前版本
+            t.ver_after verAfter -- 变更后版本
+        from fms_burn_file t
+        where 1=1
+        <if test="p.modelName != null and p.modelName != ''">
+            and t.model_name = #{p.modelName}
+        </if>
+        <if test="p.beforeItemCode != null and p.beforeItemCode != ''">
+            and t.before_item_code = #{p.beforeItemCode}
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

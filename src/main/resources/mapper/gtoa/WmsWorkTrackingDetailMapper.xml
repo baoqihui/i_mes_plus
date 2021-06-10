@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.gtoa.WmsWorkTrackingDetailMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.work_id workId,  -- work表主键
+            t.content content,  -- 更新内容
+            t.content_time contentTime,  -- 更新时间
+            t.content_usr contentUsr,  -- 更新人
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime  -- 更新时间
+        from wms_work_tracking_detail t
+        where 1=1
+        <if test="p.workId != null and p.workId != ''">
+            and t.work_id = #{p.workId}
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

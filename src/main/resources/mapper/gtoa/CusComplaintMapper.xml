@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.gtoa.CusComplaintMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.customer customer,  -- 客户名称
+            t.cus_no cusNo, -- 客诉编号
+            t.is_maintain isMaintain,-- 是否维修
+            t.date_ask dateAsk,  -- 反馈日期
+            t.no_d8 noD8,  -- 8D编号
+            t.model_name modelName,  -- 产品型号
+            t.occure occure,  -- 发生地
+            t.phase phase,  -- 产品阶段
+            t.exp_appearance expAppearance,  -- 不良现象
+            t.exp_loc expLoc,  -- 不良位置
+            t.sn sn,  -- 批次/SN/QN信息
+            t.pic pic,  -- 不良图片
+            t.repeat_flag repeatFlag,  -- 是否重复发生（0/1）
+            t.input_qty inputQty,  -- 投入数
+            t.err_qty errQty,  -- 不良数量
+            concat ( left (t.err_qty / t.input_qty *100,5),'%') as errPercentage, -- 不良率
+            t.short_period shortPeriod,  -- 临时对策（库存产品的挑选及其不良率）
+            t.exp_reason expReason,  -- 原因分析
+            t.exp_reason_imgs expReasonImgs,  -- 原因分析图片
+            t.long_period longPeriod,  -- 改善对策
+            t.long_period_img longPeriodImg, -- 改善对策图片
+            t.date_period datePeriod,  -- 对策落实时间
+            t.rsp rsp,  -- 发生原因归属
+            t.rsp_dept rspDept,  -- 责任部门
+            t.rsp_manage rspManage, -- 责任主管
+            t.rsp_usr rspUsr,  -- 责任人
+            t.miss_people missPeople, -- 漏检人
+            t.status status,  -- 状态
+            t.close_flag closeFlag,  -- 客户是否同意关闭(0/1)
+            t.remark remark,  -- 备注
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime  -- 更新时间
+        from cus_complaint t
+        where 1=1
+        <if test="p.customer != null and p.customer != ''">
+            and t.customer LIKE '%${p.customer}%'
+        </if>
+        <if test="p.modelName != null and p.modelName != ''">
+            and t.model_name LIKE '%${p.modelName}%'
+        </if>
+        <if test="p.occure != null and p.occure != ''">
+            and t.occure LIKE '%${p.occure}%'
+        </if>
+        <if test="p.phase != null and p.phase != ''">
+            and t.phase LIKE '%${p.phase}%'
+        </if>
+        <if test="p.sn != null and p.sn != ''">
+            and t.sn LIKE '%${p.sn}%'
+        </if>
+        <if test="p.repeatFlag != null and p.repeatFlag != ''">
+            and t.repeat_flag LIKE '%${p.repeatFlag}%'
+        </if>
+        <if test="p.status != null and p.status != ''">
+            and t.status LIKE '%${p.status}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.date_ask >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.date_ask
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

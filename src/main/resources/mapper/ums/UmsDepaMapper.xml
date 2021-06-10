@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsDepaMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.ums.UmsDepa">
+        select * from ums_depa t
+        order by t.id desc
+    </select>
+    <select id="treeList" resultMap="DepaOneVOMap">
+        SELECT
+            c1.id idOne,
+            c1.NAME nameOne,
+            c1.code codeOne,
+            c2.id idTwo,
+            c2.NAME nameTwo,
+            c2.code codeTwo,
+            c3.id idThr,
+            c3.NAME nameThr,
+            c3.code codeThr
+        FROM
+            ums_depa c1
+            LEFT JOIN ums_depa c2 ON c2.parent_code = c1.code
+            LEFT JOIN ums_depa c3 ON c3.parent_code = c2.code
+        WHERE
+            c1.parent_code='0'
+    </select>
+    <resultMap id="DepaOneVOMap" type="com.rh.i_mes_plus.vo.OneVO">
+        <id column="idOne" property="id"/>
+        <result column="nameOne" property="name"/>
+        <result column="codeOne" property="code"/>
+        <collection property="twoVOS" ofType="com.rh.i_mes_plus.vo.TwoVO">
+            <id column="idTwo" property="id"/>
+            <result column="nameTwo" property="name"/>
+            <result column="codeTwo" property="code"/>
+            <collection property="thrVOS" ofType="com.rh.i_mes_plus.vo.ThrVO">
+                <id column="idThr" property="id"/>
+                <result column="nameThr" property="name"/>
+                <result column="codeThr" property="code"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="getUserByDepaName" resultType="com.rh.i_mes_plus.model.ums.UmsUser">
+        SELECT
+        *
+        FROM
+        ums_user u
+        WHERE 1=1
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and u.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+        <if test="p.userName != null and p.userName != ''">
+            and u.user_name LIKE '%${p.userName}%'
+        </if>
+    </select>
+    <select id="getNoUserByDepaName" resultType="com.rh.i_mes_plus.model.ums.UmsUser">
+        select * from ums_user u2 where  u2.id not in(
+        SELECT
+        u.id
+        FROM
+        ums_user u
+        WHERE 1=1
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and u.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+        <if test="p.userName != null and p.userName != ''">
+            and u.user_name LIKE '%${p.userName}%'
+        </if>
+        )
+
+    </select>
+    <select id="treeOrgList" resultMap="DepaTwoVOMap">
+         SELECT
+            c1.id idTwo,
+            c1.NAME nameTwo,
+            c1.code codeTwo,
+            c2.id idThr,
+            c2.NAME nameThr,
+            c2.code codeThr
+        FROM
+            ums_depa c1
+            LEFT JOIN ums_depa c2 ON c2.parent_code = c1.code
+        WHERE
+            c1.parent_code='0' and c1.type=1 and c2.type=1
+    </select>
+    <select id="getParentDepa" resultType="com.rh.i_mes_plus.model.ums.UmsDepa">
+        SELECT * FROM ums_depa d1 WHERE d1.`code`=#{depaCode}
+    </select>
+    <select id="selectAllTree" resultType="com.rh.i_mes_plus.vo.ChildVO">
+        SELECT DISTINCT
+            t.id id,
+            t.name name,
+            t.code code,
+            t.parent_code parentCode
+        FROM
+            ums_depa t
+        WHERE
+            t.parent_code = #{parentCode}
+        order by t.id
+    </select>
+    <select id="selectOnlyDepaTree" resultType="com.rh.i_mes_plus.vo.ChildVO">
+         SELECT DISTINCT
+            t1.id id,
+            t1.name name,
+            t1.code code,
+            t1.parent_code parentCode
+        FROM
+            ums_depa t1
+        WHERE
+            t1.parent_code = #{parentCode}
+            and t1.type=1
+        order by t1.id
+    </select>
+
+    <resultMap id="DepaTwoVOMap" type="com.rh.i_mes_plus.vo.TwoVO">
+        <id column="idTwo" property="id"/>
+        <result column="nameTwo" property="name"/>
+        <result column="codeTwo" property="code"/>
+        <collection property="thrVOS" ofType="com.rh.i_mes_plus.vo.ThrVO">
+            <id column="idThr" property="id"/>
+            <result column="nameThr" property="name"/>
+            <result column="codeThr" property="code"/>
+        </collection>
+    </resultMap>
+    <select id="selectTreeListByParentCode" resultType="com.rh.i_mes_plus.vo.DepaTreeVO">
+        select * from ums_depa where parent_code=#{parentCode}
+    </select>
+
+    <select id="getDepaexclude" resultType="java.lang.String">
+        SELECT code FROM ums_depa WHERE code not in('T2211','T2311','T2411')
+    </select>
+</mapper>

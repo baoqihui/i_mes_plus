@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.gtoa.PdtStandardFileInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  --
+            t.ecn_no ecnNo,
+            t.model_name modelName,  -- 机型
+            t.ver ver,  -- 发行版本
+            t.bom bom,  -- BOM
+            t.feelder feelder,  -- 料站表
+            t.instruction instruction,  -- 作业指导
+            t.ecn ecn,  -- ECN编号
+            t.fai fai,  -- 规格书
+            t.mark mark,  -- MARK图
+            t.gerber gerber,  -- Gerber
+            t.place place,  -- Place
+            t.dfm dfm,  -- DFM
+            t.guidance guidance,  -- 工艺指导
+            t.rework rework,  -- 重工（不显示）
+            t.file3 file3,  -- 预留
+            t.valid_flag validFlag,  -- 发行版本标识(0,已弃用 1,在用 2,即将引用)
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime,  -- 更新时间
+            t.is_del isDel  -- 状态 0 禁用 1 启用
+        from pdt_standard_file_info t
+        where t.is_del=0
+        <if test="p.ecnNo != null and p.ecnNo != ''">
+            and t.ecn_no LIKE '%${p.ecnNo}%'
+        </if>
+        <if test="p.modelName != null and p.modelName != ''">
+            and t.model_name LIKE '%${p.modelName}%'
+        </if>
+        <if test="p.ver != null and p.ver != ''">
+            and t.ver LIKE '%${p.ver}%'
+        </if>
+        <if test="p.validFlag != null and p.validFlag != ''">
+            and t.valid_flag ${p.validFlag}
+        </if>
+        order by t.id desc
+    </select>
+</mapper>
