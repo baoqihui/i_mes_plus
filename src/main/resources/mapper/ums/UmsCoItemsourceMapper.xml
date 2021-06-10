@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsCoItemsourceMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.ums.UmsCoItemsource">
+        select * from ums_co_itemsource t where t.is_del=0
+        <if test="p.itemSourceCode != null and p.itemSourceCode != ''">
+            and t.ITEM_SOURCE_CODE = #{p.itemSourceCode}
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

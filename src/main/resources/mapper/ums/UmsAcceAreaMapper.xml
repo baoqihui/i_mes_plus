@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsAcceAreaMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.ums.UmsAcceArea">
+        select * from ums_acce_area t where is_del=0
+        and (t.at_code = 'S' or t.at_code = 'A')
+        <if test="p.arSn != null and p.arSn != ''">
+            and t.ar_sn LIKE '%${p.arSn}%'
+        </if>
+        <if test="p.arName != null and p.arName != ''">
+            and t.ar_name LIKE '%${p.arName}%'
+        </if>
+        <if test="p.atCode != null and p.atCode != ''">
+            and t.at_code = #{p.atCode}
+        </if>
+        order by t.id asc
+    </select>
+    <select id="selectAllTree" resultType="com.rh.i_mes_plus.vo.ChildVO">
+         SELECT DISTINCT
+            t.id id,
+            t.AR_NAME name,
+            t.AR_SN code,
+            t.AR_FATHER_SN parentCode
+        FROM
+            ums_acce_area t
+        WHERE
+            t.AR_FATHER_SN = #{parentCode}
+            and t.is_del=0
+        order by t.id
+    </select>
+</mapper>

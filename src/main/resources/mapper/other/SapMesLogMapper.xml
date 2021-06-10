@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.other.SapMesLogMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.error_flag errorFlag,  -- 错误标识
+            t.interfaces interfaces,  -- 错误接口
+            t.type type,  -- (1,sap-mes 2,mes-sap)
+            t.remark remark  -- 备注
+        from sap_mes_log t
+        order by t.id desc
+    </select>
+</mapper>

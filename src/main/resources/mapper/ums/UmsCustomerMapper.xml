@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsCustomerMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.ums.UmsCustomer">
+        select * from ums_customer t where t.is_del=0
+        <if test="p.customer != null and p.customer != ''">
+            and t.CUSTOMER LIKE '%${p.customer}%'
+        </if>
+        <if test="p.custCode != null and p.custCode != ''">
+            and t.CUST_CODE LIKE '%${p.custCode}%'
+        </if>
+        <if test="p.custAbbreviation != null and p.custAbbreviation != ''">
+            and t.cust_abbreviation LIKE '%${p.custAbbreviation}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

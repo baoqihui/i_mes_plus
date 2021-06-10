@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsCoIqcItemsourceMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.ums.UmsCoIqcItemsource">
+        select * from ums_co_iqc_itemsource t where t.is_del=0
+        order by t.id desc
+    </select>
+</mapper>
