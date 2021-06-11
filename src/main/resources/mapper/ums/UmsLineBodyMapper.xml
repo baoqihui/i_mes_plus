@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsLineBodyMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 主键
+            t.line_code lineCode,  -- 线别代码
+            t.line_name lineName,  -- 线别名称
+            t.parent_line_code parentLineCode,  -- 上级线别代码
+            t.class_type classType,  -- 班别（1，白班 2，夜班）
+            t.principal principal,  -- 负责人
+            t.staff_num staffNum,  -- 员工数
+            t.assist_num assistNum,  -- 辅助人数
+            t.is_warehouse_control isWarehouseControl,  -- 是否仓料管控
+            t.remark remark,  -- 描述
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime  -- 更新时间
+        from ums_line_body t
+        where 1=1
+        <if test="p.lineCode != null and p.lineCode != ''">
+            and t.line_code =#{p.lineCode} or t.parent_line_code=#{p.lineCode}
+        </if>
+        <if test="p.lineName != null and p.lineName != ''">
+            and t.line_name LIKE '%${p.lineName}%'
+        </if>
+        <if test="p.parentLineCode != null and p.parentLineCode != ''">
+            and t.parent_line_code LIKE '%${p.parentLineCode}%'
+        </if>
+        <if test="p.classType != null and p.classType != ''">
+            and t.class_type LIKE '%${p.classType}%'
+        </if>
+        <if test="p.principal != null and p.principal != ''">
+            and t.principal LIKE '%${p.principal}%'
+        </if>
+        <if test="p.staffNum != null and p.staffNum != ''">
+            and t.staff_num LIKE '%${p.staffNum}%'
+        </if>
+        <if test="p.assistNum != null and p.assistNum != ''">
+            and t.assist_num LIKE '%${p.assistNum}%'
+        </if>
+        <if test="p.isWarehouseControl != null and p.isWarehouseControl != ''">
+            and t.is_warehouse_control LIKE '%${p.isWarehouseControl}%'
+        </if>
+        <if test="p.remark != null and p.remark != ''">
+            and t.remark LIKE '%${p.remark}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.line_code asc,t.id desc
+    </select>
+    <select id="treeList" resultMap="OneVOMap">
+        SELECT
+            c1.id idOne,
+            c1.line_name nameOne,
+            c1.line_code codeOne,
+            c2.id idTwo,
+            c2.line_name nameTwo,
+            c2.line_code codeTwo,
+            c3.id idThr,
+            c3.line_name nameThr,
+            c3.line_code codeThr
+        FROM
+            ums_line_body  c1
+        LEFT JOIN ums_line_body c2 ON c2.parent_line_code = c1.line_code
+        LEFT JOIN ums_line_body c3 ON c3.parent_line_code = c2.line_code
+        WHERE
+            c1.parent_line_code = '0'
+    </select>
+    <resultMap id="OneVOMap" type="com.rh.i_mes_plus.vo.OneVO">
+        <id column="idOne" property="id"/>
+        <result column="nameOne" property="name"/>
+        <result column="codeOne" property="code"/>
+        <result column="statusOne" property="status"/>
+        <collection property="twoVOS" ofType="com.rh.i_mes_plus.vo.TwoVO">
+            <id column="idTwo" property="id"/>
+            <result column="nameTwo" property="name"/>
+            <result column="codeTwo" property="code"/>
+            <result column="statusTwo" property="status"/>
+            <collection property="thrVOS" ofType="com.rh.i_mes_plus.vo.ThrVO">
+                <id column="idThr" property="id"/>
+                <result column="nameThr" property="name"/>
+                <result column="codeThr" property="code"/>
+                <result column="statusThr" property="status"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="selectAllTree" resultType="com.rh.i_mes_plus.vo.ChildVO">
+        SELECT DISTINCT
+            t.id id,
+            t.line_name name,
+            t.line_code code,
+            t.parent_line_code parentCode
+        FROM
+            ums_line_body t
+        WHERE
+            t.parent_line_code = #{parentCode}
+        order by t.id
+    </select>
+
+</mapper>

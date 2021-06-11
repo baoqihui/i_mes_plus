@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsTechnicsMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.technics_name technicsName,  -- 工艺名称
+            t.technics_type technicsType,  -- 工艺类型: 1.正常；2.返修；3.样品
+            t.model_code modelCode, -- 机种
+            uis.CO_ITEM_NAME itemName,  -- 物料名
+            uis.CO_ITEM_SPEC itemSpec,  -- 物料描述
+            t.sc_flag scFlag, -- 加工面(A单面 S 正面 C 反面)
+            t.ur_id urId,  -- 流程id
+            ur.route_name routeName, -- 流程名
+            t.pre_ut_id preUtId,  -- 前置工艺ID
+            ut.technics_name  preTechnicsName,  -- 前置工艺名
+            t.point_count pointCount,  -- 贴片点数
+            t.ver ver,  -- 版本
+            t.ms_code msCode,  -- 阶别代码
+            t.control_type controlType,  -- 成品管控类型: 1.个体；2.批次
+            t.is_def isDef,  -- 是否默认
+            t.is_value isValue,  -- 是否有效
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.create_name createName,  -- 创建人
+            t.update_name updateName,  -- 编辑人
+            t.update_time updateTime  -- 更新时间
+        from ums_technics t
+        left join ums_route ur on t.ur_id=ur.id
+        left join ums_item_sap uis on uis.CO_ITEM_CODE=t.model_code
+        left join ums_technics ut on t.pre_ut_id=ut.id
+        where 1=1
+        <if test="p.technicsName != null and p.technicsName != ''">
+            and t.technics_name LIKE '%${p.technicsName}%'
+        </if>
+        <if test="p.technicsType != null and p.technicsType != ''">
+            and t.technics_type LIKE '%${p.technicsType}%'
+        </if>
+        <if test="p.urId != null and p.urId != ''">
+            and t.ur_id LIKE '%${p.urId}%'
+        </if>
+        <if test="p.preUtId != null and p.preUtId != ''">
+            and t.pre_ut_id LIKE '%${p.preUtId}%'
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code = #{p.modelCode}
+        </if>
+        <if test="p.scFlag != null and p.scFlag != ''">
+            and t.sc_flag LIKE '%${p.scFlag}%'
+        </if>
+        <if test="p.pointCount != null and p.pointCount != ''">
+            and t.point_count LIKE '%${p.pointCount}%'
+        </if>
+        <if test="p.ver != null and p.ver != ''">
+            and t.ver LIKE '%${p.ver}%'
+        </if>
+        <if test="p.msCode != null and p.msCode != ''">
+            and t.ms_code LIKE '%${p.msCode}%'
+        </if>
+        <if test="p.controlType != null and p.controlType != ''">
+            and t.control_type LIKE '%${p.controlType}%'
+        </if>
+        <if test="p.isDef != null and p.isDef != ''">
+            and t.is_def LIKE '%${p.isDef}%'
+        </if>
+        <if test="p.isValue != null and p.isValue != ''">
+            and t.is_value LIKE '%${p.isValue}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+    <select id="isPcbUnpack" resultType="map">
+        SELECT
+            count(1) isPcbUnpack
+        FROM
+            ums_technics t
+                LEFT JOIN ums_route_detail urd ON t.ur_id = urd.ur_id
+        WHERE
+            t.id = #{id}
+          AND t.ms_code = 'SMT'
+          AND urd.pre_urd_id = 0
+          AND urd.process_code='PCB-OPEN'
+    </select>
+</mapper>

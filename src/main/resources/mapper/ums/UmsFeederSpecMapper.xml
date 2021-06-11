@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsFeederSpecMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 规格主键ID
+            t.type_id typeId,  -- 类型id
+            uft.type_name typeName,
+            t.spec_code specCode,  -- 规格代码
+            t.spec_name specName,  -- 规格名称
+            t.remark remark,  -- 备注
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from ums_feeder_spec t
+        left join ums_feeder_type uft on t.type_id = uft.id
+        where 1=1
+        <if test="p.typeId != null and p.typeId != ''">
+            and t.type_id LIKE '%${p.typeId}%'
+        </if>
+        <if test="p.specCode != null and p.specCode != ''">
+            and t.spec_code LIKE '%${p.specCode}%'
+        </if>
+        <if test="p.specName != null and p.specName != ''">
+            and t.spec_name LIKE '%${p.specName}%'
+        </if>
+        <if test="p.remark != null and p.remark != ''">
+            and t.remark LIKE '%${p.remark}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsTechnicsPathMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.ut_id utId,  -- 工艺id
+            t.wc_code wcCode,  -- 工作中心代码
+            t.process_code processCode,  -- 工序代码
+            t.process_name processName,  -- 工序名称
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from ums_technics_path t
+        where 1=1
+        <if test="p.utId != null and p.utId != ''">
+            and t.ut_id LIKE '%${p.utId}%'
+        </if>
+        <if test="p.wcCode != null and p.wcCode != ''">
+            and t.wc_code LIKE '%${p.wcCode}%'
+        </if>
+        <if test="p.processCode != null and p.processCode != ''">
+            and t.process_code LIKE '%${p.processCode}%'
+        </if>
+        <if test="p.processName != null and p.processName != ''">
+            and t.process_name LIKE '%${p.processName}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

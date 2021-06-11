@@ -10,5 +10,5 @@ public class OneVO {
     private String name;
     private String code;
     private Boolean status;
-    private List<com.rh.i_mes_plus.vo.TwoVO> twoVOS;
+    private List<TwoVO> twoVOS;
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsRouteMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.route_name routeName,  -- 流程名称
+            t.route_desc routeDesc,  -- 流程描述
+            t.ms_code msCode,  -- 生产阶别
+            t.is_value isValue,  -- 是否生效
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.create_name createName,  -- 创建人
+            t.update_name updateName,  -- 更新人
+            t.update_time updateTime  -- 更新时间
+        from ums_route t
+        where 1=1
+        <if test="p.routeName != null and p.routeName != ''">
+            and t.route_name LIKE '%${p.routeName}%'
+        </if>
+        <if test="p.routeDesc != null and p.routeDesc != ''">
+            and t.route_desc LIKE '%${p.routeDesc}%'
+        </if>
+        <if test="p.msCode != null and p.msCode != ''">
+            and t.ms_code LIKE '%${p.msCode}%'
+        </if>
+        <if test="p.isValue != null and p.isValue != ''">
+            and t.is_value LIKE '%${p.isValue}%'
+        </if>
+        <if test="p.createName != null and p.createName != ''">
+            and t.create_name LIKE '%${p.createName}%'
+        </if>
+        <if test="p.updateName != null and p.updateName != ''">
+            and t.update_name LIKE '%${p.updateName}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

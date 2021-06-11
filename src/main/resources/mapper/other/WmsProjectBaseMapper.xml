@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.other.WmsProjectBaseMapper">
+    <select id="findList" resultType="map">
+        select
+            distinct t.project_id projectId,  -- 工单号
+            t.id id,  -- 
+            t.project_status projectStatus,  -- 工单状态1、开立  5、上线  8、关结
+            t.product_qty productQty,  -- 生产数量
+            t.item_code itemCode,  -- 机种(成品或半成品或烧录后)
+            t.item_name itemName,  -- 品名
+            t.item_desc itemDesc,  -- 规格
+            t.project_type projectType,  -- 工单类型（1，正常 2，试产）
+            t.ms_code msCode,  -- 工单阶别
+            ums.ms_name msName,  -- 阶别名称
+            t.data_code dataCode,  -- 批次号
+            t.fqc_qty fqcQty,  -- 投入量
+            t.finish_qty finishQty,  -- 产出数量
+            t.scrapped_qty scrappedQty,  -- 报废数量
+            t.prolepsis_start_date prolepsisStartDate,  -- 预计开工日期
+            t.prolepsis_end_date prolepsisEndDate,  -- 预计完成时间
+            t.project_start_date projectStartDate,  -- 实际开始时间
+            t.project_end_date projectEndDate,  -- 工关结时间
+            t.ver ver,  -- 版本:
+            t.destroy_no destroyNo,  -- 销单单号: 
+            t.open_ladder openLadder,  -- 工单展开阶数:0
+            t.freeze_flag freezeFlag,  -- 冻结与否
+            t.priority priority,  -- 优先顺序
+            t.instancy_rate instancyRate,  -- 紧急比率
+            t.remark_dept remarkDept,  -- 
+            t.project_no projectNo,  -- 项目号码(无效)
+            t.provide_date provideDate,  -- 发放日期
+            t.project_open_time projectOpenTime,  -- 工单开立时间
+            t.instorage_qty instorageQty,  -- 入库数量
+            t.plan_flag planFlag,  -- 已排程标识
+            t.working_sc workingSc,  -- 加工面数(1—单面 2—双面)
+            t.order_number orderNumber,  -- 订单号
+            t.cust_code custCode,  -- 客户代码
+            c.CUSTOMER customer,    -- 客户名称
+            t.tppb_plan_delivery_date tppbPlanDeliveryDate,  -- 计划交货日期
+            t.editor editor,  -- 修改人
+            t.project_creater projectCreater,  -- 工单开单人
+            t.line_code lineCode,  -- 线别
+            t.oqc_send_amount oqcSendAmount,  -- 抽样批次大小
+            t.depa_code depaCode,  -- 机构代码
+            t.qn_begin qnBegin,  -- QN开始号段
+            t.qn_end qnEnd,  -- QN结束号段
+            t.mac_begin macBegin,  -- MAC开始号段
+            t.mac_end macEnd,  -- MAC结束号段
+            t.sas_begin sasBegin,  -- SAS开始地址
+            t.sas_end sasEnd,  -- SAS结束地址
+            t.erp_send_status erpSendStatus,  -- ERP回传状态
+            t.cost_station costStation,  -- 成本中心
+            t.father_project fatherProject,  -- 父级工单
+            t.product_state productState,  -- 产品生产阶段（量产，试产）
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 修改时间
+            t.pm_memo pmMemo,  -- 备注
+            t.ecns ecns
+        from wms_project_base t
+        LEFT JOIN ums_customer c ON c.CUST_CODE=t.cust_code
+        LEFT JOIN wms_project_detail d ON t.project_id=d.project_id
+        LEFT JOIN ums_item_sap s ON d.item_code=s.CO_ITEM_CODE
+        LEFT JOIN ums_mo_step ums on t.ms_code = ums.ms_code
+        where   1=1
+        /*
+        s.OWNED_GROUP != '104Consumable Materi'
+        AND s.OWNED_GROUP != '102.Semi-FG'*/
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+        <if test="p.projectId != null and p.projectId != ''">
+            and t.project_id LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.projectStatus != null and p.projectStatus != ''">
+            and t.project_status LIKE '%${p.projectStatus}%'
+        </if>
+        <if test="p.productQty != null and p.productQty != ''">
+            and t.product_qty LIKE '%${p.productQty}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.itemName != null and p.itemName != ''">
+            and t.item_name LIKE '%${p.itemName}%'
+        </if>
+        <if test="p.itemDesc != null and p.itemDesc != ''">
+            and t.item_desc LIKE '%${p.itemDesc}%'
+        </if>
+        <if test="p.projectType != null and p.projectType != ''">
+            and t.project_type LIKE '%${p.projectType}%'
+        </if>
+        <if test="p.msCode != null and p.msCode != ''">
+            and t.ms_code LIKE '%${p.msCode}%'
+        </if>
+        <if test="p.dataCode != null and p.dataCode != ''">
+            and t.data_code LIKE '%${p.dataCode}%'
+        </if>
+        <if test="p.fqcQty != null and p.fqcQty != ''">
+            and t.fqc_qty LIKE '%${p.fqcQty}%'
+        </if>
+        <if test="p.finishQty != null and p.finishQty != ''">
+            and t.finish_qty LIKE '%${p.finishQty}%'
+        </if>
+        <if test="p.scrappedQty != null and p.scrappedQty != ''">
+            and t.scrapped_qty LIKE '%${p.scrappedQty}%'
+        </if>
+        <if test="p.prolepsisStartDate != null and p.prolepsisStartDate != ''">
+            and t.prolepsis_start_date LIKE '%${p.prolepsisStartDate}%'
+        </if>
+        <if test="p.prolepsisEndDate != null and p.prolepsisEndDate != ''">
+            and t.prolepsis_end_date LIKE '%${p.prolepsisEndDate}%'
+        </if>
+        <if test="p.projectStartDate != null and p.projectStartDate != ''">
+            and t.project_start_date LIKE '%${p.projectStartDate}%'
+        </if>
+        <if test="p.projectEndDate != null and p.projectEndDate != ''">
+            and t.project_end_date LIKE '%${p.projectEndDate}%'
+        </if>
+        <if test="p.ver != null and p.ver != ''">
+            and t.ver LIKE '%${p.ver}%'
+        </if>
+        <if test="p.destroyNo != null and p.destroyNo != ''">
+            and t.destroy_no LIKE '%${p.destroyNo}%'
+        </if>
+        <if test="p.openLadder != null and p.openLadder != ''">
+            and t.open_ladder LIKE '%${p.openLadder}%'
+        </if>
+        <if test="p.freezeFlag != null and p.freezeFlag != ''">
+            and t.freeze_flag LIKE '%${p.freezeFlag}%'
+        </if>
+        <if test="p.priority != null and p.priority != ''">
+            and t.priority LIKE '%${p.priority}%'
+        </if>
+        <if test="p.instancyRate != null and p.instancyRate != ''">
+            and t.instancy_rate LIKE '%${p.instancyRate}%'
+        </if>
+        <if test="p.remarkDept != null and p.remarkDept != ''">
+            and t.remark_dept LIKE '%${p.remarkDept}%'
+        </if>
+        <if test="p.projectNo != null and p.projectNo != ''">
+            and t.project_no LIKE '%${p.projectNo}%'
+        </if>
+        <if test="p.provideDate != null and p.provideDate != ''">
+            and t.provide_date LIKE '%${p.provideDate}%'
+        </if>
+        <if test="p.projectOpenTime != null and p.projectOpenTime != ''">
+            and t.project_open_time LIKE '%${p.projectOpenTime}%'
+        </if>
+        <if test="p.instorageQty != null and p.instorageQty != ''">
+            and t.instorage_qty LIKE '%${p.instorageQty}%'
+        </if>
+        <if test="p.planFlag != null and p.planFlag != ''">
+            and t.plan_flag LIKE '%${p.planFlag}%'
+        </if>
+        <if test="p.workingSc != null and p.workingSc != ''">
+            and t.working_sc LIKE '%${p.workingSc}%'
+        </if>
+        <if test="p.orderNumber != null and p.orderNumber != ''">
+            and t.order_number LIKE '%${p.orderNumber}%'
+        </if>
+        <if test="p.custCode != null and p.custCode != ''">
+            and t.cust_code LIKE '%${p.custCode}%'
+        </if>
+        <if test="p.tppbPlanDeliveryDate != null and p.tppbPlanDeliveryDate != ''">
+            and t.tppb_plan_delivery_date LIKE '%${p.tppbPlanDeliveryDate}%'
+        </if>
+        <if test="p.editor != null and p.editor != ''">
+            and t.editor LIKE '%${p.editor}%'
+        </if>
+        <if test="p.projectCreater != null and p.projectCreater != ''">
+            and t.project_creater LIKE '%${p.projectCreater}%'
+        </if>
+        <if test="p.lineCode != null and p.lineCode != ''">
+            and t.line_code LIKE '%${p.lineCode}%'
+        </if>
+        <if test="p.oqcSendAmount != null and p.oqcSendAmount != ''">
+            and t.oqc_send_amount LIKE '%${p.oqcSendAmount}%'
+        </if>
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code LIKE '%${p.depaCode}%'
+        </if>
+        <if test="p.qnBegin != null and p.qnBegin != ''">
+            and t.qn_begin LIKE '%${p.qnBegin}%'
+        </if>
+        <if test="p.qnEnd != null and p.qnEnd != ''">
+            and t.qn_end LIKE '%${p.qnEnd}%'
+        </if>
+        <if test="p.macBegin != null and p.macBegin != ''">
+            and t.mac_begin LIKE '%${p.macBegin}%'
+        </if>
+        <if test="p.macEnd != null and p.macEnd != ''">
+            and t.mac_end LIKE '%${p.macEnd}%'
+        </if>
+        <if test="p.sasBegin != null and p.sasBegin != ''">
+            and t.sas_begin LIKE '%${p.sasBegin}%'
+        </if>
+        <if test="p.sasEnd != null and p.sasEnd != ''">
+            and t.sas_end LIKE '%${p.sasEnd}%'
+        </if>
+        <if test="p.erpSendStatus != null and p.erpSendStatus != ''">
+            and t.erp_send_status LIKE '%${p.erpSendStatus}%'
+        </if>
+        <if test="p.costStation != null and p.costStation != ''">
+            and t.cost_station LIKE '%${p.costStation}%'
+        </if>
+        <if test="p.fatherProject != null and p.fatherProject != ''">
+            and t.father_project LIKE '%${p.fatherProject}%'
+        </if>
+        <if test="p.productState != null and p.productState != ''">
+            and t.product_state LIKE '%${p.productState}%'
+        </if>
+        <if test="p.pmMemo != null and p.pmMemo != ''">
+            and t.pm_memo LIKE '%${p.pmMemo}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

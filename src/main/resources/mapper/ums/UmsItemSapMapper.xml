@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsItemSapMapper">
+    <select id="findList" resultType="map">
+        select
+            s.id id,  --
+            s.CO_ITEM_CODE coItemCode,  -- 料号
+            s.CO_ITEM_NAME coItemName,  -- 物料描述
+            s.CO_ITEM_SPEC coItemSpec,  -- 物料等级
+            s.ITEM_SOURCECODE itemSourcecode,  -- 物料类型（等同于ERP材料类型）
+            it.ITEM_SOURCENAME itemSourcename, -- 物料类型名称（等同于ERP材料类型）
+            s.CO_ITEM_TYPE coItemType,  -- 物料类型（a smt料 b 其他） 默认a(不用)
+            s.ITEM_SRCTYPE itemSrctype,  -- 物料来源类型(外购/自制)(平板）
+            s.CUST_CODE custCode,  -- 客户编号
+            uc.CUSTOMER customer,   -- 客户名称
+            s.SUPPLIER_CODE supplierCode,  -- 供应商编号
+            s.CU_DID cuDid,  -- 单位DID
+            s.PM_CODE pmCode,  -- 单位组代码
+            s.TR_CODE trCode,  -- 批次规则代码
+            s.Io_ITEM_BULK ioItemBulk,  -- 休积
+            s.Io_ITEM_BULK_UNIT ioItemBulkUnit,  -- 体积单位DID
+            s.Io_ITEM_WEIGH ioItemWeigh,  -- 重量
+            s.Io_ITEM_WEIGH_UNIT ioItemWeighUnit,  -- 重量单位DID
+            s.Io_ITEM_MIN_STOCK ioItemMinStock,  -- 安全库存
+            s.Io_ITEM_MAX_STOCK ioItemMaxStock,  -- 最大安全库存
+            s.Io_ITEM_BASE_PRICE ioItemBasePrice,  -- 存货基本单价
+            s.Io_ITEM_AVAIL ioItemAvail,  -- 有效期
+            s.Io_ITEM_AVAIL_UNIT ioItemAvailUnit,  -- 有效期单位
+            s.Io_ITEM_MIN_PACK ioItemMinPack,  -- 最小包装量
+            s.CONNECT_PLANK_NUM connectPlankNum,  -- 连板数
+            s.CREATE_NAME createName,  -- 建档人
+            s.CREATE_DATE createDate,  -- 建档时间
+            s.MODIFY_NAME modifyName,  -- 修改人
+            s.MODIFY_DATE modifyDate,  -- 修改时间
+            s.Io_ITEM_STOCK_BIT_LAST ioItemStockBitLast,  -- 最后存放库位
+            s.Io_ITEM_C_LOT ioItemCLot,  -- 传票号管控(Y/N)
+            s.Io_ITEM_MORE_CONTROL ioItemMoreControl,  -- 超领管控(Y/N)
+            s.ITEM_VALUE_B itemValueB,  -- 阻容上限值
+            s.ITEM_VALUE_T itemValueT,  -- 阻容下限值
+            s.ITEM_VALUE_UNIT itemValueUnit,  -- 阻容单位
+            s.Io_ITEM_C_BCODE ioItemCBcode,  --
+            s.Io_ITEM_AMOUNT ioItemAmount,  -- 金额
+            s.Io_ITEM_MATERIAL_RATIO ioItemMaterialRatio,  -- 物料占比
+            s.Io_ITEM_SMT_RATIO ioItemSmtRatio,  -- SMT占比
+            s.Io_ITEM_PTH_RATIO ioItemPthRatio,  -- PTH占比
+            s.Io_LOT_RULE ioLotRule,  -- 物料条码规则
+            s.Io_SINGLE_RULE ioSingleRule,  -- 大板条码规则
+            s.Io_ITEM_SOURCE ioItemSource,  -- 物料来源(1:自采、2:客供、3：自产、4：自用、5：特殊)
+            s.Lo_PALLET_CAPACITY loPalletCapacity,  -- 栈板容量
+            s.ITEM_JIGSAW_NUMBER itemJigsawNumber,  -- 条码拼数
+            s.ITEM_PACKAGING_RULE itemPackagingRule,  -- 包装规则
+            s.ITEM_REMARK itemRemark,  -- 物料备注
+            s.Io_LABEL_ABBREVIATION ioLabelAbbreviation,  -- 标签简码
+            s.WAVE_SOLDER_JOINTS waveSolderJoints,  -- WAVE 焊点数
+            s.HS_SOLDER_JOINTS hsSolderJoints,  -- H/S 焊点数
+            s.Io_MAJOR_CATEGORIES ioMajorCategories,  -- 物料大类1:PCB 2:PCBA 3:原材料
+            s.Io_SMALL_SINGLE_RULE ioSmallSingleRule,  -- 小板条码规则
+            s.Io_BURNIN_NAME ioBurninName,  -- 烧入程序名
+            s.Io_STANDARD_WEIGHTS ioStandardWeights,  -- 产品标准重量(含箱)
+            s.Io_FULL_WEIGHTS ioFullWeights,  -- 满箱重量(含箱)
+            s.CO_AGING_TIME coAgingTime,  -- 高温时间(小时)
+            s.CO_CUSTOMER_ITEM coCustomerItem,  -- 客户料号
+            s.CO_STOCK_CYCLE coStockCycle,  -- 库存周期(天)
+            s.CO_CYCLE_REMIND coCycleRemind,  -- 周期提醒提前天
+            s.Io_AUTO_FQC ioAutoFqc,  -- FQC自动送检(Y/N)
+            s.Io_FQC_QTY ioFqcQty,  -- 送检批量
+            s.CO_NAMEPLATE coNameplate,  -- 有效期
+            s.CO_REVIEW_TIME coReviewTime,  -- 最大回流次数
+            s.Io_ITEM_SCRAP_FLAG ioItemScrapFlag,  -- 不良直接报废标志Y/N
+            s.CO_ITEM_DESC coItemDesc,  -- 物料描述（平板）
+            s.CO_ITEM_UNIT coItemUnit,  -- 单位（平板）
+            s.KEYBOARD_TYPE keyboardType,  -- 键盘类型（shopfloor接口用）
+            s.ITEM_VALUE_FLAG itemValueFlag,  -- 封样测试标志(Y/N)
+            s.ITEM_VALUE_TYPE itemValueType,  -- 容阻类型(0:电容1：电阻 2 电感)
+            s.ITEM_VALUE itemValue,  -- 阻容值
+            s.CO_WORKING_FLUID coWorkingFluid,  -- 工质(东贝)
+            s.QC_FLAG qcFlag,  -- 免检标志(Y是N否 )
+            s.CO_UNIT coUnit,  -- 基本计量单位()
+            s.DEFAULT_WAREHOUSE defaultWarehouse,  -- 默认仓库
+            s.DEFAULT_AREA defaultArea,  -- 默认库位
+            s.OG_NAME ogName,  -- 检验组
+            s.GG_NAME ggName,  -- 仓库组
+            s.SORT_FLAG sortFlag,  -- 分选标志(Y是N否 )
+            s.THERMOSTATIC_HOURS thermostaticHours,  -- 恒温时间(小时)
+            s.COLOR_VALID_DAYS colorValidDays,  -- 标识色有效期(天 )
+            s.FORBID_FLAG forbidFlag,  -- 禁用标识(Y是N否)
+            s.SK_VMI skVmi,  -- VMI标志
+            s.MG_TYPE mgType,  -- 管理方式
+            s.SECOND_IQC_DAYS secondIqcDays,  -- IQC二检天数
+            s.CO_IS_MSD coIsMsd,  -- MSD标识(Y是N否)
+            s.MCR_MSD_CODE mcrMsdCode,  -- 湿敏等级
+            s.TOP_PACK_QTY topPackQty,  -- 顶级包装容量
+            s.UPPER_PACK_QTY upperPackQty,  -- 上级包装容量
+            s.IQC_ITEM_SOURCECODE iqcItemSourcecode,  -- 物料检验分类
+            s.STOCK_MANAGER_NO stockManagerNo,  -- 仓管员工号
+            s.ERP_STAND_PERSONS erpStandPersons,  -- ERP标准人数
+            s.ERP_STAND_UPH_NUMBER erpStandUphNumber,  -- ERP标准产能
+            s.ERP_STAND_HOURS erpStandHours,  -- ERP标准工时
+            s.ITEM_TO_SLT itemToSlt,  -- 是否同步到标准工时表-
+            s.OSP_ITEM_CODE ospItemCode,  -- OSP管控小时数   0小时该物料为不进行OSP管控
+            s.CU_NAME cuName,  -- 单位
+            s.BATCH_FLAG batchFlag,  -- 贵重物料(y-是 n-否)
+            s.MPN mpn,  -- mpn
+            s.MANUFACTURER_CODE manufacturerCode,  -- 制造商
+            s.project_code projectCode,  -- 项目号
+            s.SH_LIFE shLife,  -- 检验周期（天）
+            s.ALTERNATIVE_ITEM alternativeItem,  -- PCB工艺
+            s.Io_ITEM_MIN_ORDER ioItemMinOrder,  -- 最小订单量
+            s.Io_ITEM_LEVEL ioItemLevel,  --
+            s.OWNED_GROUP ownedGroup,  -- 物料组
+            s.SAP_ITEM_CODE sapItemCode,  -- SAP物料代码
+            s.is_burning isBurning,  -- 是否烧录物料
+            s.CURRENCY currency,  -- 货币单位
+            s.PRICE price,  -- 价格
+            s.create_time createTime,  -- 创建时间:按当前时间自动创建
+            s.update_time updateTime,  -- 更新时间
+            s.is_del isDel,  --
+            s.depa_code depaCode,  -- 部门代码
+            s.depa_name depaName  -- 部门名称
+        from ums_item_sap s
+        left join ums_co_iqc_itemsource it ON it.ITEM_SOURCECODE=s.ITEM_SOURCECODE
+        left join ums_customer uc on s.CUST_CODE = uc.CUST_CODE
+        where s.is_del=0
+        <if test="p.coItemCode != null and p.coItemCode != ''">
+            and s.CO_ITEM_CODE LIKE '%${p.coItemCode}%'
+        </if>
+        <if test="p.coItemName != null and p.coItemName != ''">
+            and s.CO_ITEM_NAME LIKE '%${p.coItemName}%'
+        </if>
+        <if test="p.coItemSpec != null and p.coItemSpec != ''">
+            and s.CO_ITEM_SPEC LIKE '%${p.coItemSpec}%'
+        </if>
+        <if test="p.itemSourcecode != null and p.itemSourcecode != ''">
+            and s.ITEM_SOURCECODE LIKE '%${p.itemSourcecode}%'
+        </if>
+        <if test="p.manufacturerCode != null and p.manufacturerCode != ''">
+            and s.MANUFACTURER_CODE LIKE '%${p.manufacturerCode}%'
+        </if>
+        <if test="p.stockManagerNo != null and p.stockManagerNo != ''">
+            and s.STOCK_MANAGER_NO LIKE '%${p.stockManagerNo}%'
+        </if>
+        <if test="p.iqcItemSourcecode != null and p.iqcItemSourcecode != ''">
+            and s.IQC_ITEM_SOURCECODE LIKE '%${p.iqcItemSourcecode}%'
+        </if>
+        <if test="p.qcFlag != null and p.qcFlag != ''">
+            and s.QC_FLAG LIKE '%${p.qcFlag}%'
+        </if>
+        <if test="p.coIsMsd != null and p.coIsMsd != ''">
+            and s.CO_IS_MSD LIKE '%${p.coIsMsd}%'
+        </if>
+        <if test="p.ioSingleRule != null and p.ioSingleRule != ''">
+            and s.Io_SINGLE_RULE LIKE '%${p.ioSingleRule}%'
+        </if>
+        <if test="p.mcrMsdCode != null and p.mcrMsdCode != ''">
+            and s.MCR_MSD_CODE LIKE '%${p.mcrMsdCode}%'
+        </if>
+        <if test="p.ospItemCode != null and p.ospItemCode != '' ">
+            and s.OSP_ITEM_CODE is not null
+        </if>
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and s.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="findList2" resultType="com.rh.i_mes_plus.model.ums.UmsItemMes">
+        select * from ums_item_sap m
+        where m.is_del=0
+        <if test="p.coItemCode != null and p.coItemCode != ''">
+            and m.CO_ITEM_CODE LIKE '%${p.coItemCode}%'
+        </if>
+        <if test="p.coItemName != null and p.coItemName != ''">
+            and m.CO_ITEM_NAME LIKE '%${p.coItemName}%'
+        </if>
+        <if test="p.coItemSpec != null and p.coItemSpec != ''">
+            and m.CO_ITEM_SPEC LIKE '%${p.coItemSpec}%'
+        </if>
+        <if test="p.itemSourcecode != null and p.itemSourcecode != ''">
+            and m.ITEM_SOURCECODE LIKE '%${p.itemSourcecode}%'
+        </if>
+        <if test="p.manufacturerCode != null and p.manufacturerCode != ''">
+            and m.MANUFACTURER_CODE LIKE '%${p.manufacturerCode}%'
+        </if>
+        <if test="p.stockManagerNo != null and p.stockManagerNo != ''">
+            and m.STOCK_MANAGER_NO LIKE '%${p.stockManagerNo}%'
+        </if>
+        <if test="p.iqcItemSourcecode != null and p.iqcItemSourcecode != ''">
+            and m.IQC_ITEM_SOURCECODE LIKE '%${p.iqcItemSourcecode}%'
+        </if>
+        <if test="p.qcFlag != null and p.qcFlag != ''">
+            and m.QC_FLAG LIKE '%${p.qcFlag}%'
+        </if>
+        <if test="p.coIsMsd != null and p.coIsMsd != ''">
+            and m.CO_IS_MSD LIKE '%${p.coIsMsd}%'
+        </if>
+        <if test="p.ioSingleRule != null and p.ioSingleRule != ''">
+            and m.Io_SINGLE_RULE LIKE '%${p.ioSingleRule}%'
+        </if>
+        <if test="p.mcrMsdCode != null and p.mcrMsdCode != ''">
+            and m.MCR_MSD_CODE LIKE '%${p.mcrMsdCode}%'
+        </if>
+        <if test="p.ospItemCode != null and p.ospItemCode != '' ">
+            and m.OSP_ITEM_CODE is not null
+        </if>
+        <if test="p.isBurning != null and p.isBurning != ''">
+            and m.is_burning LIKE '%${p.isBurning}%'
+        </if>
+    </select>
+</mapper>

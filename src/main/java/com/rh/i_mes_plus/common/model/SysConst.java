@@ -33,4 +33,31 @@ public class SysConst {
         public static final Integer FAI=8;
         public static final Integer HAS_DEL=9;
     }
+
+    public static class WMS_AT_TYPE{
+        public static final String SAT="S";
+        public static final String AAT="A";
+        public static final String PAT="P";
+    }
+    public static class DT_CODE{
+        public static final String CG="11";
+        public static final String SC_TL="13";
+        public static final String QT="15";
+        public static final String TL="99";
+    }
+    public static class FIX_STATE{
+        public static final String ZK="1";
+        public static final String JC="2";
+        public static final String BF="3";
+        public static final String BY="4";
+    }
+    public static class TYPE_CODE{
+        public static final String GCZJ="A";
+        public static final String GCSB="B";
+        public static final String GZZJ="C";
+        public static final String GZBP="D";
+        public static final String GW="E";
+        public static final String LQ="F";
+        public static final String QT="Z";
+    }
 }

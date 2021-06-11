@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsWmsAreaMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.ums.UmsWmsArea">
+        select * from ums_wms_area t
+        order by t.id desc
+    </select>
+    <select id="treeList" resultMap="OneVOMap">
+         SELECT
+            c1.id idOne,
+            c1.AR_NAME nameOne,
+            c1.AR_SN codeOne,
+            c1.AR_STATE statusOne,
+            c2.id idTwo,
+            c2.AR_NAME nameTwo,
+            c2.AR_SN codeTwo,
+            c2.AR_STATE ='Y',
+            c3.id idThr,
+            c3.AR_NAME nameThr,
+            c3.AR_SN codeThr,
+            c3.AR_STATE ='Y' statusThr
+        FROM
+            ums_wms_area c1
+            LEFT JOIN ums_wms_area c2 ON c2.AR_FATHER_SN = c1.AR_SN
+            LEFT JOIN ums_wms_area c3 ON c3.AR_FATHER_SN = c2.AR_SN
+        WHERE
+            c1.AR_FATHER_SN = '0' and c1.is_del =0
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and (
+            c1.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+            or c2.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+            or c3.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+    <select id="getParent" resultType="com.rh.i_mes_plus.model.ums.UmsWmsArea">
+        SELECT * FROM ums_wms_area d1 WHERE d1.`AR_SN`=#{arSn}
+    </select>
+    <resultMap id="OneVOMap" type="com.rh.i_mes_plus.vo.OneVO">
+        <id column="idOne" property="id"/>
+        <result column="nameOne" property="name"/>
+        <result column="codeOne" property="code"/>
+        <result column="statusOne" property="status"/>
+        <collection property="twoVOS" ofType="com.rh.i_mes_plus.vo.TwoVO">
+            <id column="idTwo" property="id"/>
+            <result column="nameTwo" property="name"/>
+            <result column="codeTwo" property="code"/>
+            <result column="statusTwo" property="status"/>
+            <collection property="thrVOS" ofType="com.rh.i_mes_plus.vo.ThrVO">
+                <id column="idThr" property="id"/>
+                <result column="nameThr" property="name"/>
+                <result column="codeThr" property="code"/>
+                <result column="statusThr" property="status"/>
+            </collection>
+        </collection>
+    </resultMap>
+</mapper>

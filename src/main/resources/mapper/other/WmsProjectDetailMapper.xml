@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.other.WmsProjectDetailMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 主键
+            t.project_id projectId,  -- 工单ID
+            t.item_code itemCode,  -- 工单BOM明细料号
+            uis.CO_ITEM_NAME itemName,  -- 料名
+            t.must_provide_qty mustProvideQty,  -- 应发量
+            t.had_provide_qty hadProvideQty,  -- 已发量
+            t.item_name itemName,  -- 品名
+            t.units units,  -- 单位
+            t.exceed_qty exceedQty,  -- 超领量
+            t.scrap_qty scrapQty,  -- 报废量
+            t.bom_qty bomQty,  -- BOM数量
+            t.sub_item_code subItemCode,  -- 替代码
+            t.update_time updateTime,  -- 更新时间
+            t.stock_flag stockFlag,  -- 备料标识
+            t.depa_code depaCode,  -- 机构代码
+            t.sc_flag scFlag,  -- s 正面 c 反面（跟制令单定义一致）)
+            t.erp_item erpItem,  -- BOM行号
+            t.reality_qty realityQty  -- 实际使用量
+        from wms_project_detail t
+        left join ums_item_sap uis on uis.CO_ITEM_CODE=t.item_code
+        where 1=1
+        <if test="p.projectId != null and p.projectId != ''">
+            and t.project_id = #{p.projectId}
+        </if>
+        order by t.id desc
+    </select>
+    <select id="getDetailByProjectIdsAndFace" resultType="java.util.Map">
+        SELECT
+            A.id id,
+            A.project_id projectId, -- 工单
+            A.item_code itemCode, -- 物料代码
+            A.sc_flag scFlag, -- s 正面 c 反面（跟制令单定义一致）)
+            B.CO_ITEM_NAME itemName,	-- 物料名称
+            B.CO_ITEM_SPEC itemDesc,	-- 物料描述
+            T.item_code productCode,    -- 加工机种
+            T.item_name productName, -- 加工机种
+            IFNULL( A.must_provide_qty, 0 ) - IFNULL( A.had_provide_qty, 0 ) AS osdAmountPlan, -- 计划数量
+            A.sub_item_code subItemCode -- 替代码
+        FROM
+            wms_project_detail A
+        LEFT JOIN ums_item_sap B ON A.item_code = B.CO_ITEM_CODE
+        LEFT JOIN wms_project_base T ON T.project_id = A.project_id
+        WHERE
+        OWNED_GROUP != '104Consumable Materi'
+        AND OWNED_GROUP != '102.Semi-FG'
+        AND ( IFNULL( A.must_provide_qty, 0 ) - IFNULL( A.had_provide_qty, 0 ) ) > 0
+        <if test="p.projectId != null and p.projectId != ''">
+            and A.project_id = '${p.projectId}'
+        </if>
+        <if test="p.scFlag != null and p.scFlag != ''">
+            and A.sc_flag = '${p.scFlag}'
+        </if>
+        ORDER BY
+        A.project_id ASC,
+        A.item_code ASC
+    </select>
+</mapper>

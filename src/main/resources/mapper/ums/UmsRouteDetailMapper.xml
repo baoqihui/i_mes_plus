@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsRouteDetailMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.ur_id urId,  -- 流程id
+            t.process_code processCode,  -- 工序代码
+            t.pre_urd_id preUrdId,  -- 上一个流程工序id
+            t.state state,  -- 状态: （0，正常；1，维修；2，回流 ）
+            t.is_must_pass isMustPass,  -- 是否必过（0，非必过 1，必过）
+            t.sort sort,  -- 排序
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from ums_route_detail t
+        where 1=1
+        <if test="p.urId != null and p.urId != ''">
+            and t.ur_id LIKE '%${p.urId}%'
+        </if>
+        <if test="p.processCode != null and p.processCode != ''">
+            and t.process_code LIKE '%${p.processCode}%'
+        </if>
+        <if test="p.preUrdId != null and p.preUrdId != ''">
+            and t.pre_urd_id LIKE '%${p.preUrdId}%'
+        </if>
+        <if test="p.state != null and p.state != ''">
+            and t.state LIKE '%${p.state}%'
+        </if>
+        <if test="p.isMustPass != null and p.isMustPass != ''">
+            and t.is_must_pass LIKE '%${p.isMustPass}%'
+        </if>
+        <if test="p.sort != null and p.sort != ''">
+            and t.sort LIKE '%${p.sort}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

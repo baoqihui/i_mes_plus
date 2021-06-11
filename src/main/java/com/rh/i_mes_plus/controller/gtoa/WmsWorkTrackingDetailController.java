@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rh.i_mes_plus.common.model.PageResult;
 import com.rh.i_mes_plus.common.model.Result;
-import com.rh.i_mes_plus.dto.WmsWorkTrackingDetailDTO;
+import com.rh.i_mes_plus.dto.gtoa.WmsWorkTrackingDetailDTO;
 import com.rh.i_mes_plus.model.gtoa.WmsWorkTracingMain;
 import com.rh.i_mes_plus.model.gtoa.WmsWorkTrackingDetail;
 import com.rh.i_mes_plus.service.gtoa.IWmsWorkTracingMainService;

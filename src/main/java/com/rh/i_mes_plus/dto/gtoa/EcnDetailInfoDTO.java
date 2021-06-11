@@ -1,4 +1,4 @@
-package com.rh.i_mes_plus.dto;
+package com.rh.i_mes_plus.dto.gtoa;
 
 import com.rh.i_mes_plus.model.gtoa.EcnDetailDiscriptionInfo;
 import com.rh.i_mes_plus.model.gtoa.EcnDetailInfo;

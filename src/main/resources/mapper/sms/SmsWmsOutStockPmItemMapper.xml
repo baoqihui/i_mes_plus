@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsOutStockPmItemMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 主键ID
+            t.doc_no docNo,  -- 出库单据号
+            t.project_id projectId,  -- 工单号
+            t.item_code itemCode,  -- BOM料号
+            t.item_name itemName,  -- BOM品名
+            t.item_spec itemSpec,  -- BOM规格
+            t.project_item projectItem,  -- 工单料号(加工机种)
+            t.osd_amount_plan osdAmountPlan,  -- 计划出库数量
+            t.osd_amount osdAmount,  -- 实际出库数量
+            t.to_erp toErp,  -- erp回写标识
+            t.sc_flag scFlag,  -- 加工面(a单面 s 正面 c 反面)
+            t.out_seq outSeq,  -- 备料顺序
+            t.erp_item erpItem,  -- ERP行号
+            t.replace_code replaceCode  -- 替代码
+        from sms_wms_out_stock_pm_item t
+        order by t.id desc
+    </select>
+    <select id="getMassageList" resultType="com.rh.i_mes_plus.vo.MassageVO">
+        SELECT CONCAT(l.osl_amount,'*',COUNT(l.osl_amount)) massage  FROM sms_wms_out_stock_list l WHERE l.osd_id=#{id} GROUP BY l.osl_amount
+    </select>
+    <select id="getMassageLotList" resultType="com.rh.i_mes_plus.vo.MassageVO">
+        SELECT
+            CONCAT(l.osl_lot_number,'*',l.osl_amount,'*',COUNT(l.osl_amount)) massage
+        FROM
+            sms_wms_out_stock_list l
+        WHERE
+            l.osd_id = #{id}
+        GROUP BY
+            l.osl_amount,
+            l.osl_lot_number
+    </select>
+
+</mapper>

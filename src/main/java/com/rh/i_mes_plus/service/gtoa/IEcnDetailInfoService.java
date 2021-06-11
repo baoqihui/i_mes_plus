@@ -3,8 +3,8 @@ package com.rh.i_mes_plus.service.gtoa;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rh.i_mes_plus.common.model.Result;
-import com.rh.i_mes_plus.dto.EcnDetailInfoDTO;
-import com.rh.i_mes_plus.dto.EcnDetailInfoTwoDTO;
+import com.rh.i_mes_plus.dto.gtoa.EcnDetailInfoDTO;
+import com.rh.i_mes_plus.dto.gtoa.EcnDetailInfoTwoDTO;
 import com.rh.i_mes_plus.model.gtoa.EcnDetailInfo;
 
 import java.util.Map;

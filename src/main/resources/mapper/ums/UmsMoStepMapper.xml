@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsMoStepMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.ms_code msCode,  -- 工单阶别代码
+            t.ms_name msName,  -- 工单阶别名称
+            t.ms_type msType,  -- 阶别类型（1，数据统计阶 2，制令单生产阶)
+            t.ms_calculate_object msCalculateObject,  -- 计算对象(0:不计算 1:元器件数 2:焊点数 3:PCS)
+            t.ms_smt_flag msSmtFlag,  -- 贴片阶标识(Y/N)
+            t.ms_test_step msTestStep,  -- 检验阶
+            t.ms_batteries_flag msBatteriesFlag,  -- 电芯阶标识(Y/N)
+            t.ms_mo_error_amount msMoErrorAmount,  -- 制令单误差量
+            t.previous_step previousStep,  -- 前置阶别代码
+            t.input_flag inputFlag,  -- 工单投入阶(Y/N)
+            t.output_flag outputFlag,  -- 工单产出阶(Y/N)
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from ums_mo_step t
+        where 1=1
+        <if test="p.msCode != null and p.msCode != ''">
+            and t.ms_code LIKE '%${p.msCode}%'
+        </if>
+        <if test="p.msName != null and p.msName != ''">
+            and t.ms_name LIKE '%${p.msName}%'
+        </if>
+        <if test="p.msType != null and p.msType != ''">
+            and t.ms_type LIKE '%${p.msType}%'
+        </if>
+        <if test="p.msCalculateObject != null and p.msCalculateObject != ''">
+            and t.ms_calculate_object LIKE '%${p.msCalculateObject}%'
+        </if>
+        <if test="p.msSmtFlag != null and p.msSmtFlag != ''">
+            and t.ms_smt_flag LIKE '%${p.msSmtFlag}%'
+        </if>
+        <if test="p.msTestStep != null and p.msTestStep != ''">
+            and t.ms_test_step LIKE '%${p.msTestStep}%'
+        </if>
+        <if test="p.msBatteriesFlag != null and p.msBatteriesFlag != ''">
+            and t.ms_batteries_flag LIKE '%${p.msBatteriesFlag}%'
+        </if>
+        <if test="p.msMoErrorAmount != null and p.msMoErrorAmount != ''">
+            and t.ms_mo_error_amount LIKE '%${p.msMoErrorAmount}%'
+        </if>
+        <if test="p.previousStep != null and p.previousStep != ''">
+            and t.previous_step LIKE '%${p.previousStep}%'
+        </if>
+        <if test="p.inputFlag != null and p.inputFlag != ''">
+            and t.input_flag LIKE '%${p.inputFlag}%'
+        </if>
+        <if test="p.outputFlag != null and p.outputFlag != ''">
+            and t.output_flag LIKE '%${p.outputFlag}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

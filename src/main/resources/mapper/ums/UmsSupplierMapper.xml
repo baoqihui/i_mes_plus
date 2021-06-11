@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsSupplierMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.ums.UmsSupplier">
+        select * from ums_supplier t where t.is_del=0
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+        <if test="p.supplierCode != null and p.supplierCode != ''">
+            and t.supplier_code LIKE '%${p.supplierCode}%'
+        </if>
+        <if test="p.supplierShort != null and p.supplierShort != ''">
+            and t.supplier_short LIKE '%${p.supplierShort}%'
+        </if>
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and t.supplier_name LIKE '%${p.supplierName}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

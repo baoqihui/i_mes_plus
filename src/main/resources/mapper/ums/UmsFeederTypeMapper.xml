@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsFeederTypeMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.type_name typeName,  -- 分类名
+            t.type_remark typeRemark,  -- 备注
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from ums_feeder_type t
+        where 1=1
+        <if test="p.typeName != null and p.typeName != ''">
+            and t.type_name LIKE '%${p.typeName}%'
+        </if>
+        <if test="p.typeRemark != null and p.typeRemark != ''">
+            and t.type_remark LIKE '%${p.typeRemark}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>
