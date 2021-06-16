@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsReceiveDocMapper">
+    <select id="allList" resultType="map">
+        SELECT
+        DISTINCT t.WR_DOC_NUM wrDocNum,
+        t.id id,
+        t.depa_name depaName,
+        s.supplier_code supplierCode,
+        s.supplier_name supplierName,
+        A.dt_name twtName,
+        t.WR_DATE wrDate,
+        CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,'')) as twtTypeName,
+        r.user_name userName,
+        t.WR_INPUT_DATE wrInputDate,
+        t.RETURN_ERP_FLAG returnErpFlag,
+        t.WH_CODE whCode,
+        t.WR_STATE wrState,
+        t.PROJECT_ID projectId,
+        t.customer customer,
+        ar.AR_NAME whName -- 仓库名称
+        FROM
+        sms_wms_receive_doc t
+        LEFT JOIN ums_supplier s on t.SUPPLIER_CODE=s.supplier_code
+        LEFT JOIN ums_user r on t.wr_input_no=r.user_account
+        LEFT JOIN sms_wms_receive_detail d on t.WR_DOC_NUM=d.WR_DOC_NUM
+        LEFT JOIN sms_wms_io_type A on t.DT_CODE=A.dt_code
+        LEFT JOIN sms_wms_erp_doc_type B ON t.TWT_DID=B.d_id
+        LEFT JOIN ums_wms_area ar ON t.wh_code=ar.AR_SN
+        WHERE
+        1=1
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and s.supplier_name LIKE '%${p.supplierName}%'
+        </if>
+        <if test="p.userName != null and p.userName != ''">
+            and r.user_name LIKE '%${p.userName}%'
+        </if>
+        <if test="p.wrState != null and p.wrState != ''">
+            and t.WR_STATE LIKE '%${p.wrState}%'
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.WH_CODE LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.wrInputNo != null and p.wrInputNo != ''">
+            and t.WR_INPUT_NO LIKE '%${p.wrInputNo}%'
+        </if>
+        <if test="p.twtTypeName != null and p.twtTypeName != ''">
+            and CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,''))  LIKE '%${p.twtTypeName}%'
+        </if>
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and t.dt_code = #{p.dtCode}
+        </if>
+        <if test="p.twtDid != null and p.twtDid != ''">
+            and t.twt_did = #{p.twtDid}
+        </if>
+        <if test="p.wrDocNum != null and p.wrDocNum != ''">
+            and t.WR_DOC_NUM LIKE '%${p.wrDocNum}%'
+        </if>
+        <if test="p.erpPo != null and p.erpPo != ''">
+            and d.ERP_PO LIKE '%${p.erpPo}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.WR_INPUT_DATE >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.WR_INPUT_DATE
+        </if>
+        order by t.WR_STATE asc,t.id desc
+    </select>
+    <select id="findList" resultType="map">
+        SELECT
+        DISTINCT t.WR_DOC_NUM wrDocNum,
+        t.id id,
+        t.SUPPLIER_CODE supplierCode,
+        t.customer customer,
+        s.supplier_name supplierName,
+        t.WR_DATE wrDate,
+        r.user_name userName,
+        t.WR_INPUT_DATE wrInputDate,
+        t.WR_STATE wrState
+        FROM
+        sms_wms_receive_doc t
+        LEFT JOIN ums_supplier s on t.SUPPLIER_CODE=s.supplier_code
+        LEFT JOIN ums_user r on t.wr_input_no=r.user_account
+        LEFT JOIN sms_wms_receive_detail d on t.WR_DOC_NUM=d.WR_DOC_NUM
+        WHERE
+        1=1
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and t.dt_code = #{p.dtCode}
+        </if>
+        <if test="p.wrDocNum != null and p.wrDocNum != ''">
+            and t.WR_DOC_NUM LIKE '%${p.wrDocNum}%'
+        </if>
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and s.supplier_name LIKE '%${p.supplierName}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.WR_INPUT_DATE >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.WR_INPUT_DATE
+        </if>
+        <if test="p.coItemCode != null and p.coItemCode != ''">
+            and d.CO_ITEM_CODE LIKE '%${p.coItemCode}%'
+        </if>
+        order by t.WR_STATE asc,t.id desc
+    </select>
+    <select id="getMaxDocNum" resultType="java.lang.String">
+        SELECT MAX(s.WR_DOC_NUM) FROM sms_wms_receive_doc s WHERE s.WR_DOC_NUM like '${yyyyMM}%'
+    </select>
+    <select id="allSelectList" resultType="java.util.Map">
+        SELECT
+        DISTINCT d.id id,
+        d.depa_name depaName,
+        d.WR_DOC_NUM wrDocNum,
+        d.ERP_PO erpPo,
+        d.PLAN_NUM planNum,
+        d.RECEIVE_NUM receiveNum,
+        d.CO_ITEM_CODE coItemCode,
+        i.CO_ITEM_NAME coItemName,
+        d.ERP_PO_ITEM_NO erpPoItemNo,
+        t.WR_DATE wrDate,
+        t.WR_STATE wrState,
+        A.dt_name twtName,
+        CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,'')) as twtTypeName,
+        s.supplier_name supplierName,
+        r.user_name userName,
+        t.WR_INPUT_DATE wrInputDate,
+        d.REMARK remark
+        FROM
+        (select * from sms_wms_receive_detail
+        <where>
+            <if test="p.depaCode != null and p.depaCode != ''">
+                and depa_code in
+                <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="p.wrDocNum != null and p.wrDocNum != ''">
+                and WR_DOC_NUM LIKE '%${p.wrDocNum}%'
+            </if>
+            <if test="p.whCode != null and p.whCode != ''">
+                and WH_CODE LIKE '%${p.whCode}%'
+            </if>
+            <if test="p.coItemCode != null and p.coItemCode != ''">
+                and CO_ITEM_CODE LIKE '%${p.coItemCode}%'
+            </if>
+            <if test="p.erpPoItemNo != null and p.erpPoItemNo != ''">
+                and ERP_PO_ITEM_NO LIKE '%${p.erpPoItemNo}%'
+            </if>
+            <if test="p.erpPo != null and p.erpPo != ''">
+                and ERP_PO LIKE '%${p.erpPo}%'
+            </if>
+        </where>) d
+        LEFT JOIN sms_wms_receive_doc t on t.WR_DOC_NUM=d.WR_DOC_NUM
+        LEFT JOIN ums_item_sap i on d.CO_ITEM_CODE=i.CO_ITEM_CODE
+        LEFT JOIN ums_supplier s on t.SUPPLIER_CODE=s.supplier_code
+        LEFT JOIN ums_user r on t.wr_input_no=r.user_account
+        LEFT JOIN sms_wms_io_type A on t.DT_CODE=A.dt_code
+        LEFT JOIN sms_wms_erp_doc_type B ON t.twt_did=B.d_id
+        WHERE
+        1=1
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and s.supplier_name LIKE '%${p.supplierName}%'
+        </if>
+        <if test="p.wrState != null and p.wrState != ''">
+            and t.WR_STATE LIKE '%${p.wrState}%'
+        </if>
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and t.dt_code = #{p.dtCode}
+        </if>
+        <if test="p.twtDid != null and p.twtDid != ''">
+            and t.twt_did = #{p.twtDid}
+        </if>
+        <if test="p.itemName != null and p.itemName != ''">
+            and i.CO_ITEM_NAME LIKE '%${p.itemName}%'
+        </if>
+        <if test="p.twtTypeName != null and p.twtTypeName != ''">
+            and CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,''))  LIKE '%${p.twtTypeName}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.WR_INPUT_DATE >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.WR_INPUT_DATE
+        </if>
+        order by t.WR_STATE asc,t.id desc
+    </select>
+    <select id="getReceiveList" resultType="java.lang.String">
+        SELECT
+        WR_DOC_NUM
+        FROM
+        sms_wms_receive_doc
+        WHERE
+        1=1
+        and
+        WR_STATE!='4'
+        AND ( WR_DOC_NUM NOT LIKE '2018%' AND WR_DOC_NUM NOT LIKE '2017%' )
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and DT_CODE = #{p.dtCode}
+        </if>
+        ORDER BY
+        WR_INPUT_DATE DESC
+    </select>
+</mapper>

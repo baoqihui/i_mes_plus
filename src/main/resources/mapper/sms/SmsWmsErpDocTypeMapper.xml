@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsErpDocTypeMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.dt_code dtCode,  -- 单据类别
+            t.d_id dId,  -- 类型id
+            t.type_name typeName,  -- 单别名称
+            t.create_erp_no createErpNo,  -- 创建人工号
+            t.type_no typeNo,  -- 单别编码
+            t.create_rep_name createRepName,  -- 创建人姓名
+            t.is_del isDel,  -- 
+            t.depa_code depaCode,  -- 部门代码
+            t.depa_name depaName,  -- 部门名称
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from sms_wms_erp_doc_type t
+        order by t.id desc
+    </select>
+</mapper>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsReloadDocDetailSubMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.reload_did reloadDid,  -- 换料物料明细id
+            t.reload_no reloadNo,  -- 换料单号
+            t.item_code itemCode,  -- 换料物料品号
+            t.barcode barcode,  -- 换料物料sn
+            t.worker worker,  -- 作业员工号
+            t.work_time workTime,  -- 作业时间
+            t.to_erp toErp,  -- 是否回写，y为是；n/null为否
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from sms_wms_reload_doc_detail_sub t
+        order by t.id desc
+    </select>
+    <select id="listAll" resultType="java.util.Map">
+        select
+            d.depa_code depaCode, -- 部门代码
+            d.depa_name depaName, -- 部门名称
+            t.barcode barcode,  -- 换料物料sn
+            t.amount amount, -- 数量
+            t.item_code itemCode,  -- 换料物料品号
+            s.CO_ITEM_NAME coItemName, -- 物料名称
+            t.reload_no reloadNo,  -- 换料单号
+            d.wh_code whCode,  -- 换料仓库
+            aa.AR_NAME whName,  -- 仓库名称
+            d.supplier_code supCode,  -- 供应商编号
+            d.supplier_name supName,  -- 供应商名称
+            d.create_no createNo,  -- 开单人工号
+            u.user_name createName, -- 开单人名
+            t.worker worker,  -- 作业员工号
+            u2.user_name createName, -- 作业员工名
+            d.reload_status reloadStatus, -- 单据状态:0-开立 1-已发货 2 -收料中 4-关结
+            d.reload_date reload_date, -- 换料时间
+            d.create_time create_time, -- 开单时间
+            t.work_time workTime,  -- 操作时间
+            d.remark remark -- 备注
+        from sms_wms_reload_doc_detail_sub t
+        LEFT JOIN sms_wms_reload_doc_detail dd ON dd.id=t.reload_did
+        LEFT JOIN sms_wms_reload_doc d ON d.reload_no=t.reload_no
+        LEFT JOIN ums_item_sap s ON s.CO_ITEM_CODE=t.item_code
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=d.wh_code
+        LEFT JOIN ums_user u on d.create_no=u.user_account
+        LEFT JOIN ums_user u2 on t.worker=u2.user_account
+        WHERE 1=1
+        <if test="p.reloadNo != null and p.reloadNo != ''">
+            and t.reload_no LIKE '%${p.reloadNo}%'
+        </if>
+        <if test="p.reloadStatus != null and p.reloadStatus != ''">
+            and d.reload_status LIKE '%${p.reloadStatus}%'
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and d.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.barcode != null and p.barcode != ''">
+            and t.barcode LIKE '%${p.barcode}%'
+        </if>
+        <if test="p.inStartTime != null and p.inStartTime != '' ">
+            and d.create_time >= '${p.inStartTime}'
+        </if>
+        <if test="p.inEndTime !=null and p.inEndTime != '' ">
+            and '${p.inEndTime}' >= d.create_time
+        </if>
+        <if test="p.workStartTime != null and p.workStartTime != '' ">
+            and t.work_time >= '${p.workStartTime}'
+        </if>
+        <if test="p.workEndTime !=null and p.workEndTime != '' ">
+            and '${p.workEndTime}' >= t.work_time
+        </if>
+        order by t.id desc
+    </select>
+    <select id="listAllCollect" resultType="java.util.Map">
+        select
+            t.item_code itemCode,  -- 换料物料品号
+            s.CO_ITEM_NAME coItemName, -- 物料名称
+            d.wh_code whCode,  -- 换料仓库
+            aa.AR_NAME whName,  -- 仓库名称
+            d.supplier_code supCode,  -- 供应商编号
+            d.supplier_name supName,  -- 供应商名称
+            SUM(t.amount) amount -- 数量
+        from sms_wms_reload_doc_detail_sub t
+        LEFT JOIN sms_wms_reload_doc_detail dd ON dd.id=t.reload_did
+        LEFT JOIN sms_wms_reload_doc d ON d.reload_no=t.reload_no
+        LEFT JOIN ums_item_sap s ON s.CO_ITEM_CODE=t.item_code
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=d.wh_code
+        LEFT JOIN ums_user u on d.create_no=u.user_account
+        LEFT JOIN ums_user u2 on t.worker=u2.user_account
+        WHERE 1=1
+        <if test="p.reloadNo != null and p.reloadNo != ''">
+            and t.reload_no LIKE '%${p.reloadNo}%'
+        </if>
+        <if test="p.reloadStatus != null and p.reloadStatus != ''">
+            and d.reload_status LIKE '%${p.reloadStatus}%'
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and d.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.barcode != null and p.barcode != ''">
+            and t.barcode LIKE '%${p.barcode}%'
+        </if>
+        <if test="p.inStartTime != null and p.inStartTime != '' ">
+            and d.create_time >= '${p.inStartTime}'
+        </if>
+        <if test="p.inEndTime !=null and p.inEndTime != '' ">
+            and '${p.inEndTime}' >= d.create_time
+        </if>
+        <if test="p.workStartTime != null and p.workStartTime != '' ">
+            and t.work_time >= '${p.workStartTime}'
+        </if>
+        <if test="p.workEndTime !=null and p.workEndTime != '' ">
+            and '${p.workEndTime}' >= t.work_time
+        </if>
+        GROUP BY
+            t.item_code,
+            d.wh_code,
+            d.supplier_code
+    </select>
+    <select id="listByDid" resultType="map">
+        select
+            t.id id,  --
+            t.reload_did reloadDid,  -- 换料物料明细id
+            t.reload_no reloadNo,  -- 换料单号
+            t.item_code itemCode,  -- 换料物料品号
+            t.barcode barcode,  -- 换料物料sn
+            t.worker worker,  -- 作业员工号
+            t.work_time workTime,  -- 作业时间
+            t.to_erp toErp,  -- 是否回写，y为是；n/null为否
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.amount amount,
+            dd.item_name itemName,
+            u.user_name userName
+        from sms_wms_reload_doc_detail_sub t
+        left join sms_wms_reload_doc_detail dd on dd.id=t.reload_did
+        left join ums_user u on u.user_account=t.worker
+        where t.reload_did=#{reloadDid}
+        order by t.id desc
+    </select>
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsBarcodeInfoMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.sms.SmsWmsBarcodeInfo">
+        select * from sms_wms_barcode_info t where 1=1
+        <if test="p.wrDocNum != null and p.wrDocNum != ''">
+            and t.TBL_DOC_NUM = #{p.wrDocNum}
+        </if>
+        <if test="p.coItemCode != null and p.coItemCode != ''">
+            and t.TBL_ITEMCODE = #{p.coItemCode}
+        </if>
+        <if test="p.erpPoItemNo != null and p.erpPoItemNo != ''">
+            and t.TBL_ITEM_SEQ = #{p.erpPoItemNo}
+        </if>
+        order by t.id desc
+    </select>
+    <select id="getNotPdaBarcodes" resultType="map">
+        SELECT
+            t.id id,  --
+            t.TBL_BARCODE tblBarcode,  -- 条码
+            t.MPN mpn,  -- MPN
+            t.TBL_NUM tblNum,  -- 数量  QTY
+            t.TBL_CREATEDATE tblCreatedate,  -- 生成日 D/C
+            t.tbl_manufacturer_bat tblManufacturerBat,  -- 制造商批号 LOT
+            t.tbl_manufacturer_date tblManufacturerDate,  -- 制造商生产日期
+            t.TBL_PO_NUM tblPoNum,  -- 采购单号 PO
+            t.TBL_ITEMCODE tblItemcode,  -- 物料代码
+            t.TBL_ITEM_SEQ tblItemSeq,  -- 项次
+            t.tbl_manufacturer_code tblManufacturerCode,  -- 制造商代码 MFG
+            t.tbl_sup_code tblSupCode,  -- 供应商代码
+            t.TBL_DOC_NUM tblDocNum,  -- 入库单号
+            t.TBL_BATNUM tblBatnum,  -- 批号
+            t.TBL_SOURCE tblSource,  -- 来源 1 BS打印
+            t.TOP_BARCODE topBarcode,  -- 顶级包装条码
+            t.UPPER_BARCODE upperBarcode,  -- 上级包装条码
+            t.GIFT_FLAG giftFlag,  -- 0 采购 1 赠品
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.project_code projectCode,  -- 项目号
+            t.MCR_MSD_CODE mcrMsdCode,  -- 湿敏等级
+            t.has_print hasPrint,  -- 是否打印过
+            t.is_open isOpen,  -- 是否是拆分标签
+            CASE WHEN i.id IS NULL THEN '0' ELSE '1' END AS isReceive
+        FROM
+            sms_wms_barcode_info t
+        LEFT JOIN sms_wms_stock_info i ON t.TBL_BARCODE=i.tbl_barcode and i.doc_num=#{wrDocNum}
+        WHERE
+            t.TBL_DOC_NUM = #{wrDocNum}
+    </select>
+</mapper>

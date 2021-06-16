@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsMoveDocDetailSubMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.move_did moveDid,  -- 调拨物料明细id
+            t.move_no moveNo,  -- 调拨单号
+            t.item_code itemCode,  -- 调拨物料品号
+            t.barcode barcode,  -- 调拨物料sn
+            t.amount amount,  -- 调拨数量
+            t.worker worker,  -- 作业员工号
+            t.work_time workTime,  -- 作业时间
+            t.to_erp toErp,  -- 是否回写，y为是；n/null为否
+            t.os_container osContainer,  -- 装载容器
+            t.pallet_sn palletSn,  -- 栈板sn
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from sms_wms_move_doc_detail_sub t
+        order by t.id desc
+    </select>
+    <select id="listAll" resultType="java.util.Map">
+        select
+            d.depa_code depaCode, -- 部门代码
+            d.depa_name depaName, -- 部门名称
+            t.pallet_sn palletSn,  -- 栈板sn
+            t.os_container osContainer,  -- 箱号
+            t.barcode barcode,  -- 调拨物料sn
+            t.amount amount,  -- 调拨数量
+            t.item_code itemCode,  -- 调拨物料品号
+            s.CO_ITEM_NAME coItemName, -- 物料名称
+            t.move_no moveNo,  -- 调拨单号
+            d.in_wh_code inWhCode,  -- 调入仓库sn
+            inar.AR_NAME inArName,  -- 调入仓库名
+            d.out_wh_code outWhCode,  -- 调出仓库sn
+            outar.AR_NAME outArName, -- 调出仓库名
+            d.supplier_code supplierCode,  -- 供应商代码
+            su.supplier_name supplierName,  -- 供应商名称
+            d.create_no createNo, -- 开单人
+            u.user_name createName, -- 开单人名
+            t.worker worker,  -- 作业员工号
+            u2.user_name workerName, -- 作业员工名
+            d.move_status moveStatus, -- 单据状态:0-开立 1-调拨中4-关结
+            d.move_date moveDate, -- 计划调拨日期
+            d.create_time createTime, -- 开单时间
+            t.work_time workTime -- 作业时间
+        from sms_wms_move_doc_detail_sub t
+        LEFT JOIN sms_wms_move_doc_detail dd ON dd.id=t.move_did
+        LEFT JOIN sms_wms_move_doc d ON d.move_no= t.move_no
+        LEFT JOIN ums_item_sap s ON s.CO_ITEM_CODE=t.item_code
+        left join ums_wms_area inar ON d.in_wh_code=inar.AR_SN
+        left join ums_wms_area outar ON d.out_wh_code=outar.AR_SN
+        LEFT JOIN ums_supplier su on su.supplier_code=d.SUPPLIER_CODE
+        LEFT JOIN ums_user u on d.create_no=u.user_account
+        LEFT JOIN ums_user u2 on t.worker=u2.user_account
+        where 1=1
+        <if test="p.moveNo != null and p.moveNo != ''">
+            and t.move_no LIKE '%${p.moveNo}%'
+        </if>
+        <if test="p.moveStatus != null and p.moveStatus != ''">
+            and d.move_status LIKE '%${p.moveStatus}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.osContainer != null and p.osContainer != ''">
+            and t.os_container LIKE '%${p.osContainer}%'
+        </if>
+
+        <if test="p.inWhCode != null and p.inWhCode != ''">
+            and d.in_wh_code LIKE '%${p.inWhCode}%'
+        </if>
+        <if test="p.outWhCode != null and p.outWhCode != ''">
+            and d.out_wh_code LIKE '%${p.outWhCode}%'
+        </if>
+        <if test="p.barcode != null and p.barcode != ''">
+            and t.barcode LIKE '%${p.barcode}%'
+        </if>
+        <if test="p.osContainer != null and p.osContainer != ''">
+            and t.os_container LIKE '%${p.osContainer}%'
+        </if>
+        <if test="p.inStartTime != null and p.inStartTime != '' ">
+            and d.create_time >= '${p.inStartTime}'
+        </if>
+        <if test="p.inEndTime !=null and p.inEndTime != '' ">
+            and '${p.inEndTime}' >= d.create_time
+        </if>
+        <if test="p.workStartTime != null and p.workStartTime != '' ">
+            and t.work_time >= '${p.workStartTime}'
+        </if>
+        <if test="p.workEndTime !=null and p.workEndTime != '' ">
+            and '${p.workEndTime}' >= t.work_time
+        </if>
+    </select>
+    <select id="listAllCollect" resultType="java.util.Map">
+        select
+        t.item_code itemCode,  -- 调拨物料品号
+        s.CO_ITEM_NAME coItemName, -- 物料名称
+        d.in_wh_code inWhCode,  -- 调入仓库sn
+        inar.AR_NAME inArName,  -- 调入仓库名
+        d.out_wh_code outWhCode,  -- 调出仓库sn
+        outar.AR_NAME outArName, -- 调出仓库名
+        d.supplier_code supplierCode,  -- 供应商代码
+        su.supplier_name supplierName,  -- 供应商名称
+        SUM(t.amount) amount  -- 调拨数量
+        from sms_wms_move_doc_detail_sub t
+        LEFT JOIN sms_wms_move_doc_detail dd ON dd.id=t.move_did
+        LEFT JOIN sms_wms_move_doc d ON d.move_no= t.move_no
+        LEFT JOIN ums_item_sap s ON s.CO_ITEM_CODE=t.item_code
+        left join ums_wms_area inar ON d.in_wh_code=inar.AR_SN
+        left join ums_wms_area outar ON d.out_wh_code=outar.AR_SN
+        LEFT JOIN ums_supplier su on su.supplier_code=d.SUPPLIER_CODE
+        where 1=1
+        <if test="p.moveNo != null and p.moveNo != ''">
+            and t.move_no LIKE '%${p.moveNo}%'
+        </if>
+        <if test="p.moveStatus != null and p.moveStatus != ''">
+            and d.move_status LIKE '%${p.moveStatus}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.osContainer != null and p.osContainer != ''">
+            and t.os_container LIKE '%${p.osContainer}%'
+        </if>
+
+        <if test="p.inWhCode != null and p.inWhCode != ''">
+            and d.in_wh_code LIKE '%${p.inWhCode}%'
+        </if>
+        <if test="p.outWhCode != null and p.outWhCode != ''">
+            and d.out_wh_code LIKE '%${p.outWhCode}%'
+        </if>
+        <if test="p.barcode != null and p.barcode != ''">
+            and t.barcode LIKE '%${p.barcode}%'
+        </if>
+        <if test="p.osContainer != null and p.osContainer != ''">
+            and t.os_container LIKE '%${p.osContainer}%'
+        </if>
+        <if test="p.inStartTime != null and p.inStartTime != '' ">
+            and d.create_time >= '${p.inStartTime}'
+        </if>
+        <if test="p.inEndTime !=null and p.inEndTime != '' ">
+            and '${p.inEndTime}' >= d.create_time
+        </if>
+        <if test="p.workStartTime != null and p.workStartTime != '' ">
+            and t.work_time >= '${p.workStartTime}'
+        </if>
+        <if test="p.workEndTime !=null and p.workEndTime != '' ">
+            and '${p.workEndTime}' >= t.work_time
+        </if>
+        GROUP BY
+            t.item_code,
+            d.in_wh_code,
+            d.out_wh_code,
+            d.supplier_code
+    </select>
+</mapper>

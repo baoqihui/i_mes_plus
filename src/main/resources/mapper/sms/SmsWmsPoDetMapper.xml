@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsPoDetMapper">
+    <select id="findList" resultType="map">
+        SELECT
+        t.id id,
+        t.twd_po_no twdPoNo,
+        t.twd_po_item_no twdPoItemNo,
+        t.twd_date twdDate,
+        t.item_code itemCode,
+        t.item_name itemName,
+        t.item_min_pack itemMinPack,
+        t.twd_po_qty twdPoQty,
+        t.twd_receive_qty twdReceiveQty,
+        t.mes_receive_qty mesReceiveQty,
+        t.manufacturer_code manufacturerCode,
+        t.mpn mpn,
+        t.erp_is_close erpIsClose,
+        t.twd_is_close twdIsClose,
+        t.twd_remark twdRemark,
+        t.twd_sup_code twdSupCode,
+        t.twd_sup_name twdSupName,
+        t.create_time createTime,
+        t.update_time updatetime,
+        t.depa_code depaCode,
+        t.depa_name depaName,
+        m.MANUFACTURER_NAME manufacturerName
+        FROM
+            sms_wms_po_det t
+        LEFT JOIN sms_co_manufacturer m ON t.manufacturer_code=m.MANUFACTURER_CODE
+        where t.is_del=0
+        <if test="p.twdPoNo != null and p.twdPoNo != ''">
+            and t.twd_po_no = #{p.twdPoNo}
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

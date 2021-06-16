@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsChooseBarcodeLogMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.doc_no docNo,  -- 备料单号
+            t.item_code itemCode,  -- 物料编号
+            t.qty_plan qtyPlan,  -- 需求数量
+            t.qty_real qtyReal,  -- 挑料数量
+            t.barcode barcode,  -- 条码
+            t.qty_barcode qtyBarcode,  -- 条码数量
+            t.is_lack isLack,  -- 是否缺料
+            t.is_snip isSnip,  -- 是否剪断
+            t.is_send isSend,  -- 是否已发
+            t.light_color lightColor,  -- 灯光颜色
+            t.loc loc,  -- 库位
+            t.remark remark,  -- 备注
+            t.create_user createUser,  -- 创建人
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime  -- 更新时间
+        from sms_wms_choose_barcode_log t
+        order by t.id desc
+    </select>
+</mapper>

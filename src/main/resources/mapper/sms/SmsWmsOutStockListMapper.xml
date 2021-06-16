@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsOutStockListMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 明细主键ID
+            t.doc_no docNo,  -- 出库单据号
+            t.osd_id osdId,  -- 出库物料表id
+            t.co_item_code coItemCode,  -- 机种代码
+            t.osl_lot_number oslLotNumber,  -- 生产批次号
+            t.tbl_barcode tblBarcode,  -- 机器序列号
+            t.osl_amount oslAmount,  -- 数量
+            t.out_stock_man_no outStockManNo,  -- 出库人
+            t.out_stock_time outStockTime,  -- 出库时间
+            t.osl_packing_name oslPackingName,  -- 包装阶名
+            t.os_container osContainer,  -- 装载容器
+            t.os_order osOrder,  -- 客户订单号
+            t.os_rec_no osRecNo,  -- 接收人
+            t.line_no lineNo,  -- 行号
+            t.osl_back_num oslBackNum,  -- 退料数量
+            t.product_item_code productItemCode,  -- 成品料号
+            t.wh_code whCode,  -- 仓库SN
+            t.reservoir_code reservoirCode,  -- 库区SN
+            t.area_sn areaSn,  -- 仓库SN
+            t.pallet_sn palletSn,  -- 栈板SN
+            t.supplier_code supplierCode,  -- 供应商代码
+            t.is_bask_erp isBaskErp,  -- 是否回写，Y为是；N/null为否
+            t.sk_quality_flag skQualityFlag,  -- 品质标识Y:良品 N:不良品 
+            t.in_doc_flag inDocFlag,  -- 领料单物料标志(Y是N否)，默认是
+            t.vmi_flag vmiFlag,  -- VMI标识(Y是N否)
+            t.can_to_erp canToErp,  -- 允许上传ERP(Y是N否)
+            t.sk_edition_code skEditionCode,  -- 版本
+            t.project_id projectId,  -- 工单号
+            t.remark remark,  -- 
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from sms_wms_out_stock_list t
+        order by t.id desc
+    </select>
+    <select id="listAll" resultType="java.util.Map">
+        select
+            d.depa_code depaCode, -- 部门代码
+            d.depa_name depaName, -- 部门名称
+            t.tbl_barcode tblBarcode,  -- 物料sn
+            t.osl_amount oslAmount,  -- 数量
+            t.co_item_code coItemCode,  -- 物料编码
+            s.CO_ITEM_NAME coItemName, -- 物料名称
+            t.doc_no docNo,  -- 出库单据号
+            A.dt_name twtName, -- 出库类型
+            CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.type_name,'')) as twtTypeName, -- 出库单类别
+            t.PROJECT_ID projectId, -- 工单号
+            t.wh_code whCode,  -- 仓库SN
+            aa.AR_NAME whName,  -- 仓库名称
+            t.supplier_code supplierCode,  -- 供应商代码
+            su.supplier_name supplierName,  -- 供应商名称
+            d.doc_man_no docManNo, -- 开单人
+            u.user_name  docManName, -- 开单人名称
+            t.out_stock_man_no outStockManNo,  -- 操作人
+            u2.user_name outStockManName, -- 操作人名称
+            d.doc_status docStatus, -- 状态(1录入、2、出库中 4、关结)
+            d.doc_out_time docoOutTime, -- 计划时间
+            d.doc_time docTime, -- 开单时间
+            t.out_stock_time outStockTime, -- 操作时间
+            sd.osd_amount_plan osdAmountPlan, -- 计划出库数量
+            sd.osd_amount_real osdAmountReal, -- 实际出库数量
+            d.doc_remark docRemark -- 备注
+        from sms_wms_out_stock_list t
+        LEFT JOIN sms_wms_out_stock_detail sd ON sd.id=t.osd_id
+        LEFT JOIN sms_wms_out_stock_doc d ON d.doc_no=t.doc_no
+        LEFT JOIN ums_item_sap s ON s.CO_ITEM_CODE=t.CO_ITEM_CODE
+        LEFT JOIN sms_wms_io_type A ON d.DT_CODE=A.dt_code
+        LEFT JOIN sms_wms_erp_doc_type B ON d.twt_did=B.d_id
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=t.wh_code
+        LEFT JOIN ums_supplier su on su.supplier_code=t.SUPPLIER_CODE
+        LEFT JOIN ums_user u on d.doc_man_no=u.user_account
+        LEFT JOIN ums_user u2 on t.out_stock_man_no=u2.user_account
+        where 1=1
+        <if test="p.docNo != null and p.docNo != ''">
+            and t.doc_no LIKE '%${p.docNo}%'
+        </if>
+        <if test="p.projectId != null and p.projectId != ''">
+            and t.PROJECT_ID LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.docStatus != null and p.docStatus != ''">
+            and d.doc_status LIKE '%${p.docStatus}%'
+        </if>
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and A.dt_code LIKE '%${p.dtCode}%'
+        </if>
+        <if test="p.twtTypeName != null and p.twtTypeName != ''">
+            and CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,'')) LIKE '%${p.twtTypeName}%'
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.WH_CODE LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.coItemCode != null and p.coItemCode != ''">
+            and t.CO_ITEM_CODE LIKE '%${p.coItemCode}%'
+        </if>
+        <if test="p.tblBarcode != null and p.tblBarcode != ''">
+            and t.TBL_BARCODE LIKE '%${p.tblBarcode}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.out_stock_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.out_stock_time
+        </if>
+        ORDER BY t.id desc
+    </select>
+    <select id="listAllCollect" resultType="java.util.Map">
+        select
+        d.depa_code depaCode, -- 部门代码
+        d.depa_name depaName, -- 部门名称
+        t.co_item_code coItemCode,  -- 物料编码
+        s.CO_ITEM_NAME coItemName, -- 物料名称
+        A.dt_name twtName, -- 出库类型
+        CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,'')) as twtTypeName, -- 出库单类别
+        t.wh_code whCode,  -- 仓库SN
+        aa.AR_NAME whName,  -- 仓库名称
+        t.supplier_code supplierCode,  -- 供应商代码
+        su.supplier_name supplierName,  -- 供应商名称
+        d.cust_code custCode, -- 客户
+        c.CUSTOMER customer, -- 客户名称
+        SUM(t.osl_amount) amount  -- 数量
+
+        from sms_wms_out_stock_list t
+        LEFT JOIN sms_wms_out_stock_detail sd ON sd.id=t.osd_id
+        LEFT JOIN sms_wms_out_stock_doc d ON d.doc_no=t.doc_no
+        LEFT JOIN ums_item_sap s ON s.CO_ITEM_CODE=t.CO_ITEM_CODE
+        LEFT JOIN sms_wms_io_type A ON d.DT_CODE=A.dt_code
+        LEFT JOIN sms_wms_erp_doc_type B ON d.twt_did=B.d_id
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=t.wh_code
+        LEFT JOIN ums_supplier su on su.supplier_code=t.SUPPLIER_CODE
+        LEFT JOIN ums_customer c ON c.CUST_CODE=d.cust_code
+        where 1=1
+        <if test="p.docNo != null and p.docNo != ''">
+            and t.doc_no LIKE '%${p.docNo}%'
+        </if>
+        <if test="p.projectId != null and p.projectId != ''">
+            and t.PROJECT_ID LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.docStatus != null and p.docStatus != ''">
+            and d.doc_status LIKE '%${p.docStatus}%'
+        </if>
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and A.dt_code LIKE '%${p.dtCode}%'
+        </if>
+        <if test="p.twtTypeName != null and p.twtTypeName != ''">
+            and CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,'')) LIKE '%${p.twtTypeName}%'
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.WH_CODE LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.coItemCode != null and p.coItemCode != ''">
+            and t.CO_ITEM_CODE LIKE '%${p.coItemCode}%'
+        </if>
+        <if test="p.tblBarcode != null and p.tblBarcode != ''">
+            and t.TBL_BARCODE LIKE '%${p.tblBarcode}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.out_stock_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.out_stock_time
+        </if>
+        GROUP BY
+            t.co_item_code,
+            t.wh_code,
+            t.supplier_code,
+            A.dt_code,
+            d.cust_code,
+            CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,''))
+    </select>
+    <select id="listAndBarcode" resultType="java.util.Map">
+        select
+            t.id id,  -- 明细主键ID
+            t.doc_no docNo,  -- 出库单据号
+            t.osd_id osdId,  -- 出库物料表id
+            t.co_item_code coItemCode,  -- 机种代码
+            t.osl_lot_number oslLotNumber,  -- 生产批次号
+            t.tbl_barcode tblBarcode,  -- 机器序列号
+            t.osl_amount oslAmount,  -- 数量
+            t.out_stock_man_no outStockManNo,  -- 出库人
+            t.out_stock_time outStockTime,  -- 出库时间
+            t.osl_packing_name oslPackingName,  -- 包装阶名
+            t.os_container osContainer,  -- 装载容器
+            t.os_order osOrder,  -- 客户订单号
+            t.os_rec_no osRecNo,  -- 接收人
+            t.line_no lineNo,  -- 行号
+            t.osl_back_num oslBackNum,  -- 退料数量
+            t.product_item_code productItemCode,  -- 成品料号
+            t.wh_code whCode,  -- 仓库SN
+            t.reservoir_code reservoirCode,  -- 库区SN
+            t.area_sn areaSn,  -- 仓库SN
+            t.pallet_sn palletSn,  -- 栈板SN
+            t.supplier_code supplierCode,  -- 供应商代码
+            t.is_bask_erp isBaskErp,  -- 是否回写，Y为是；N/null为否
+            t.sk_quality_flag skQualityFlag,  -- 品质标识Y:良品 N:不良品
+            t.in_doc_flag inDocFlag,  -- 领料单物料标志(Y是N否)，默认是
+            t.vmi_flag vmiFlag,  -- VMI标识(Y是N否)
+            t.can_to_erp canToErp,  -- 允许上传ERP(Y是N否)
+            t.sk_edition_code skEditionCode,  -- 版本
+            t.project_id projectId,  -- 工单号
+            t.remark remark,  --
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            rd.item_name itemName,     -- 物料名称
+            bi.tbl_manufacturer_date tblManufacturerDate,  -- 生产日期
+            u.user_name userName
+        from sms_wms_out_stock_list t
+        left join sms_wms_barcode_info bi on t.TBL_BARCODE=bi.TBL_BARCODE
+        left join sms_wms_out_stock_detail rd on rd.id=t.osd_id
+        LEFT JOIN ums_user u on u.user_account=t.out_stock_man_no
+        where 1=1
+        <if test="osdId != null and osdId != ''">
+            and t.osd_id = #{osdId}
+        </if>
+    </select>
+</mapper>

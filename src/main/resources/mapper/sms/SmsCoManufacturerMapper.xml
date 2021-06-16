@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsCoManufacturerMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.MANUFACTURER_NAME manufacturerName,  -- 制造商名称
+            t.MANUFACTURER_CODE manufacturerCode,  -- 制造商编号
+            t.MANUFACTURER_ID manufacturerId,  -- manufacturer_ID
+            t.MANUFACTURER_ABBREVIATION manufacturerAbbreviation,  -- 制造商简称
+            t.MANUFACTURER_PASS manufacturerPass,  -- 制造商登录密码(WEB打印)
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.is_del isDel,  -- 
+            t.depa_code depaCode,  -- 部门代码
+            t.depa_name depaName  -- 部门名称
+        from sms_co_manufacturer t
+        order by t.id desc
+    </select>
+</mapper>

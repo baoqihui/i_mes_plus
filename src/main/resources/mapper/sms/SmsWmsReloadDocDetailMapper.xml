@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsReloadDocDetailMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.reload_no reloadNo,  -- 换料单号
+            t.po_no poNo,  -- 采购单号
+            t.item_code itemCode,  -- 物料编码
+            t.item_name itemName,  -- 物料名称
+            t.item_spec itemSpec,  -- 物料描述
+            t.total_amount totalAmount,  -- 申请数量
+            t.reality_amount realityAmount,  -- 实发数量
+            t.receive_amount receiveAmount,  -- 已收数量
+            t.remark remark,  -- 备注
+            t.supplier_code supplierCode,  -- 供应商编号
+            t.supplier_name supplierName,  -- 供应商名称
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from sms_wms_reload_doc_detail t
+        order by t.id desc
+    </select>
+    <select id="listAll" resultType="java.util.Map">
+        select
+            t.id id,  --
+            t.reload_no reloadNo,  -- 换料单号
+            t.po_no twdPoNo,  -- 采购单号
+            t.item_code itemCode,  -- 物料编码
+            t.item_name itemName,  -- 物料名称
+            s.Io_ITEM_MIN_PACK itemMinPack, -- 最小包装数
+            t.reality_amount twdPoQty,  -- 实发数量
+            t.receive_amount mesReceiveQty,  -- 已收数量
+            s.MANUFACTURER_CODE manufacturerCode, -- 制造商代码
+            s.MPN mpn, -- mpn
+            t.remark twdRemark,  -- 备注
+            t.supplier_code twdSupCode,  -- 供应商编号
+            t.supplier_name twdSupName  -- 供应商名称
+        from sms_wms_reload_doc_detail t
+        LEFT JOIN  ums_item_sap s on s.CO_ITEM_CODE=t.item_code
+        where t.reload_no=#{reloadNo}
+    </select>
+</mapper>

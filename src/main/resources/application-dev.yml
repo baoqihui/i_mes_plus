@@ -60,3 +60,4 @@ nginxFilePath: E:\file/
 nginxFilePathForDownload: E:\file/download/
 
 zhaoIpAndPort: 192.168.50.97:8003
+liIpAndPort: 192.168.61.202:8082

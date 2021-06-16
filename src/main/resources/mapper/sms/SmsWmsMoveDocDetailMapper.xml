@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsMoveDocDetailMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.move_no moveNo,  -- 调拨单号
+            t.item_code itemCode,  -- 物料编码
+            t.plan_amount planAmount,  -- 申请数量
+            t.real_amount realAmount,  -- 已调拨量
+            t.in_wh_code inWhCode,  -- 调入仓库sn
+            t.out_wh_code outWhCode,  -- 调出仓库sn
+            t.cu_did cuDid,  -- 计量单位id
+            t.erp_move_id erpMoveId,  -- erp调拨单明细序号
+            t.erp_move_type erpMoveType,  -- erp调拨单别
+            t.remark remark,  -- 备注
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from sms_wms_move_doc_detail t
+        order by t.id desc
+    </select>
+</mapper>

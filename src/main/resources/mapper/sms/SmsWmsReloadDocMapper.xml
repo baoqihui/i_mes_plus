@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsReloadDocMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.reload_no reloadNo,  -- 换料单号
+            t.reload_status reloadStatus,  -- 单据状态:0-开立 1-退料中4-关结
+            t.reload_date reloadDate,  -- 单据日期
+            t.wh_code whCode,  -- 发货仓库
+            ar.AR_NAME whName, -- 发货仓库名
+            t.supplier_code supCode,  -- 供应商编号
+            t.supplier_name supName,  -- 供应商名称
+            t.create_no createNo,  -- 开单人工号
+            u.user_name createName,   -- 开单人姓名
+            t.create_time createTime,  -- 开单时间
+            t.update_time updateTime,  -- 更新时间
+            t.remark remark,  -- 备注
+            t.depa_code depaCode,  -- 部门代码
+            t.depa_name depaName  -- 部门名称
+        from sms_wms_reload_doc t
+        left join ums_user u on t.create_no=u.user_account
+        left join ums_wms_area ar ON t.wh_code=ar.AR_SN
+        where 1=1
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+        <if test="p.createName != null and p.createName != ''">
+            and u.user_name LIKE '%${p.createName}%'
+        </if>
+        <if test="p.reloadNo != null and p.reloadNo != ''">
+            and t.reload_no LIKE '%${p.reloadNo}%'
+        </if>
+        <if test="p.reloadStatus != null and p.reloadStatus != ''">
+            and t.reload_status LIKE '%${p.reloadStatus}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.reload_status asc,t.id desc
+    </select>
+    <select id="getStockInfoBySn" resultType="java.util.Map">
+        SELECT
+            t.id id,-- 仓库主键ID
+            t.tbl_barcode tblBarcode,-- SN
+            t.amount amount,-- SN数量（同计划数量）
+            t.co_item_code coItemCode,-- 物料编码
+            i.CO_ITEM_NAME coItemName,-- 物料名称
+            i.CO_ITEM_SPEC coItemSpec,-- 物料描述
+            i.CO_UNIT coUnit, -- 单位
+            t.order_no poNo, -- 采购单号
+            t.supplier_code supplierCode, -- 供应商代码
+            su.supplier_name supplierName -- 供应商名
+        FROM
+            sms_wms_stock_info t
+            LEFT JOIN ums_item_sap i ON t.co_item_code = i.CO_ITEM_CODE
+            LEFT JOIN ums_supplier su on su.supplier_code=t.SUPPLIER_CODE
+        WHERE
+        t.wh_code = 'W-M-UPT'
+        and t.order_no is not NULL
+        AND t.tbl_barcode IN (
+            SELECT
+                a.TBL_BARCODE
+            FROM
+                sms_wms_stock_info a,
+                (SELECT s.order_no poNo, s.co_item_code itemCode FROM sms_wms_stock_info s WHERE s.TBL_BARCODE LIKE '%${p.tblBarcode}%' ) d
+            WHERE
+                  a.order_no = d.poNo AND a.co_item_code = d.itemCode
+        )
+    </select>
+</mapper>

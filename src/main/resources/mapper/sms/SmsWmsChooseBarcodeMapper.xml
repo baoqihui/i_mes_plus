@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsChooseBarcodeMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.doc_no docNo,  -- 备料单号
+            t.item_code itemCode,  -- 物料编号
+            t.qty_plan qtyPlan,  -- 需求数量
+            t.qty_real qtyReal,  -- 挑料数量
+            t.barcode barcode,  -- 条码
+            t.qty_barcode qtyBarcode,  -- 条码数量
+            t.is_lack isLack,  -- 是否缺料
+            t.is_snip isSnip,  -- 是否剪断
+            t.is_send isSend,  -- 是否已发
+            t.light_color lightColor,  -- 灯光颜色
+            t.loc loc,  -- 库位
+            t.remark remark,  -- 备注
+            t.create_user createUser,  -- 创建人
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime  -- 更新时间
+        from sms_wms_choose_barcode t
+        order by t.id desc
+    </select>
+    <select id="getStockInfos" resultType="java.util.Map">
+        select
+            t.id id,  -- 仓库主键ID
+            t.tbl_barcode tblBarcode,  -- SN
+            t.amount amount,  -- SN数量（同计划数量）
+            t.co_item_code coItemCode,  -- 物料编码
+            t.doc_num docNum,  -- 单据号
+            t.cust_code custCode,  -- 客户代码
+            t.product_ver productVer,  --
+            t.lot_number lotNumber,  -- 生产批次号
+            t.container container,  -- 箱号
+            t.order_no orderNo,  -- 订单号/采购单号
+            t.wh_code whCode,  -- 仓库SN
+            t.reservoir_code reservoirCode,  -- 库区SN
+            t.area_sn areaSn,  -- 库位
+            t.quality quality,  -- 品质标识Y:良品 N:不良品
+            t.is_return isReturn,  -- 退料标识0:否 1:是
+            t.return_no returnNo,  -- 退料单号，多个使用英文全角逗号分割
+            t.quality_date qualityDate,  -- 品质失效期
+            t.supplier_code supplierCode,  -- 供应商代码
+            t.fifo_time fifoTime,  -- fifo基准时间
+            t.pdate pdate,  -- 制造商生产日期
+            t.freeze_flag freezeFlag,  -- 冻结标志（Y冻结/N解冻）
+            t.have_check haveCheck,  -- 检验状态:Y为已检 N为未检
+            t.subatch subatch,  --
+            t.in_stock_time inStockTime,  -- 入库时间
+            t.in_stock_man inStockMan,  -- 入库人
+            t.number_type numberType,  -- SN类型：0表示工单  1表示批次  2表示单个
+            t.vmi vmi,  -- VMI标志
+            t.stock_flag stockFlag,  -- 库存状态（1：在库，2：已备料，3：调拨，4盘点）
+            t.pallet_sn palletSn,  -- 栈板SN
+            t.edition_code editionCode,  -- 版本
+            t.project_id projectId,  -- 工单号
+            t.supplier_trace supplierTrace,  -- 供应商追溯
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.depa_code depaCode,  -- 部门代码
+            t.depa_name depaName,  -- 部门名称
+            uis.Io_ITEM_AVAIL ioItemAvail
+        FROM
+            sms_wms_stock_info t
+        left join ums_item_sap uis on t.co_item_code = uis.CO_ITEM_CODE
+        WHERE
+            t.co_item_code = #{itemCode}
+        and t.wh_code='W-M-MPA'
+        and t.stock_flag='1'
+        and t.tbl_barcode not in (SELECT i.barcode FROM sms_wms_choose_barcode i)
+        ORDER BY
+            t.in_stock_time ASC
+    </select>
+
+</mapper>

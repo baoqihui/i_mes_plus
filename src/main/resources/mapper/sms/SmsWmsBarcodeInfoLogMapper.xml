@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsBarcodeInfoLogMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.sms.SmsWmsBarcodeInfoLog">
+        select * from sms_wms_barcode_info_log t
+        order by t.id desc
+    </select>
+    <select id="getMax" resultType="java.lang.String">
+        SELECT MAX(TBL_BARCODE) FROM sms_wms_barcode_info_log s WHERE s.TBL_ITEMCODE =#{itemCode} and s.TBL_CREATEDATE=#{yyyyMMdd}
+    </select>
+</mapper>

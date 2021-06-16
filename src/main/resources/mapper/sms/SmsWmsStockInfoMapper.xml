@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsStockInfoMapper">
+    <select id="findList" resultType="map">
+        select
+        t.id id,  -- 仓库主键ID
+        t.tbl_barcode tblBarcode,  -- SN
+        t.amount amount,  -- SN数量（同计划数量）
+        t.co_item_code coItemCode,  -- 物料编码
+        i.CO_ITEM_NAME coItemName, -- 物料名称
+        i.CO_ITEM_SPEC coItemSpec, -- 物料描述
+        i.CO_UNIT coUnit, -- 单位
+        t.doc_num docNum,  -- 单据号
+        t.cust_code custCode,  -- 客户代码
+        t.product_ver productVer,  --
+        t.lot_number lotNumber,  -- 生产批次号
+        t.container container,  -- 箱号
+        t.order_no orderNo,  -- 订单号/采购单号
+        t.wh_code whCode,  -- 仓库SN
+        t.reservoir_code reservoirCode,  -- 库区SN
+        t.area_sn areaSn,  -- 库位
+        t.quality quality,  -- 品质标识Y:良品 N:不良品
+        t.is_return isReturn,  -- 退料标识0:否 1:是
+        t.return_no returnNo,  -- 退料单号，多个使用英文全角逗号分割
+        t.quality_date qualityDate,  -- 品质失效期
+        t.supplier_code supplierCode,  -- 供应商代码
+        t.fifo_time fifoTime,  -- fifo基准时间
+        t.pdate pdate,  -- 制造商生产日期
+        t.freeze_flag freezeFlag,  -- 冻结标志（Y冻结/N解冻）
+        t.have_check haveCheck,  -- 检验状态:Y为已检 N为未检
+        t.subatch subatch,  --
+        t.in_stock_time inStockTime,  -- 入库时间
+        t.in_stock_man inStockMan,  -- 入库人
+        t.number_type numberType,  -- SN类型：0表示工单  1表示批次  2表示单个
+        t.vmi vmi,  -- VMI标志
+        t.stock_flag stockFlag,  -- 库存状态（1：在库，2：已备料，3：调拨，4盘点）
+        t.pallet_sn palletSn,  -- 栈板SN
+        t.edition_code editionCode,  -- 版本
+        t.project_id projectId,  -- 工单号
+        t.supplier_trace supplierTrace,  -- 供应商追溯
+        t.create_time createTime,  -- 创建时间:按当前时间自动创建
+        t.update_time updateTime,  -- 更新时间
+        t.depa_code depaCode,  -- 部门代码
+        t.depa_name depaName  -- 部门名称
+        from sms_wms_stock_info t
+        LEFT JOIN ums_item_sap i on t.co_item_code=i.CO_ITEM_CODE
+        where 1=1
+        <if test="p.coItemCode != null and p.coItemCode != ''">
+            and t.co_item_code LIKE '%${p.coItemCode}%'
+        </if>
+        <if test="p.coItemName != null and p.coItemName != ''">
+            and i.CO_ITEM_NAME LIKE '%${p.coItemName}%'
+        </if>
+        <if test="p.tblBarcode != null and p.tblBarcode != ''">
+            and t.tbl_barcode LIKE '%${p.tblBarcode}%'
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.in_stock_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.in_stock_time
+        </if>
+        order by t.id desc
+    </select>
+
+    <select id="listAll" resultType="java.util.Map">
+        select
+        t.id id,  -- 仓库主键ID
+        t.tbl_barcode tblBarcode,  -- 物料SN
+        t.co_item_code coItemCode,  -- 物料料号
+        i.CO_ITEM_NAME coItemName, -- 物料名称
+        t.amount amount,  -- 数量
+        t.stock_flag stockFlag,  -- 库存状态（1：在库，2：已备料，3：调拨，4盘点）
+        t.doc_num docNum,  -- 单据号
+        t.order_no orderNo,  -- 订单号/采购单号
+        t.lot_number lotNumber,  -- 制造商批次号
+        t.pdate pdate,  -- 制造商生产日期
+        t.supplier_code supplierCode,  -- 供应商代码
+        s.supplier_name supplierName,  -- 供应商名称
+        t.wh_code whCode,  -- 仓库SN
+        aa.AR_NAME whName,  -- 仓库名称
+        t.reservoir_code reservoirCode,  -- 库区SN
+        t.area_sn areaSn,  -- 库位
+        t.freeze_flag freezeFlag,  -- 冻结标志（Y冻结/N解冻）
+        t.have_check haveCheck,  -- 检验状态:Y为已检 N为未检
+        t.in_stock_time inStockTime,  -- 入库时间
+        t.in_stock_man inStockMan,  -- 入库人号
+        u.user_name userName, -- 入库人名
+        sa.MPN mpn,  -- mpn
+        datediff(NOW(),t.in_stock_time) dullDate, -- 呆滞时长
+        CASE WHEN(datediff(NOW(),t.pdate)-i.Io_ITEM_AVAIL)>0
+        THEN (datediff(NOW(),t.pdate)-i.Io_ITEM_AVAIL)
+        ELSE 0 END AS exceedDate, -- 超期时长
+
+        i.CO_ITEM_SPEC coItemSpec, -- 物料描述
+        i.CO_UNIT coUnit, -- 单位
+        t.cust_code custCode,  -- 客户编码
+        c.CUSTOMER custName,   -- 客户名称
+        t.product_ver productVer,  --
+        t.quality quality,  -- 品质标识Y:良品 N:不良品
+        t.is_return isReturn,  -- 退料标识0:否 1:是
+        t.return_no returnNo,  -- 退料单号，多个使用英文全角逗号分割
+        t.quality_date qualityDate,  -- 品质失效期
+        t.fifo_time fifoTime,  -- fifo基准时间
+        t.subatch subatch,  --
+        t.number_type numberType,  -- SN类型：0表示工单  1表示批次  2表示单个
+        t.vmi vmi,  -- VMI标志
+        t.pallet_sn palletSn,  -- 栈板SN
+        t.edition_code editionCode,  -- 版本
+        t.project_id projectId,  -- 工单号
+        t.supplier_trace supplierTrace,  -- 供应商追溯
+        t.create_time createTime,  -- 创建时间:按当前时间自动创建
+        t.update_time updateTime,  -- 更新时间
+        t.depa_code depaCode,  -- 部门代码
+        t.depa_name depaName  -- 部门名称
+        from sms_wms_stock_info t
+        LEFT JOIN ums_item_sap i on t.co_item_code=i.CO_ITEM_CODE
+        LEFT JOIN ums_customer c on c.CUST_CODE=i.CUST_CODE
+        LEFT JOIN ums_supplier s on s.supplier_code=i.SUPPLIER_CODE
+        LEFT JOIN ums_item_sap sa on sa.CO_ITEM_CODE=i.CO_ITEM_CODE
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=t.wh_code
+        LEFT JOIN ums_user u on t.in_stock_man=u.user_account
+        where 1=1
+        <if test="p.tblBarcode != null and p.tblBarcode != ''">
+            and t.tbl_barcode LIKE '%${p.tblBarcode}%'
+        </if>
+        <if test="p.container != null and p.container != ''">
+            and t.container LIKE '%${p.container}%'
+        </if>
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and s.supplier_name LIKE '%${p.supplierName}%'
+        </if>
+        <if test="p.docNum != null and p.docNum != ''">
+            and t.doc_num LIKE '%${p.docNum}%'
+        </if>
+
+        <if test="p.orderNo != null and p.orderNo != ''">
+            and t.order_no LIKE '%${p.orderNo}%'
+        </if>
+        <if test="p.stockFlag != null and p.stockFlag != ''">
+            and t.stock_flag LIKE '%${p.stockFlag}%'
+        </if>
+        <if test="p.userDefinedStockFlag != null and p.userDefinedStockFlag != ''">
+            and t.stock_flag ${p.userDefinedStockFlag}
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.reservoirCode != null and p.reservoirCode != ''">
+            and t.reservoir_code LIKE '%${p.reservoirCode}%'
+        </if>
+
+        <if test="p.areaSn != null and p.areaSn != ''">
+            and t.area_sn LIKE '%${p.areaSn}%'
+        </if>
+        <if test="p.freezeFlag != null and p.freezeFlag != ''">
+            and t.freeze_flag LIKE '%${p.freezeFlag}%'
+        </if>
+        <if test="p.haveCheck != null and p.haveCheck != ''">
+            and t.have_check LIKE '%${p.haveCheck}%'
+        </if>
+        <if test="p.coItemCode != null and p.coItemCode != ''">
+            and t.co_item_code LIKE '%${p.coItemCode}%'
+        </if>
+
+        <if test="p.projectId != null and p.projectId != ''">
+            and t.project_id LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.lotNumber != null and p.lotNumber != ''">
+            and t.lot_number = #{p.lotNumber}
+        </if>
+        <if test="p.editionCode != null and p.editionCode != ''">
+            and t.edition_code = #{p.editionCode}
+        </if>
+
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.in_stock_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.in_stock_time
+        </if>
+        order by t.stock_flag asc,t.id desc
+    </select>
+    <select id="listAllCollect" resultType="java.util.Map">
+        SELECT
+            t.co_item_code coItemCode, -- 物料编码
+            t.wh_code whCode, -- 仓库SN
+            aa.AR_NAME whName,  -- 仓库名称
+            i.CO_ITEM_NAME coItemName, -- 物料名称
+            i.CO_ITEM_SPEC coItemSpec, -- 物料描述
+            i.CO_UNIT coUnit, -- 单位
+            t.cust_code custCode, -- 客户编码
+            c.CUSTOMER custName, -- 客户名称
+            t.supplier_code supplierCode, -- 供应商代码
+            s.supplier_name supplierName, -- 供应商名称
+            t.stock_flag stockFlag,     -- 库存状态
+            t.depa_code depaCode, -- 部门代码
+            t.depa_name depaName, -- 部门名称
+            SUM(t.amount) amount -- 数量
+        FROM
+            sms_wms_stock_info t
+        LEFT JOIN ums_item_sap i ON t.co_item_code = i.CO_ITEM_CODE
+        LEFT JOIN ums_customer c ON c.CUST_CODE = i.CUST_CODE
+        LEFT JOIN ums_supplier s ON s.supplier_code = t.SUPPLIER_CODE
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=t.wh_code
+        where 1=1
+        <if test="p.tblBarcode != null and p.tblBarcode != ''">
+            and t.tbl_barcode LIKE '%${p.tblBarcode}%'
+        </if>
+        <if test="p.container != null and p.container != ''">
+            and t.container LIKE '%${p.container}%'
+        </if>
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and s.supplier_name LIKE '%${p.supplierName}%'
+        </if>
+        <if test="p.docNum != null and p.docNum != ''">
+            and t.doc_num LIKE '%${p.docNum}%'
+        </if>
+
+        <if test="p.orderNo != null and p.orderNo != ''">
+            and t.order_no LIKE '%${p.orderNo}%'
+        </if>
+        <if test="p.stockFlag != null and p.stockFlag != ''">
+            and t.stock_flag LIKE '%${p.stockFlag}%'
+        </if>
+        <if test="p.userDefinedStockFlag != null and p.userDefinedStockFlag != ''">
+            and t.stock_flag ${p.userDefinedStockFlag}
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.reservoirCode != null and p.reservoirCode != ''">
+            and t.reservoir_code LIKE '%${p.reservoirCode}%'
+        </if>
+
+        <if test="p.areaSn != null and p.areaSn != ''">
+            and t.area_sn LIKE '%${p.areaSn}%'
+        </if>
+        <if test="p.freezeFlag != null and p.freezeFlag != ''">
+            and t.freeze_flag LIKE '%${p.freezeFlag}%'
+        </if>
+        <if test="p.haveCheck != null and p.haveCheck != ''">
+            and t.have_check LIKE '%${p.haveCheck}%'
+        </if>
+        <if test="p.coItemCode != null and p.coItemCode != ''">
+            and t.co_item_code LIKE '%${p.coItemCode}%'
+        </if>
+
+        <if test="p.projectId != null and p.projectId != ''">
+            and t.project_id LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.lotNumber != null and p.lotNumber != ''">
+            and t.lot_number = #{p.lotNumber}
+        </if>
+        <if test="p.editionCode != null and p.editionCode != ''">
+            and t.edition_code = #{p.editionCode}
+        </if>
+
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.in_stock_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.in_stock_time
+        </if>
+        GROUP BY
+        t.co_item_code,
+        t.wh_code,
+        t.stock_flag,
+        t.cust_code,
+        t.supplier_code
+        order by t.stock_flag asc,t.id desc
+    </select>
+</mapper>

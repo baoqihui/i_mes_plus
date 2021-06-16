@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsReceiveDetailSubMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 主键ID
+            t.WRD_DID wrdDid,  -- 明细ID
+            t.WR_DOC_NUM wrDocNum,  -- 收料单号
+            t.CO_ITEM_CODE coItemCode,  -- 物料代码
+            t.tbl_barcode tblBarcode,  -- 物料SN
+            t.ITEM_VER itemVer,  -- 版本号
+            t.RECEIVE_NUM receiveNum,  -- 实收数量
+            t.CURRENT_NUM currentNum,  -- 当前数量
+            t.LOT_NUMBER lotNumber,  -- 批次号
+            t.AREA_SN areaSn,  -- 货位SN(库位SN)
+            t.CURRENT_AREA_SN currentAreaSn,  -- 当前所在区域SN
+            t.WRDS_CL_BCODE wrdsClBcode,  -- 标识码
+            t.WRDS_IN_DATE wrdsInDate,  -- 入库时间
+            t.tbl_manufacturer_bat wrdsGyph,  -- 供应商批号
+            t.tbl_manufacturer_date wrdsGyscrq,  -- 供应商生产日期
+            t.WRDS_TICKET_NUM wrdsTicketNum,  -- 客户传票号
+            t.WRDS_REPOST_BAR wrdsRepostBar,  -- 重贴条码标志(Y是N否)，默认否
+            t.WRDS_IN_DOC wrdsInDoc,  -- 领料单物料标志(Y是N否)，默认是
+            t.WRDS_EMP_NO wrdsEmpNo,  -- 操作人工号
+            t.WRDS_EMP_NAME wrdsEmpName,  -- 操作人工姓名
+            t.WH_CODE whCode,  -- 仓库SN
+            t.RESERVOIR_CODE reservoirCode,  -- 库区SN
+            t.SUPPLIER_CODE supplierCode,  -- 供应商
+            t.WRDS_RETURN_FLAG wrdsReturnFlag,  -- 退库标识 Y是N否
+            t.WRDS_CONTAINER wrdsContainer,  -- 容器SN
+            t.WRDS_CONTAINER_BAT wrdsContainerBat,  -- 成品下线堆栈批号
+            t.CUST_CODE custCode,  -- 客户编号
+            t.PROJECT_ID projectId,  -- 工单号
+            t.VMI_FLAG vmiFlag,  -- VMI标志
+            t.TO_ERP toErp,  -- 是否回写，Y为是；N/null为否
+            t.PALLET_SN palletSn,  -- 栈板SN
+            t.CAN_TO_ERP canToErp,  -- 成品完工入库上传标识(0不上传1可以上传)
+            t.OQC_NO oqcNo,  -- iqc抽检单号
+            t.OS_QC_RESULT osQcResult,  -- 是否允收(y/n),挑选时允收才能入库 
+            t.OS_QTY_LOSS osQtyLoss,  -- 损耗数量 
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from sms_wms_receive_detail_sub t
+        where 1=1
+        <if test="p.wrdDid != null and p.wrdDid != ''">
+            and t.WRD_DID = #{p.wrdDid}
+        </if>
+        order by t.id desc
+    </select>
+    <select id="listAll" resultType="java.util.Map">
+        select
+            d.depa_code depaCode, -- 部门代码
+            d.depa_name depaName, -- 部门名称
+            t.tbl_barcode tblBarcode,  -- 物料SN
+            t.RECEIVE_NUM receiveNum, -- SN数量
+            t.CO_ITEM_CODE coItemCode,  -- 物料代码
+            s.CO_ITEM_NAME coItemName, -- 物料名称
+            t.WR_DOC_NUM wrDocNum,  -- 入库单号
+            A.dt_name twtName, -- 入库类型
+            CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,'')) as twtTypeName, -- 入库单类别
+            d.PROJECT_ID projectId, -- 工单号
+            rd.WH_CODE whCode,   -- 仓库代码
+            aa.AR_NAME whName,  -- 仓库名称
+            t.supplier_code supplierCode,  -- 供应商代码
+            su.supplier_name supplierName,  -- 供应商名称
+            t.tbl_manufacturer_bat tblManufacturerBat,  -- 供应商批号
+            t.tbl_manufacturer_date tblManufacturerDate,  -- 供应商生产日期
+            rd.ERP_PO poNo, -- 采购订单号
+            t.WRDS_EMP_NO wrdsEmpNo,  -- 操作人工号
+            u.user_name userName,  -- 入库人
+            t.WRDS_EMP_NAME userName,  -- 操作人工姓名
+            d.WR_STATE  wrState, -- 单据状态
+            t.WRDS_IN_DATE wrdsInDate,  -- 入库时间
+            d.WR_REMARK remark
+        from sms_wms_receive_detail_sub t
+        LEFT JOIN sms_wms_receive_detail rd ON rd.id=t.WRD_DID
+        LEFT JOIN sms_wms_receive_doc d ON d.WR_DOC_NUM=t.WR_DOC_NUM
+        LEFT JOIN ums_item_sap s ON s.CO_ITEM_CODE=t.CO_ITEM_CODE
+        LEFT JOIN sms_wms_io_type A ON d.DT_CODE=A.dt_code
+        LEFT JOIN sms_wms_erp_doc_type B ON d.TWT_DID=B.d_id
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=t.wh_code
+        LEFT JOIN ums_supplier su on su.supplier_code=t.SUPPLIER_CODE
+        LEFT JOIN ums_user u on t.WRDS_EMP_NO=u.user_account
+        WHERE 1=1
+        <if test="p.wrDocNum != null and p.wrDocNum != ''">
+            and t.WR_DOC_NUM LIKE '%${p.wrDocNum}%'
+        </if>
+        <if test="p.projectId != null and p.projectId != ''">
+            and d.PROJECT_ID LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.tblManufacturerBat != null and p.tblManufacturerBat != ''">
+            and t.tbl_manufacturer_bat LIKE '%${p.tblManufacturerBat}%'
+        </if>
+        <if test="p.poNo != null and p.poNo != ''">
+            and rd.ERP_PO LIKE '%${p.poNo}%'
+        </if>
+
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.WH_CODE LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and su.supplier_name LIKE '%${p.supplierName}%'
+        </if>
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and A.dt_code LIKE '%${p.dtCode}%'
+        </if>
+        <if test="p.twtTypeName != null and p.twtTypeName != ''">
+            and CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,'')) LIKE '%${p.twtTypeName}%'
+        </if>
+
+        <if test="p.coItemCode != null and p.coItemCode != ''">
+            and t.CO_ITEM_CODE LIKE '%${p.coItemCode}%'
+        </if>
+        <if test="p.tblBarcode != null and p.tblBarcode != ''">
+            and t.TBL_BARCODE LIKE '%${p.tblBarcode}%'
+        </if>
+        <if test="p.wrState != null and p.wrState != ''">
+            and d.WR_STATE LIKE '%${p.wrState}%'
+        </if>
+        <if test="p.projectId != null and p.projectId != ''">
+            and d.PROJECT_ID LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.inStartTime != null and p.inStartTime != '' ">
+            and t.WRDS_IN_DATE >= '${p.inStartTime}'
+        </if>
+        <if test="p.inEndTime !=null and p.inEndTime != '' ">
+            and '${p.inEndTime}' >= t.WRDS_IN_DATE
+        </if>
+        <if test="p.manufacturerStartTime != null and p.manufacturerStartTime != '' ">
+            and t.tbl_manufacturer_date >= '${p.manufacturerStartTime}'
+        </if>
+        <if test="p.manufacturerEndTime !=null and p.manufacturerEndTime != '' ">
+            and '${p.manufacturerEndTime}' >= t.tbl_manufacturer_date
+        </if>
+        order by t.id desc
+    </select>
+
+    <select id="listAllCollect" resultType="java.util.Map">
+        select
+        d.depa_code depaCode, -- 部门代码
+        d.depa_name depaName, -- 部门名称
+        t.CO_ITEM_CODE coItemCode,  -- 物料代码
+        s.CO_ITEM_NAME coItemName, -- 物料名称
+        A.dt_name twtName, -- 入库类型
+        CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,'')) as twtTypeName, -- 入库单类别
+        rd.WH_CODE whCode,   -- 仓库代码
+        aa.AR_NAME whName,  -- 仓库名称
+        t.supplier_code supplierCode,  -- 供应商代码
+        su.supplier_name supplierName,  -- 供应商名称
+        SUM(t.RECEIVE_NUM) amount -- 数量
+        from sms_wms_receive_detail_sub t
+        LEFT JOIN sms_wms_receive_detail rd ON rd.id=t.WRD_DID
+        LEFT JOIN sms_wms_receive_doc d ON d.WR_DOC_NUM=t.WR_DOC_NUM
+        LEFT JOIN ums_item_sap s ON s.CO_ITEM_CODE=t.CO_ITEM_CODE
+        LEFT JOIN sms_wms_io_type A ON d.DT_CODE=A.dt_code
+        LEFT JOIN sms_wms_erp_doc_type B ON d.TWT_DID=B.d_id
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=t.wh_code
+        LEFT JOIN ums_supplier su on su.supplier_code=t.SUPPLIER_CODE
+        LEFT JOIN ums_user u on t.WRDS_EMP_NO=u.user_account
+        WHERE 1=1
+        <if test="p.wrDocNum != null and p.wrDocNum != ''">
+            and t.WR_DOC_NUM LIKE '%${p.wrDocNum}%'
+        </if>
+        <if test="p.projectId != null and p.projectId != ''">
+            and d.PROJECT_ID LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.tblManufacturerBat != null and p.tblManufacturerBat != ''">
+            and t.tbl_manufacturer_bat LIKE '%${p.tblManufacturerBat}%'
+        </if>
+        <if test="p.poNo != null and p.poNo != ''">
+            and rd.ERP_PO LIKE '%${p.poNo}%'
+        </if>
+
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.WH_CODE LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and su.supplier_name LIKE '%${p.supplierName}%'
+        </if>
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and A.dt_code LIKE '%${p.dtCode}%'
+        </if>
+        <if test="p.twtTypeName != null and p.twtTypeName != ''">
+            and CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,'')) LIKE '%${p.twtTypeName}%'
+        </if>
+
+        <if test="p.coItemCode != null and p.coItemCode != ''">
+            and t.CO_ITEM_CODE LIKE '%${p.coItemCode}%'
+        </if>
+        <if test="p.tblBarcode != null and p.tblBarcode != ''">
+            and t.TBL_BARCODE LIKE '%${p.tblBarcode}%'
+        </if>
+        <if test="p.wrState != null and p.wrState != ''">
+            and d.WR_STATE LIKE '%${p.wrState}%'
+        </if>
+        <if test="p.projectId != null and p.projectId != ''">
+            and d.PROJECT_ID LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.inStartTime != null and p.inStartTime != '' ">
+            and t.WRDS_IN_DATE >= '${p.inStartTime}'
+        </if>
+        <if test="p.inEndTime !=null and p.inEndTime != '' ">
+            and '${p.inEndTime}' >= t.WRDS_IN_DATE
+        </if>
+        <if test="p.manufacturerStartTime != null and p.manufacturerStartTime != '' ">
+            and t.tbl_manufacturer_date >= '${p.manufacturerStartTime}'
+        </if>
+        <if test="p.manufacturerEndTime !=null and p.manufacturerEndTime != '' ">
+            and '${p.manufacturerEndTime}' >= t.tbl_manufacturer_date
+        </if>
+        GROUP BY
+            t.co_item_code,
+            t.wh_code,
+            t.supplier_code,
+            A.dt_code,
+            CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,''))
+    </select>
+    <select id="getGroup" resultType="com.rh.i_mes_plus.model.sms.SmsWmsReceiveDetailSub">
+        SELECT
+            CO_ITEM_CODE coItemCode,
+            tbl_manufacturer_bat tblManufacturerBat,
+            tbl_manufacturer_date tblManufacturerDate,
+            sum(RECEIVE_NUM) receiveNum
+        FROM
+            sms_wms_receive_detail_sub
+        WHERE
+            WR_DOC_NUM = #{wrDocNum}
+        GROUP BY
+            CO_ITEM_CODE,
+            tbl_manufacturer_bat,
+            tbl_manufacturer_date
+    </select>
+</mapper>

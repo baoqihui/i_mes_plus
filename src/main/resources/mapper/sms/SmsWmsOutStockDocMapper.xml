@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsOutStockDocMapper">
+    <select id="findList" resultType="map">
+        select
+        DISTINCT t.doc_no docNo, -- 出库单据号
+        t.id id,  -- ID
+        t.to_erp toErp,  -- 是否回写，Y为是；N/null为否
+        t.depa_name depaName,  -- 部门名称
+        t.pickup_type pickupType,  -- 备料类型：1手工创建 2自EXCEL 3自料站表  4自生产工单
+        t.wh_code whCode,  -- 仓库代码
+        ar.AR_NAME whName, -- 仓库名称
+        t.doc_status docStatus,  -- 状态(1录入、2、出库中 4、关结)
+        t.twt_did twtDid,  -- 收发类型ID
+        CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.type_name,'')) as twtTypeName, -- 收发类型
+        t.doc_man_no docManNo,  -- 制单人
+        u.user_name userName,
+
+        t.doc_time docTime,  -- 开单时间
+        (SELECT GROUP_CONCAT(DISTINCT m.project_id) FROM sms_wms_out_stock_pm_item m WHERE m.doc_no = t.doc_no GROUP BY m.doc_no) allProject, -- 工单
+        t.doc_remark docRemark,  -- 备注
+
+
+        t.cust_code custCode,  -- 客户代码
+        C.CUSTOMER customer, -- 客户名称
+        t.supplier_name supplierName,  -- 供应商名称
+        t.doc_out_time docOutTime,  -- 计划出货日期
+        t.dt_code dtCode,  -- 出库类型(关联单据类型表ID) t_co_wh_doc_type
+        t.doc_ship_address docShipAddress,  -- 发货地址
+        t.sv_id svId,  -- 发货方式ID
+        t.doc_ship_tern docShipTern,  -- 发货付款方式
+        t.doc_specific_type docSpecificType,  -- 特定发货方式
+        t.doc_ship_account docShipAccount,  -- 运单号
+        t.doc_close_date docCloseDate,  -- 关结时间
+        t.doc_ship_type docShipType,  -- 运单类型 1 收货人 2 第三方
+        t.supplier_code supplierCode,  -- 供应商代码
+        t.doc_shopreservoir_code docShopreservoirCode,  -- 车间现场库区，回传ERP接口需要，WMS未做任何业务逻辑处理
+        t.movein_wh_code moveinWhCode,  -- 调入仓库SN
+        t.erp_doc erpDoc,  -- ERP单号(同步时写入)
+        t.erp_doc_type erpDocType,  -- ERP单据类型(同步时写入)
+        t.erp_verification_code erpVerificationCode,  -- ERP审核码
+        t.oqc_time oqcTime,  -- OQC确认时间
+        t.oqc_man_no oqcManNo,  -- OQC确认人
+        t.oqc_accounts_flag oqcAccountsFlag,  -- OQC标志:Y是N否默认否
+        t.wms_time wmsTime,  -- 仓库确认时间
+        t.wms_man_no wmsManNo,  -- 仓库确认人
+        t.wms_accounts_flag wmsAccountsFlag,  -- 仓库标志是，否，默认否
+        t.doc_flag docFlag,  -- 是否放行标识
+        t.insert_out_flag insertOutFlag,  -- 插单发货(Y是N否)
+        t.can_to_erp canToErp,  -- 全部领料允许上传(Y是N否)
+        t.doc_outstock_flag docOutstockFlag,  -- 是否场外库
+        t.create_time createTime,  -- 创建时间:按当前时间自动创建
+        t.update_time updateTime,  -- 更新时间
+        t.depa_code depaCode  -- 部门代码
+        from sms_wms_out_stock_doc t
+        LEFT JOIN sms_wms_io_type A on t.DT_CODE=A.dt_code
+        LEFT JOIN sms_wms_erp_doc_type B ON t.twt_did=B.d_id
+        LEFT JOIN ums_customer C ON C.CUST_CODE=t.cust_code
+        LEFT JOIN ums_wms_area ar ON t.wh_code=ar.AR_SN
+        LEFT JOIN ums_user u on u.user_account=t.doc_man_no
+        WHERE
+        1=1
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and t.dt_code LIKE '%${p.dtCode}%'
+        </if>
+        <if test="p.userName != null and p.userName != ''">
+            and u.user_name LIKE '%${p.userName}%'
+        </if>
+        <if test="p.docNo != null and p.docNo != ''">
+            and t.doc_no LIKE '%${p.docNo}%'
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.docStatus != null and p.docStatus != ''">
+            and t.doc_status LIKE '%${p.docStatus}%'
+        </if>
+        <if test="p.twtDid != null and p.twtDid != ''">
+            and t.twt_did LIKE '%${p.twtDid}%'
+        </if>
+        <if test="p.twtTypeName != null and p.twtTypeName != ''">
+            and CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,''))  LIKE '%${p.twtTypeName}%'
+        </if>
+        <if test="p.pickupType != null and p.pickupType != ''">
+            and t.pickup_type LIKE '%${p.pickupType}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.doc_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.doc_time
+        </if>
+        <if test="p.allProject != null and p.allProject != ''">
+            and (SELECT GROUP_CONCAT(DISTINCT m.project_id) FROM sms_wms_out_stock_pm_item m WHERE m.doc_no = t.doc_no GROUP BY m.doc_no) LIKE '%${p.allProject}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and (SELECT GROUP_CONCAT(DISTINCT D.item_code) FROM sms_wms_out_stock_detail d WHERE d.doc_no = t.doc_no) LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.tblBarcode != null and p.tblBarcode != ''">
+            and (SELECT GROUP_CONCAT(DISTINCT l.TBL_BARCODE) FROM sms_wms_out_stock_list l WHERE l.doc_no = t.doc_no) LIKE '%${p.tblBarcode}%'
+        </if>
+        order by t.doc_status asc,t.id desc
+    </select>
+
+    <select id="getItemNumByDocNos" resultType="java.util.Map">
+        SELECT
+        t.item_code itemCode,
+        t.item_name itemName,
+        t.item_spec itemSpec,
+        t.remark projectId,
+        SUM( IFNULL( t.osd_amount_plan, 0 ) ) osdAmountPlan,
+        SUM( IFNULL( t.osd_amount_real, 0 ) ) osdAmountReal,
+        SUM( IFNULL( t.osd_amount_plan, 0 ) ) osdAmountConsumption,
+        SUM( IFNULL( t.osd_amount_real, 0 )- IFNULL( t.osd_amount_plan, 0 )) osdAmountRetired
+        FROM
+        sms_wms_out_stock_detail t
+        WHERE
+        doc_no IN
+        <foreach collection="p.docNos" separator="," close=")" open="(" item="item" index="index">
+            #{item}
+        </foreach>
+        GROUP BY
+        t.item_code,
+        t.item_name
+    </select>
+    <select id="getDocNoByProjectIdAndDocNo" resultType="java.util.Map">
+        select t.doc_no docNo from sms_wms_out_stock_doc t where 1=1
+        <if test="p.docNo != null and p.docNo != ''">
+            and t.doc_no LIKE '%${p.docNo}%'
+        </if>
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and t.dt_code LIKE '%${p.dtCode}%'
+        </if>
+        <if test="p.projectId != null and p.projectId != ''">
+            and (SELECT GROUP_CONCAT( DISTINCT i.PROJECT_ID ) FROM sms_wms_out_stock_pm_item i WHERE t.doc_no = i.doc_no ) LIKE '%${p.projectId}%'
+        </if>
+    </select>
+    <select id="getAllProjects" resultType="java.lang.String">
+        SELECT
+        GROUP_CONCAT( DISTINCT m.project_id ) allProject
+        FROM
+        sms_wms_out_stock_pm_item m
+        WHERE
+        m.doc_no in
+        <foreach collection="p.docNos" separator="," close=")" open="(" item="item" index="index">
+            #{item}
+        </foreach>
+    </select>
+    <select id="statement" resultType="java.util.Map">
+        select
+            t.co_item_code coItemCode,  -- 物料编码
+            t.tbl_barcode tblBarcode,  -- 物料sn
+            sd.osd_amount_plan osdAmountPlan, -- 计划出库数量
+            si.amount amount,  -- SN库存数量
+            si.lot_number lotNumber, -- 批次号
+            t.wh_code whCode,  -- 仓库SN
+            aa.AR_NAME whName,  -- 仓库名称
+            si.reservoir_code reservoirCode, -- 库区SN
+            si.area_sn areaSn, -- 库位
+            si.pdate pdate, -- 生产日期
+            t.PROJECT_ID projectId, -- 工单号
+            d.doc_remark docRemark, -- 备注
+            sd.replace_flag replaceFlag
+        from sms_wms_out_stock_list t
+        LEFT JOIN sms_wms_out_stock_detail sd ON sd.id=t.osd_id
+        LEFT JOIN sms_wms_out_stock_doc d ON d.doc_no=t.doc_no
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=t.wh_code
+        LEFT JOIN sms_wms_stock_info si on si.tbl_barcode=t.TBL_BARCODE
+        where 1=1
+        <if test="p.docNo != null and p.docNo != ''">
+            and t.doc_no LIKE '%${p.docNo}%'
+        </if>
+    </select>
+    <select id="statementStock" resultType="java.util.Map">
+        select
+            si.co_item_code coItemCode, -- 物料代码
+            si.tbl_barcode tblBarcode,  -- 物料sn
+            si.amount amount,  -- SN库存数量
+            si.lot_number lotNumber, -- 批次号
+            si.wh_code whCode,  -- 仓库SN
+            aa.AR_NAME whName,  -- 仓库名称
+            si.reservoir_code reservoirCode, -- 库区SN
+            si.area_sn areaSn, -- 库位
+            si.pdate pdate, -- 生产日期
+            si.PROJECT_ID projectId -- 工单号
+        from sms_wms_stock_info si
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=si.wh_code
+        where 1=1
+        and si.co_item_code=#{coItemCode}
+        and si.stock_flag='1'
+        and si.wh_code!='W-M-UPT'
+        and si.wh_code!='W-M-MSC'
+    </select>
+</mapper>

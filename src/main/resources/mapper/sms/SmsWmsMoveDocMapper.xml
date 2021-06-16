@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsMoveDocMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.move_no moveNo,  -- 调拨单号
+            t.move_status moveStatus,  -- 单据状态:0-开立 1-调拨中4-关结
+            t.supplier_code supplierCode,  -- 供应商编号
+            s.supplier_name supplierName, -- 供应商名称
+            t.create_no createNo,  -- 开单人工号
+            u.user_name userName,   -- 开单人姓名
+            t.create_time createTime,  -- 开单时间
+            t.move_date moveDate,  -- 计划调拨日期
+            t.remark remark,  -- 备注
+            t.in_wh_code inWhCode,  -- 调入仓库sn
+            inar.AR_NAME inArName,  -- 调入仓库名
+            t.out_wh_code outWhCode,  -- 调出仓库sn
+            outar.AR_NAME outArName, -- 调出仓库名
+            t.move_type moveType, -- 调拨单类型(1,非半成品 2，半成品)
+            t.update_time updateTime,  -- 更新时间
+            t.move_flag moveFlag,  -- 1调拨2借出
+            t.out_doc_id outDocId,  -- 出库单号
+            t.erp_doc erpDoc,  -- erp单号(同步时写入)
+            t.erp_doc_type erpDocType,  -- erp单据类型(同步时写入)
+            t.depa_code depaCode,  -- 部门代码
+            t.depa_name depaName  -- 部门名称
+        from sms_wms_move_doc t
+        left join ums_supplier s on t.supplier_code=s.supplier_code
+        left join ums_user u on t.create_no=u.user_account
+        left join ums_wms_area inar ON t.in_wh_code=inar.AR_SN
+        left join ums_wms_area outar ON t.out_wh_code=outar.AR_SN
+        where 1=1
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+        <if test="p.moveNo != null and p.moveNo != ''">
+            and t.move_no LIKE '%${p.moveNo}%'
+        </if>
+        <if test="p.supplierCode != null and p.supplierCode != ''">
+            and t.supplier_code LIKE '%${p.supplierCode}%'
+        </if>
+        <if test="p.createNo != null and p.createNo != ''">
+            and t.create_no LIKE '%${p.createNo}%'
+        </if>
+        <if test="p.moveStatus != null and p.moveStatus != ''">
+            and t.move_status LIKE '%${p.moveStatus}%'
+        </if>
+        <if test="p.moveType != null and p.moveType != ''">
+            and t.move_type LIKE '%${p.moveType}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.move_date >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.move_date
+        </if>
+        order by t.move_status asc,t.id desc
+    </select>
+</mapper>

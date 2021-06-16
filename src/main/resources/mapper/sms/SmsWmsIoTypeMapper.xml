@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsWmsIoTypeMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.dt_code dtCode,  -- 单据类型代码
+            t.dt_name dtName,  -- 
+            t.type type,  -- 
+            t.rep_code repCode,  -- 
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.is_del isDel,  -- 
+            t.depa_code depaCode,  -- 部门代码
+            t.depa_name depaName  -- 部门名称
+        from sms_wms_io_type t
+        where 1=1
+        <if test="p.type != null and p.type != ''">
+            and t.type LIKE '%${p.type}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>
