@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.GzkFixDetailInfoMapper">
+    <select id="findList" resultType="map">
+        select
+        t.id id,  --
+        t.fix_no fixNo,  -- 治具编号
+        t.type_code typeCode,  -- 治具大类代码
+        i.type_name typeName,  -- 类型名
+        t.item_type_code itemTypeCode,  -- 小类别代码
+        ti.item_type_name itemTypeName, -- 小类名称
+        t.model_code modelCode,  -- 适用机型
+        t.supplier_code supplierCode,  -- 供应商代码
+        s.supplier_name supplierName, -- 供应商名称
+        t.pos pos,  -- 储存位置
+        t.in_date inDate,  -- 进场日期
+        t.state state,  -- 状态(1.在库 2.借出 3.报废 4.保养)
+        t.create_user createUser,  -- 创建人
+        t.create_time createTime,  -- 创建时间
+        t.update_time updateTime,  -- 更新时间
+        (SELECT datediff(NOW(), t.mainten_time)  FROM sps_mainten_log_info t WHERE t.type_code = 'C' AND t.spares_no = t.fix_no AND t.cycle_code='HY' ORDER BY t.mainten_time DESC LIMIT 1) finalMaintenTime,
+        IFNULL((SELECT CASE WHEN(datediff( NOW(), t.mainten_time)>= 180 ) THEN '1' ELSE '0' END AS thirtyDayExceptStatus
+        FROM sps_mainten_log_info t WHERE t.type_code = 'C' AND t.spares_no = t.fix_no AND t.cycle_code='HY' ORDER BY t.mainten_time DESC LIMIT 1),'1') isExceedTime
+        from gzk_fix_detail_info t
+        left join ums_spares_type_info i on i.type_code=t.type_code
+        left join ums_spares_item_type_info ti on t.item_type_code=ti.item_type_code
+        left join ums_supplier s on s.supplier_code=t.supplier_code
+        where 1=1
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and t.type_code LIKE '%${p.typeCode}%'
+        </if>
+        <if test="p.itemTypeCode != null and p.itemTypeCode != ''">
+            and t.item_type_code LIKE '%${p.itemTypeCode}%'
+        </if>
+        <if test="p.itemTypeName != null and p.itemTypeName != ''">
+            and  ti.item_type_name LIKE '%${p.itemTypeName}%'
+        </if>
+        <if test="p.fixNo != null and p.fixNo != ''">
+            and t.fix_no LIKE '%${p.fixNo}%'
+        </if>
+        <if test="p.finalFixNo != null and p.finalFixNo != ''">
+            and t.fix_no = #{p.finalFixNo}
+        </if>
+        <if test="p.sparesNo != null and p.sparesNo != ''">
+            and t.fix_no LIKE '%${p.sparesNo}%'
+        </if>
+        <if test="p.state != null and p.state != ''">
+            and t.state = #{p.state}
+        </if>
+        <if test="p.userDefinedState != null and p.userDefinedState != ''">
+            and t.state ${p.userDefinedState}
+        </if>
+        ORDER BY isExceedTime desc,id desc
+    </select>
+    <select id="leadOut" resultType="java.util.Map">
+        select
+            t.id id,  --
+            t.fix_no fixNo,  -- 治具编号
+            t.type_code typeCode,  -- 治具大类代码
+            i.type_name typeName,  -- 类型名
+            t.item_type_code itemTypeCode,  -- 小类别代码
+            ti.item_type_name itemTypeName, -- 小类名称
+            t.model_code modelCode,  -- 适用机型
+            t.supplier_code supplierCode,  -- 供应商代码
+            s.supplier_name supplierName, -- 供应商名称
+            t.pos pos,  -- 储存位置
+            t.in_date inDate,  -- 进场日期
+            t.state state,  -- 状态(1.在库 2.借出 3.报废 4.保养)
+            t.create_user createUser,  -- 创建人
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime,  -- 更新时间
+            IFNULL((SELECT CASE WHEN(datediff( NOW(), t.mainten_time)>= 30 ) THEN '1' ELSE '0' END AS thirtyDayExceptStatus
+        FROM sps_mainten_log_info t WHERE t.type_code = 'C' AND t.spares_no = t.fix_no ORDER BY t.mainten_time DESC LIMIT 1),'1') isExceedTime
+        from gzk_fix_detail_info t
+        left join ums_spares_type_info i on i.type_code=t.type_code
+        left join ums_spares_item_type_info ti on t.item_type_code=ti.item_type_code
+        left join ums_supplier s on s.supplier_code=t.supplier_code
+        where
+        t.id IN
+        <foreach collection="ids" separator="," close=")" open="(" item="item" index="index">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

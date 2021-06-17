@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.SpsFeederMaintenLogMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.feeder_sn feederSn,  -- 料枪SN
+            sfi.spec_code specCode,
+            ufs.spec_name specName,
+            t.type type,  -- 类型（1，保养 2，维修）
+            t.cycle_code cycleCode,  -- 保养周期代码
+            t.comment_names commentNames,  -- 保养内容名称集合
+            t.comment_codes commentCodes,  -- 保养内容代码集合
+            t.bad_phenomenon badPhenomenon,  -- 不良现象
+            t.maintenance_content maintenanceContent,  -- 维修内容
+            t.mainten_time maintenTime,  -- 保养时间
+            t.maintener maintener,  -- 保养人
+            t.remark remark,  -- 备注
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from sps_feeder_mainten_log t
+        left join sps_feeder_info sfi on t.feeder_sn = sfi.feeder_sn
+        left join ums_feeder_spec ufs on sfi.spec_code = ufs.spec_code
+        where 1=1
+        <if test="p.feederSn != null and p.feederSn != ''">
+            and t.feeder_sn LIKE '%${p.feederSn}%'
+        </if>
+        <if test="p.type != null and p.type != ''">
+            and t.type LIKE '%${p.type}%'
+        </if>
+        <if test="p.cycleCode != null and p.cycleCode != ''">
+            and t.cycle_code LIKE '%${p.cycleCode}%'
+        </if>
+        <if test="p.commentNames != null and p.commentNames != ''">
+            and t.comment_names LIKE '%${p.commentNames}%'
+        </if>
+        <if test="p.commentCodes != null and p.commentCodes != ''">
+            and t.comment_codes LIKE '%${p.commentCodes}%'
+        </if>
+        <if test="p.badPhenomenon != null and p.badPhenomenon != ''">
+            and t.bad_phenomenon LIKE '%${p.badPhenomenon}%'
+        </if>
+        <if test="p.maintenanceContent != null and p.maintenanceContent != ''">
+            and t.maintenance_content LIKE '%${p.maintenanceContent}%'
+        </if>
+        <if test="p.maintenTime != null and p.maintenTime != ''">
+            and t.mainten_time LIKE '%${p.maintenTime}%'
+        </if>
+        <if test="p.maintener != null and p.maintener != ''">
+            and t.maintener LIKE '%${p.maintener}%'
+        </if>
+        <if test="p.remark != null and p.remark != ''">
+            and t.remark LIKE '%${p.remark}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

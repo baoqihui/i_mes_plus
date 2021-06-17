@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.ApprovalProcessMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.type_code typeCode,  -- 大类代码
+            t.oper_type operType,  -- 操作类型（1.报废）
+            t.stream_no streamNo,  -- 流编号
+            t.node_no nodeNo,  -- 节点编号
+            t.node_name nodeName,  -- 节点名称
+            t.is_auto_pass isAutoPass,  -- 是否自动审核（0，非自动 1，自动）
+            t.oper_usr_no operUsrNo,  -- 操作人编号
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from approval_process t
+        where 1=1
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and t.type_code = #{p.typeCode}
+        </if>
+        <if test="p.operType != null and p.operType != ''">
+            and t.oper_type = #{p.operType}
+        </if>
+        <if test="p.streamNo != null and p.streamNo != ''">
+            and t.stream_no = #{p.streamNo}
+        </if>
+        <if test="p.nodeNo != null and p.nodeNo != ''">
+            and t.node_no = #{p.nodeNo}
+        </if>
+        order by t.id desc
+    </select>
+    <select id="getOperUsrNo" resultType="com.rh.i_mes_plus.model.sps.ApprovalProcess">
+        select
+            t.id id,  --
+            t.type_code typeCode,  -- 大类代码
+            t.oper_type operType,  -- 操作类型（1.报废）
+            t.stream_no streamNo,  -- 流编号
+            t.node_no nodeNo,  -- 节点编号
+            t.node_name nodeName,  -- 节点名称
+            t.is_auto_pass isAutoPass,  -- 是否自动审核（0，非自动 1，自动）
+            t.oper_usr_no operUsrNo,  -- 操作人编号
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from approval_process t
+        where t.is_auto_pass=0
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and t.type_code = #{p.typeCode}
+        </if>
+        <if test="p.operType != null and p.operType != ''">
+            and t.oper_type = #{p.operType}
+        </if>
+        <if test="p.streamNo != null and p.streamNo != ''">
+            and t.stream_no = #{p.streamNo}
+        </if>
+        <if test="p.nodeNo != null and p.nodeNo != ''">
+            and t.node_no > #{p.nodeNo}
+        </if>
+        order by t.node_no asc
+        limit 1
+    </select>
+
+</mapper>

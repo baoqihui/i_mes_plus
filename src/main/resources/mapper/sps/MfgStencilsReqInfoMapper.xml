@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.MfgStencilsReqInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.stencil_no stencilNo,  -- 治具编号
+            t.lend_usr lendUsr,  -- 借用人
+            t.lend_time lendTime,  -- 借用时间
+            t.lend_appearance_inspection lendAppearanceInspection,  -- 借用时外观检测(0，ng 1，ok)
+            t.lend_pos lendPos,  -- 借用时储位
+            t.lend_left_upper lendLeftUpper,  -- 借用时左上
+            t.lend_right_upper lendRightUpper,  -- 借用时右上
+            t.lend_left_lower lendLeftLower,  -- 借用时左下
+            t.lend_right_lower lendRightLower,  -- 借用时右下
+            t.lend_centre lendCentre,  -- 借用时中间
+            t.usr_return usrReturn,  -- 归还人
+            t.time_return timeReturn,  -- 归还时间
+            t.return_appearance_inspection returnAppearanceInspection,  -- 归还时外观检测(0，ng 1，ok)
+            t.return_pos returnPos,  -- 归还时储位
+            t.return_left_upper returnLeftUpper,  -- 归还时左上
+            t.return_right_upper returnRightUpper,  -- 归还时右上
+            t.return_left_lower returnLeftLower,  -- 归还时左下
+            t.return_right_lower returnRightLower,  -- 归还时右下
+            t.return_centre returnCentre,  -- 归还时中间
+            t.this_used_times thisUsedTimes,  -- 本次使用次数
+            t.state state,  -- 状态(1，新建 2，领用 3，归还)
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime,  -- 更新时间
+            t.line_code lineCode,   -- 线体代码
+            ulb.line_name lineName, -- 线体名称
+            msdi.item_type_code itemTypeCode,  -- 小类别代码
+            ti.item_type_name itemTypeName, -- 小类名称
+            msdi.item_code itemCode,  -- 物料代码
+            msdi.item_name itemName,  -- 物料名称
+            msdi.item_spec itemSpec,  -- 物料描述
+            msdi.used_times usedTimes  -- 累计使用次数
+        from mfg_stencils_req_info t
+        left join mfg_stencils_detail_info msdi on t.stencil_no = msdi.stencil_no
+        left join ums_spares_item_type_info ti on msdi.item_type_code=ti.item_type_code
+        left join ums_line_body ulb on t.line_code = ulb.line_code
+        where 1=1
+        <if test="p.itemTypeCode != null and p.itemTypeCode != ''">
+            and msdi.item_type_code LIKE '%${p.itemTypeCode}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and msdi.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.itemName != null and p.itemName != ''">
+            and msdi.item_name LIKE '%${p.itemName}%'
+        </if>
+        <if test="p.stencilNo != null and p.stencilNo != ''">
+            and t.stencil_no LIKE '%${p.stencilNo}%'
+        </if>
+        <if test="p.lendUsr != null and p.lendUsr != ''">
+            and t.lend_usr LIKE '%${p.lendUsr}%'
+        </if>
+        <if test="p.lendTime != null and p.lendTime != ''">
+            and t.lend_time LIKE '%${p.lendTime}%'
+        </if>
+        <if test="p.lendAppearanceInspection != null and p.lendAppearanceInspection != ''">
+            and t.lend_appearance_inspection LIKE '%${p.lendAppearanceInspection}%'
+        </if>
+        <if test="p.lendPos != null and p.lendPos != ''">
+            and t.lend_pos LIKE '%${p.lendPos}%'
+        </if>
+        <if test="p.lendLeftUpper != null and p.lendLeftUpper != ''">
+            and t.lend_left_upper LIKE '%${p.lendLeftUpper}%'
+        </if>
+        <if test="p.lendRightUpper != null and p.lendRightUpper != ''">
+            and t.lend_right_upper LIKE '%${p.lendRightUpper}%'
+        </if>
+        <if test="p.lendLeftLower != null and p.lendLeftLower != ''">
+            and t.lend_left_lower LIKE '%${p.lendLeftLower}%'
+        </if>
+        <if test="p.lendRightLower != null and p.lendRightLower != ''">
+            and t.lend_right_lower LIKE '%${p.lendRightLower}%'
+        </if>
+        <if test="p.lendCentre != null and p.lendCentre != ''">
+            and t.lend_centre LIKE '%${p.lendCentre}%'
+        </if>
+        <if test="p.usrReturn != null and p.usrReturn != ''">
+            and t.usr_return LIKE '%${p.usrReturn}%'
+        </if>
+        <if test="p.timeReturn != null and p.timeReturn != ''">
+            and t.time_return LIKE '%${p.timeReturn}%'
+        </if>
+        <if test="p.returnAppearanceInspection != null and p.returnAppearanceInspection != ''">
+            and t.return_appearance_inspection LIKE '%${p.returnAppearanceInspection}%'
+        </if>
+        <if test="p.returnPos != null and p.returnPos != ''">
+            and t.return_pos LIKE '%${p.returnPos}%'
+        </if>
+        <if test="p.returnLeftUpper != null and p.returnLeftUpper != ''">
+            and t.return_left_upper LIKE '%${p.returnLeftUpper}%'
+        </if>
+        <if test="p.returnRightUpper != null and p.returnRightUpper != ''">
+            and t.return_right_upper LIKE '%${p.returnRightUpper}%'
+        </if>
+        <if test="p.returnLeftLower != null and p.returnLeftLower != ''">
+            and t.return_left_lower LIKE '%${p.returnLeftLower}%'
+        </if>
+        <if test="p.returnRightLower != null and p.returnRightLower != ''">
+            and t.return_right_lower LIKE '%${p.returnRightLower}%'
+        </if>
+        <if test="p.returnCentre != null and p.returnCentre != ''">
+            and t.return_centre LIKE '%${p.returnCentre}%'
+        </if>
+        <if test="p.thisUsedTimes != null and p.thisUsedTimes != ''">
+            and t.this_used_times LIKE '%${p.thisUsedTimes}%'
+        </if>
+        <if test="p.state != null and p.state != ''">
+            and t.state LIKE '%${p.state}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

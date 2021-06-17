@@ -102,4 +102,18 @@ public class UmsPermissionServiceImpl extends ServiceImpl<UmsPermissionMapper, U
         removeById(id);
         return Result.succeed("删除成功");
     }
+
+    @Override
+    public Result deleteBatch(List<Long> ids) {
+        for (Long id : ids) {
+            List<UmsRolePer> umsRolePers = umsRolePerService.list(new LambdaQueryWrapper<UmsRolePer>()
+                    .eq(UmsRolePer::getPerId, id)
+            );
+            if (!umsRolePers.isEmpty()) {
+                return Result.failed("请先解绑该组权限绑定的角色");
+            }
+        }
+        removeByIds(ids);
+        return Result.succeed("删除成功");
+    }
 }

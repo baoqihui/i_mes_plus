@@ -30,5 +30,7 @@ public interface IUmsPermissionService extends IService<UmsPermission> {
     List<String> getUserButtonPermission(String userAccount);
 
     Result delete(Long id);
+
+    Result deleteBatch(List<Long> ids);
 }
 

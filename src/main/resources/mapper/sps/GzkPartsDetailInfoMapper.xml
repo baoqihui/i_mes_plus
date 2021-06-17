@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.GzkPartsDetailInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.kgt_no kgtNo,  -- KGT编号（内部）
+            t.sn sn,  -- 编号（外部）
+            t.type_code typeCode,  -- 治具大类代码
+            i.type_name typeName,  -- 类型名
+            t.item_code itemCode,  -- 物料代码
+            t.item_type_code itemTypeCode,  -- 备品类别
+            ti.item_type_name itemTypeName, -- 小类名称
+            t.qty qty,  -- 数量
+            t.pos pos,  -- 存储位置
+            t.loc loc,  -- 库区（量产库/实验库/报废库/生产库）
+            t.state state,  -- 状态（在库/已借出/报废）
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime,  -- 更新时间
+            t.create_user createUser    -- 创建人
+        from gzk_parts_detail_info t
+        left join ums_spares_type_info i on i.type_code=t.type_code
+        left join ums_spares_item_type_info ti on t.item_type_code=ti.item_type_code
+        where 1=1
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and t.type_code LIKE '%${p.typeCode}%'
+        </if>
+        <if test="p.itemTypeCode != null and p.itemTypeCode != ''">
+            and t.item_type_code LIKE '%${p.itemTypeCode}%'
+        </if>
+        <if test="p.finalKgtNo != null and p.finalKgtNo != ''">
+            and t.kgt_no = #{p.finalKgtNo}
+        </if>
+        <if test="p.kgtNo != null and p.kgtNo != ''">
+            and t.kgt_no LIKE '%${p.kgtNo}%'
+        </if>
+        <if test="p.sparesNo != null and p.sparesNo != ''">
+            and t.kgt_no LIKE '%${p.sparesNo}%'
+        </if>
+        <if test="p.sn != null and p.sn != ''">
+            and t.sn LIKE '%${p.sn}%'
+        </if>
+        <if test="p.state != null and p.state != ''">
+            and t.state = #{p.state}
+        </if>
+        <if test="p.userDefinedState != null and p.userDefinedState != ''">
+            and t.state ${p.userDefinedState}
+        </if>
+        order by t.id desc
+    </select>
+    <select id="statement" resultType="java.util.Map">
+        SELECT
+            t.item_type_code itemTypeCode,  -- 备品类别
+            t.item_code itemCode, -- 料号
+            t.create_user createUser,       -- 创建人
+            ti.item_type_name itemTypeName, -- 小类名称
+            ti.min_qty minQty,              -- 最小库存
+            ifnull((SELECT sum(a.qty) FROM gzk_parts_detail_info a WHERE a.item_type_code = t.item_type_code and a.loc='1'),0) productionQty, -- 量产库数量
+            ifnull((SELECT sum(b.qty) FROM gzk_parts_detail_info b WHERE b.item_type_code = t.item_type_code and b.loc='2'),0) testQty,		  -- 实验库数量
+            ifnull((SELECT sum(c.qty) FROM gzk_parts_detail_info c WHERE c.item_type_code = t.item_type_code and c.loc='3'),0) scrapQty,	  -- 报废库数量
+            ifnull((SELECT sum(d.qty) FROM gzk_parts_detail_info d WHERE d.item_type_code = t.item_type_code and d.loc='4'),0) lendQty		  -- 借出库数量
+        FROM
+            gzk_parts_detail_info t
+        LEFT JOIN ums_spares_item_type_info ti ON t.item_type_code = ti.item_type_code
+        GROUP BY t.item_code,t.item_type_code
+    </select>
+    <select id="leadOutByIds" resultType="com.rh.i_mes_plus.vo.GzkPartsDetailInfoVO">
+        select
+            t.id id,  --
+            t.kgt_no kgtNo,  -- KGT编号（内部）
+            t.sn sn,  -- 编号（外部）
+            t.type_code typeCode,  -- 治具大类代码
+            i.type_name typeName,  -- 类型名
+            t.item_code itemCode,  -- 物料代码
+            t.item_type_code itemTypeCode,  -- 备品类别
+            ti.item_type_name itemTypeName, -- 小类名称
+            t.qty qty,  -- 数量
+            t.pos pos,  -- 存储位置
+            t.loc loc,  -- 库区（量产库/实验库/报废库/生产库）
+            t.state state,  -- 状态（在库/已借出/报废）
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime,  -- 更新时间
+            t.create_user createUser    -- 创建人
+        from gzk_parts_detail_info t
+        left join ums_spares_type_info i on i.type_code=t.type_code
+        left join ums_spares_item_type_info ti on t.item_type_code=ti.item_type_code
+        where 1=1
+        <if test="ids != null and ids.size()>0">
+            and t.id IN
+            <foreach collection="ids" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+</mapper>

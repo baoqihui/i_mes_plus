@@ -68,7 +68,15 @@ public class UmsPermissionController {
     public Result delete(@PathVariable Long id) {
         return umsPermissionService.delete(id);
     }
-
+    /**
+     * 删除
+     */
+    @ApiOperation(value = "批量删除")
+    @PostMapping("/umsPermission/deleteBatch")
+    public Result delete(@RequestBody Map<String,List<Long>> map) {
+        List<Long> ids = map.get("ids");
+        return umsPermissionService.deleteBatch(ids);
+    }
     /**
      * 通过parentId递归查询权限树（查询全部传0）
      */

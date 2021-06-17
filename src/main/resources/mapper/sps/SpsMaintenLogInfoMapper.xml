@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.SpsMaintenLogInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.type_code typeCode,  -- 类别
+            t.item_type_code itemTypeCode,  -- 小类代码
+            t.spares_no sparesNo,  -- 备具号
+            t.cycle_code cycleCode,  -- 保养周期代码
+            t.comment_codes commentCodes,  -- 保养内容代码集合
+            t.comment_names commentNames,  -- 保养内容名称集合
+            t.maintener maintener,  -- 保养人
+            t.mainten_time maintenTime,  -- 保养时间
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime,  -- 更新时间
+            t.req_no reqNo,  -- 借用单号
+            t.state state,  -- 保养状态（1.未保养 2. 已保养）
+            usti.type_name typeName,  -- 大类名
+            usiti.item_type_name itemTypeName,  -- 小类名称
+            smci.cycle_name cycleName,      -- 周期名称
+            sefri.mo_no moNo
+        from sps_mainten_log_info t
+        left join ums_spares_item_type_info usiti on t.item_type_code = usiti.item_type_code
+        left join sps_mainten_cycle_info smci on t.cycle_code = smci.cycle_code
+        left join ums_spares_type_info usti on t.type_code = usti.type_code
+        left join sps_eng_fix_req_info sefri on t.req_no = sefri.req_no
+        where 1=1
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and t.type_code LIKE '%${p.typeCode}%'
+        </if>
+        <if test="p.sparesNo != null and p.sparesNo != ''">
+            and t.spares_no LIKE '%${p.sparesNo}%'
+        </if>
+        <if test="p.reqNo != null and p.reqNo != ''">
+            and t.req_no LIKE '%${p.reqNo}%'
+        </if>
+        <if test="p.cycleName != null and p.cycleName != ''">
+            and smci.cycle_name LIKE '%${p.cycleName}%'
+        </if>
+        <if test="p.itemTypeCode != null and p.itemTypeCode != ''">
+            and t.item_type_code LIKE '%${p.itemTypeCode}%'
+        </if>
+        <if test="p.itemTypeName != null and p.itemTypeName != ''">
+            and usiti.item_type_name LIKE '%${p.itemTypeName}%'
+        </if>
+        <if test="p.moNo != null and p.moNo != ''">
+            and sefri.mo_no LIKE '%${p.moNo}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

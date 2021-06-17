@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.SpsEngFixReqInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  --
+            t.req_no reqNo,  -- 申请单号
+            t.mo_no moNo,  -- 制令单号
+            t.model_code modelCode, -- 机型
+            t.item_type_code itemTypeCode, -- 小类类别
+            usiti.item_type_name itemTypeName, -- 小类名称
+            t.usr_lend usrLend,  -- 借用人
+            t.time_lend timeLend,  -- 借用时间
+            t.usr_return usrReturn,  -- 归还人
+            t.time_return timeReturn,  -- 归还时间
+            t.poses poses,  -- 存储位置
+            t.target_qty targetQty,   -- 工单数量
+            t.state state,  -- 状态
+            t.remark remark,  -- 备注
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime -- 更新时间
+        from sps_eng_fix_req_info t
+        left join ums_spares_item_type_info usiti on t.item_type_code = usiti.item_type_code
+        where 1=1
+        <if test="p.reqNo != null and p.reqNo != ''">
+            and t.req_no LIKE '%${p.reqNo}%'
+        </if>
+        <if test="p.usrLend != null and p.usrLend != ''">
+            and t.usr_lend LIKE '%${p.usrLend}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

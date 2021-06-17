@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.MfgStencilsDetailInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  --
+            t.stencil_no stencilNo,  -- 钢网号
+            t.type_code typeCode,  -- 治具大类代码
+            t.item_type_code itemTypeCode,  -- 小类别代码
+            t.model_code modelCode,  -- 适用机型
+            t.item_code itemCode,  -- 物料代码
+            t.item_name itemName,  -- 物料名称
+            t.item_spec itemSpec,  -- 物料描述
+            t.pcb_count pcbCount,  -- 拼板数
+            t.max_times maxTimes,  -- 最大使用次数
+            t.used_times usedTimes,  -- 累计使用次数
+            t.has_frame hasFrame,  -- 是否有框
+            t.item_source itemSource,  -- 来源类型（1，自费 2，客供）
+            t.cust_code custCode,  -- 客户代码
+            t.supplier_code supplierCode,  -- 供应商代码
+            t.pos pos,  -- 储位
+            t.ownership ownership,  -- 治具产权
+            t.left_upper leftUpper,  -- 左上
+            t.left_lower leftLower,  -- 左下
+            t.right_upper rightUpper,  -- 右上
+            t.right_lower rightLower,  -- 右下
+            t.centre centre,  -- 中间
+            t.state state,  -- 状态(1.在库 2.借出 3.报废 4.保养)
+            t.in_time inTime,  -- 入库时间
+            t.in_name inName,  -- 入库人
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime,  -- 更新时间
+            t.mainten_warn maintenWarn, -- 保养提醒
+            t.appearance_inspection appearanceInspection,   -- 外观检测(0，ng 1，ok)
+            t.sc_flag scFlag,   -- 正反面
+            i.type_name typeName,  -- 类型名
+            ti.item_type_name itemTypeName, -- 小类名称
+            s.supplier_name supplierName, -- 供应商名称
+            uc.CUSTOMER customer
+        from mfg_stencils_detail_info t
+        left join ums_spares_type_info i on i.type_code=t.type_code
+        left join ums_spares_item_type_info ti on t.item_type_code=ti.item_type_code
+        left join ums_supplier s on s.supplier_code=t.supplier_code
+        left join ums_customer uc on t.cust_code = uc.CUST_CODE
+        where 1=1
+        <if test="p.stencilNo != null and p.stencilNo != ''">
+            and t.stencil_no LIKE '%${p.stencilNo}%'
+        </if>
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and t.type_code LIKE '%${p.typeCode}%'
+        </if>
+        <if test="p.itemTypeCode != null and p.itemTypeCode != ''">
+            and t.item_type_code LIKE '%${p.itemTypeCode}%'
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.itemName != null and p.itemName != ''">
+            and t.item_name LIKE '%${p.itemName}%'
+        </if>
+        <if test="p.itemSpec != null and p.itemSpec != ''">
+            and t.item_spec LIKE '%${p.itemSpec}%'
+        </if>
+        <if test="p.pcbCount != null and p.pcbCount != ''">
+            and t.pcb_count LIKE '%${p.pcbCount}%'
+        </if>
+        <if test="p.maxTimes != null and p.maxTimes != ''">
+            and t.max_times LIKE '%${p.maxTimes}%'
+        </if>
+        <if test="p.usedTimes != null and p.usedTimes != ''">
+            and t.used_times LIKE '%${p.usedTimes}%'
+        </if>
+        <if test="p.hasFrame != null and p.hasFrame != ''">
+            and t.has_frame LIKE '%${p.hasFrame}%'
+        </if>
+        <if test="p.itemSource != null and p.itemSource != ''">
+            and t.item_source LIKE '%${p.itemSource}%'
+        </if>
+        <if test="p.custCode != null and p.custCode != ''">
+            and t.cust_code LIKE '%${p.custCode}%'
+        </if>
+        <if test="p.supplierCode != null and p.supplierCode != ''">
+            and t.supplier_code LIKE '%${p.supplierCode}%'
+        </if>
+        <if test="p.pos != null and p.pos != ''">
+            and t.pos LIKE '%${p.pos}%'
+        </if>
+        <if test="p.ownership != null and p.ownership != ''">
+            and t.ownership LIKE '%${p.ownership}%'
+        </if>
+        <if test="p.leftUpper != null and p.leftUpper != ''">
+            and t.left_upper LIKE '%${p.leftUpper}%'
+        </if>
+        <if test="p.leftLower != null and p.leftLower != ''">
+            and t.left_lower LIKE '%${p.leftLower}%'
+        </if>
+        <if test="p.rightUpper != null and p.rightUpper != ''">
+            and t.right_upper LIKE '%${p.rightUpper}%'
+        </if>
+        <if test="p.rightLower != null and p.rightLower != ''">
+            and t.right_lower LIKE '%${p.rightLower}%'
+        </if>
+        <if test="p.centre != null and p.centre != ''">
+            and t.centre LIKE '%${p.centre}%'
+        </if>
+        <if test="p.state != null and p.state != ''">
+            and t.state LIKE '%${p.state}%'
+        </if>
+        <if test="p.inTime != null and p.inTime != ''">
+            and t.in_time LIKE '%${p.inTime}%'
+        </if>
+        <if test="p.inName != null and p.inName != ''">
+            and t.in_name LIKE '%${p.inName}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        <if test="p.itemTypeName != null and p.itemTypeName != ''">
+            and ti.item_type_name LIKE '%${p.itemTypeName}%'
+        </if>
+        <if test="p.customer != null and p.customer != ''">
+            and uc.CUSTOMER LIKE '%${p.customer}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

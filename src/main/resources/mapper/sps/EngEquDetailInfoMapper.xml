@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.EngEquDetailInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.equ_no equNo,  -- 设备ID（内部编号）
+            t.type_code typeCode,   --
+            i.type_name typeName,  -- 类型名
+            t.item_type_code itemTypeCode,
+            ti.item_type_name itemTypeName, -- 小类名称
+            t.factory factory,  -- 使用工厂
+            t.dept_code deptCode,  -- 管理部门
+            t.line_code lineCode,  -- 线体代码
+            ulb.line_name lineName, -- 线体名称
+            t.equ_sn equSn,  -- 设备SN（外部）
+            t.manufactury_code manufacturyCode,  -- 制造商
+            t.supplier_code supplierCode,  -- 供应商
+            s.supplier_name supplierName, -- 供应商名称
+            t.in_date inDate,  -- 进厂日期
+            t.state state,  -- 状态
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime  -- 更新时间
+        from eng_equ_detail_info t
+        left join ums_spares_type_info i on i.type_code=t.type_code
+        left join ums_spares_item_type_info ti on t.item_type_code=ti.item_type_code
+        left join ums_supplier s on s.supplier_code=t.supplier_code
+        left join ums_line_body ulb on t.line_code = ulb.line_code
+        where 1=1
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and t.type_code LIKE '%${p.typeCode}%'
+        </if>
+        <if test="p.itemTypeCode != null and p.itemTypeCode != ''">
+            and t.item_type_code LIKE '%${p.itemTypeCode}%'
+        </if>
+        <if test="p.itemTypeName != null and p.itemTypeName != ''">
+            and ti.item_type_name LIKE '%${p.itemTypeName}%'
+        </if>
+        <if test="p.finalEquNo != null and p.finalEquNo != ''">
+            and t.equ_no = #{p.finalEquNo}
+        </if>
+        <if test="p.equNo != null and p.equNo != ''">
+            and t.equ_no LIKE '%${p.equNo}%'
+        </if>
+        <if test="p.equSn != null and p.equSn != ''">
+            and t.equ_sn LIKE '%${p.equSn}%'
+        </if>
+        <if test="p.sparesNo != null and p.sparesNo != ''">
+            and t.equ_no LIKE '%${p.sparesNo}%'
+        </if>
+        <if test="p.state != null and p.state != ''">
+            and t.state = #{p.state}
+        </if>
+        <if test="p.userDefinedState != null and p.userDefinedState != ''">
+            and t.state ${p.userDefinedState}
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

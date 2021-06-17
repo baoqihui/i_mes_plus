@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.SpsEngFixDetailInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.fix_no fixNo,  -- 治具编号
+            t.type_code typeCode,  -- 治具大类代码
+            i.type_name typeName,  -- 类型名
+            t.item_type_code itemTypeCode,  -- 小类别代码
+            t.model_code modelCode,  -- 适用机型
+            t.sc_flag scFlag,  -- 正反面标识
+            t.supplier_code supplierCode,  -- 供应商代码
+            t.cust_code custCode,  -- 客户代码
+            t.pin_count pinCount,  -- Pin数
+            t.max_times maxTimes,  -- 最大使用次数
+            t.used_times usedTimes,  -- 使用次数
+            t.ownership ownership,  -- 治具产权
+            t.pos pos,  -- 储位
+            t.fix_desc fixDesc, -- 描述
+            t.state state,  -- 状态(1.在库 2.借出 3.报废 4.保养)
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime,  -- 更新时间
+            ti.item_type_name itemTypeName, -- 小类名称
+            s.supplier_name supplierName, -- 供应商名称
+            uc.CUSTOMER customer
+        from sps_eng_fix_detail_info t
+        left join ums_spares_type_info i on i.type_code=t.type_code
+        left join ums_spares_item_type_info ti on t.item_type_code=ti.item_type_code
+        left join ums_supplier s on s.supplier_code=t.supplier_code
+        left join ums_customer uc on t.cust_code = uc.CUST_CODE
+        where 1=1
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and t.type_code LIKE '%${p.typeCode}%'
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.itemTypeCode != null and p.itemTypeCode != ''">
+            and t.item_type_code LIKE '%${p.itemTypeCode}%'
+        </if>
+        <if test="p.custCode != null and p.custCode != ''">
+            and t.cust_code LIKE '%${p.custCode}%'
+        </if>
+        <if test="p.customer != null and p.customer != ''">
+            and uc.CUSTOMER LIKE '%${p.customer}%'
+        </if>
+        <if test="p.itemTypeName != null and p.itemTypeName != ''">
+            and ti.item_type_name LIKE '%${p.itemTypeName}%'
+        </if>
+        <if test="p.fixNo != null and p.fixNo != ''">
+            and t.fix_no LIKE '%${p.fixNo}%'
+        </if>
+        <if test="p.finalFixNo != null and p.finalFixNo != ''">
+            and t.fix_no =#{p.finalFixNo}
+        </if>
+        <if test="p.sparesNo != null and p.sparesNo != ''">
+            and t.fix_no LIKE '%${p.sparesNo}%'
+        </if>
+        <if test="p.state != null and p.state != ''">
+            and t.state = #{p.state}
+        </if>
+        <if test="p.userDefinedState != null and p.userDefinedState != ''">
+            and t.state ${p.userDefinedState}
+        </if>
+        order by t.fix_no desc
+    </select>
+    <select id="selItemTypeInfosByModelCode" resultType="java.util.Map">
+        SELECT
+            t.item_type_code itemTypeCode,
+            ti.item_type_name itemTypeName
+        FROM
+            sps_eng_fix_detail_info t
+                LEFT JOIN ums_spares_item_type_info ti ON t.item_type_code=ti.item_type_code
+        WHERE
+            t.model_code = #{modelCode}
+        GROUP BY t.item_type_code,ti.item_type_name
+    </select>
+    <select id="getPosesByFixNos" resultType="java.lang.String">
+        SELECT GROUP_CONCAT(DISTINCT t.pos) poses FROM sps_eng_fix_detail_info t
+        where
+        t.fix_no in
+        <foreach collection="fixNos" separator="," close=")" open="(" item="item" index="index">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

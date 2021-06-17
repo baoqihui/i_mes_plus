@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.SpsMaintenCycleInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.cycle_code cycleCode,  -- 保养周期代码
+            t.cycle_name cycleName,  -- 保养周期名称
+            t.days days,  -- 保养间隔天数
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime  -- 更新时间
+        from sps_mainten_cycle_info t
+        where 1=1
+        <if test="p.cycleName != null and p.cycleName != ''">
+            and t.cycle_name LIKE '%${p.cycleName}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

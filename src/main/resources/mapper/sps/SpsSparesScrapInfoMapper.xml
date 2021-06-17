@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.SpsSparesScrapInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  --
+            t.type_code typeCode,  -- 大类代码
+            t.item_type_code itemTypeCode,  -- 小类代码
+            t.spares_no sparesNo,  -- 备具号
+            t.reason reason,  -- 报废原因
+            t.applicant applicant,  -- 申请人
+            t.time_app timeApp,  -- 申请时间
+            t.manager manager,  -- 部门经理
+            t.manager_time_review managerTimeReview,  -- 部门经理审核时间
+            t.manager_comment managerComment,  -- 部门经理审核建议
+            t.president president,  -- 总经理
+            t.president_time_review presidentTimeReview,  -- 总经理审核时间
+            t.president_comment presidentComment,  -- 总经理审核建议
+            t.treasurer treasurer,  -- 财务
+            t.treasurer_time_review treasurerTimeReview,  -- 总经理审核时间
+            t.treasurer_comment treasurerComment,  -- 总经理审核建议
+            t.state state,  -- 状态(0，新建 1,待审核 2，部门经理 3，总经理 4，财务（审批完成)
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime,  -- 更新时间
+            usti.type_name typeName, -- 大类名
+            usiti.item_type_name itemTypeName  -- 小类名
+        from sps_spares_scrap_info t
+        left join ums_spares_item_type_info usiti on t.item_type_code = usiti.item_type_code
+        left join ums_spares_type_info usti on t.type_code = usti.type_code
+        where 1=1
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and t.type_code LIKE '%${p.typeCode}%'
+        </if>
+        <if test="p.sparesNo != null and p.sparesNo != ''">
+            and t.spares_no LIKE '%${p.sparesNo}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

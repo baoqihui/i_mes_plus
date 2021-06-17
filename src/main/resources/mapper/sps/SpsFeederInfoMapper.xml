@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.SpsFeederInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.spec_code specCode,  -- 规格代码
+            ufs.spec_name specName, -- 规格名称
+            uft.type_name typeName, -- 类型
+            t.feeder_sn feederSn,  -- 料枪SN
+            t.right_channel_sn rightChannelSn,  -- 右通道SN
+            t.left_channel_sn leftChannelSn,  -- 左通道SN
+            t.in_channel_sn inChannelSn,  -- 中通道SN
+            t.mainten_cycle_code maintenCycleCode,  -- 保养类型
+            smci.cycle_name maintenCycleName,  -- 保养类型名
+            t.mainten_cycle_days maintenCycleDays,  -- 提醒周期
+            t.line_code lineCode,  -- 线别代码
+            ulb.line_name lineName, -- 线别
+            t.sc_flag scFlag,  -- 正反面
+            t.position position,  -- 站位
+            t.state state,  -- 状态
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from sps_feeder_info t
+        left join ums_feeder_spec ufs on t.spec_code = ufs.spec_code
+        left join ums_feeder_type uft on ufs.type_id = uft.id
+        left join sps_mainten_cycle_info smci on t.mainten_cycle_code = smci.cycle_code
+        left join ums_line_body ulb on t.line_code = ulb.line_code
+        where 1=1
+        <if test="p.specCode != null and p.specCode != ''">
+            and t.spec_code LIKE '%${p.specCode}%'
+        </if>
+        <if test="p.typeName != null and p.typeName != ''">
+            and uft.type_name LIKE '%${p.typeName}%'
+        </if>
+        <if test="p.feederSn != null and p.feederSn != ''">
+            and t.feeder_sn LIKE '%${p.feederSn}%'
+        </if>
+        <if test="p.rightChannelSn != null and p.rightChannelSn != ''">
+            and t.right_channel_sn LIKE '%${p.rightChannelSn}%'
+        </if>
+        <if test="p.leftChannelSn != null and p.leftChannelSn != ''">
+            and t.left_channel_sn LIKE '%${p.leftChannelSn}%'
+        </if>
+        <if test="p.inChannelSn != null and p.inChannelSn != ''">
+            and t.in_channel_sn LIKE '%${p.inChannelSn}%'
+        </if>
+        <if test="p.maintenCycleCode != null and p.maintenCycleCode != ''">
+            and t.mainten_cycle_code LIKE '%${p.maintenCycleCode}%'
+        </if>
+        <if test="p.maintenCycleDays != null and p.maintenCycleDays != ''">
+            and t.mainten_cycle_days LIKE '%${p.maintenCycleDays}%'
+        </if>
+        <if test="p.lineCode != null and p.lineCode != ''">
+            and t.line_code LIKE '%${p.lineCode}%'
+        </if>
+        <if test="p.scFlag != null and p.scFlag != ''">
+            and t.sc_flag LIKE '%${p.scFlag}%'
+        </if>
+        <if test="p.state != null and p.state != ''">
+            and t.state LIKE '%${p.state}%'
+        </if>
+        <if test="p.position != null and p.position != ''">
+            and t.position LIKE '%${p.position}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>
