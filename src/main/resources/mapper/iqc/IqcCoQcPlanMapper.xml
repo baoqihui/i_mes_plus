@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcCoQcPlanMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.iqc.IqcCoQcPlan">
+        select * from iqc_co_qc_plan t
+        left join iqc_oqa_test_type iott on t.ott_id=iott.id
+        where 1=1
+        <if test="p.aqlValue != null and p.aqlValue != ''">
+            and t.aql_value = #{p.aqlValue}
+        </if>
+        <if test="p.otsCode != null and p.otsCode != ''">
+            and iott.ots_code = #{p.otsCode}
+        </if>
+        <if test="p.ottName != null and p.ottName != ''">
+            and iott.ott_name = #{p.ottName}
+        </if>
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+        order by t.code asc,t.id desc
+    </select>
+</mapper>

@@ -63,6 +63,9 @@ redis:
   timeout: 3000ms # 连接超时时间（毫秒）
 
 
-#fileHostPath: Z:\file/
+nginx:
+  filePath: /file/
+  filePathForDownload: /file/download/
+  ipAndPortAndFilePrefix: 120.27.244.176:8000/file/
 
 zhaoIpAndPort: 192.168.50.97:8090

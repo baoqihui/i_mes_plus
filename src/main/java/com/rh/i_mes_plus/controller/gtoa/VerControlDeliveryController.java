@@ -81,6 +81,13 @@ public class VerControlDeliveryController {
     @ApiOperation(value = "保存")
     @PostMapping("/verControlDelivery/saveAll")
     public Result saveAll(@RequestBody VerControlDelivery verControlDelivery) {
+        VerControlDelivery one = verControlDeliveryService.getOne(new QueryWrapper<VerControlDelivery>()
+                .eq("model_name", verControlDelivery.getModelName())
+                .eq("ver", verControlDelivery.getVer())
+                .eq("is_del", 0));
+        if (one!=null){
+            return Result.failed("此机型已存在该版本信息，无需新增");
+        }
         verControlDeliveryService.save(verControlDelivery);
         Map<String, Object> params=new HashMap<>();
         params.put("modelName",verControlDelivery.getModelName());

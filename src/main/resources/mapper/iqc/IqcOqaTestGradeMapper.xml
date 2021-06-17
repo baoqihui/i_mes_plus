@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcOqaTestGradeMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.iqc.IqcOqaTestGrade">
+        select * from iqc_oqa_test_grade t
+        left join iqc_oqa_level ol on t.ol_id=ol.id
+        where
+        1=1
+        <if test="p.otsCode != null and p.otsCode != ''">
+            and ol.ots_code LIKE '%${p.otsCode}%'
+        </if>
+        <if test="p.olId != null and p.olId != ''">
+            and t.ol_id LIKE '%${p.olId}%'
+        </if>
+        <if test="p.olName != null and p.olName != ''">
+            and ol.ol_name LIKE '%${p.olName}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

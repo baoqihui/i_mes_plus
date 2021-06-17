@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcOqaTestLevelMapper">
+    <select id="findList" resultType="map">
+        SELECT
+            t.id,
+            t.depa_code depaCode,
+            t.depa_name depaName,
+            t.item_code itemCode,
+            t.aql aql,
+            t.is_def idDef,
+            i.CO_ITEM_NAME itemName,
+            g.otg_level otgLevel,
+            l.ol_name olName,
+            tt.ott_name ottName,
+            s.ots_name otsName,
+            tiy.name tiyName,
+            t.odl_code odlCode
+        FROM
+            iqc_oqa_test_level t
+        LEFT JOIN ums_item_sap i on t.item_code = i.CO_ITEM_CODE
+        LEFT JOIN iqc_oqa_test_grade g  ON g.id = t.otg_id
+        LEFT JOIN iqc_oqa_level l ON l.id = g.ol_id
+        LEFT JOIN iqc_oqa_test_type tt ON tt.id = t.ott_id
+        LEFT JOIN iqc_oqa_test_step s ON s.ots_code = t.ots_code
+        LEFT JOIN iqc_test_item_type tiy on tiy.id=t.tiy_id
+        where 1=1
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+        <if test="p.otsCode != null and p.otsCode != ''">
+            and t.ots_code LIKE '%${p.otsCode}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+    </select>
+    <select id="getModelAndLevel" resultType="java.lang.Integer">
+        SELECT count(1) FROM iqc_oqa_test_level l,iqc_test_item_model m WHERE l.item_code=m.item_code and l.item_code=#{itemCode} AND l.tiy_id=m.tiy_id
+    </select>
+</mapper>

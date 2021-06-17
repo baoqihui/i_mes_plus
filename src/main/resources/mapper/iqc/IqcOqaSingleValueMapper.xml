@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcOqaSingleValueMapper">
+    <select id="findList" resultType="map">
+        SELECT
+            t.id id,-- 检测项值ID
+            t.oqc_no oqcNo,-- 抽检单号
+            t.osv_serial_number osvSerialNumber,-- 抽样条码
+            t.osv_mo_number osvMoNumber,-- 制令号
+            t.osv_tiy_id osvTiyId,-- 测试项类别ID
+            tiy.`name` tiyName,-- 类型名
+            t.osv_ti_name osvTiName,-- 检测项目
+            t.osv_tim_unit osvTimUnit,-- 单位
+            t.osv_sort osvSort,-- 显示顺序
+            t.osv_value osvValue,-- 测试值
+            t.osv_error_code osvErrorCode,-- 不良代码
+            o.error_desc errorDesc, -- 不良原因
+            t.osv_directions osvDirections,-- 备注
+            t.os_id osId,-- 抽验个体ID
+            t.osv_scarp_number osvScarpNumber,-- 报废数量
+            t.osv_result osvResult,-- 项目检验结果(ok/ng)
+            t.osv_points osvPoints,-- 不良点位1
+            t.osv_points2 osvPoints2,-- 不良点位2
+            t.osv_points3 osvPoints3,-- 不良点位3
+            t.odl_code odlCode,-- 缺陷等级代码
+            t.osv_tim_range osvTimRange,-- 值域(0:单值 1:范围值 2:状态值)
+            t.osv_tim_lower_limit osvTimLowerLimit,-- 下限
+            t.osv_tim_upper_limit osvTimUpperLimit,-- 上限
+            t.create_time createTime,-- 创建时间:按当前时间自动创建
+            t.update_time updateTime,-- 更新时间
+            t.depa_code depaCode,-- 机构代码
+            t.depa_name depaName -- 部门名称
+        FROM
+            iqc_oqa_single_value t
+            LEFT JOIN iqc_test_item_type tiy ON t.osv_tiy_id = tiy.id
+            LEFT JOIN iqc_co_error_code o ON t.osv_error_code=error_code
+        where 1=1
+        <if test="p.oqcNo != null and p.oqcNo != ''">
+            and t.oqc_no = #{p.oqcNo}
+        </if>
+        <if test="p.osId != null and p.osId != ''">
+            and t.os_id = #{p.osId}
+        </if>
+        ORDER BY
+            t.id DESC
+    </select>
+    <select id="countNg" resultType="java.lang.Integer">
+        SELECT count(1) FROM (SELECT * FROM iqc_oqa_single_value WHERE oqc_no=#{oqcNo} and osv_result='NG' and osv_tiy_id=#{tiyId} GROUP BY os_id ) as a
+    </select>
+</mapper>

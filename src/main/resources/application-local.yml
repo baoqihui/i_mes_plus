@@ -48,10 +48,11 @@ Oos:
   endpoint: oss-cn-hangzhou.aliyuncs.com
   filedir: image/
 
-#nginx文件上传路径（普通）
-nginxFilePath: D:\file/
-#nginx文件上传路径（下载）
-nginxFilePathForDownload: D:\file/download/
+#nginx文件上传路径
+nginx:
+  filePath: D:\file/
+  filePathForDownload: D:\file/download/
+  ipAndPortAndFilePrefix: 192.168.61.101:80/file/
 
 zhaoIpAndPort: 192.168.50.97:8003
 liIpAndPort: 192.168.61.202:8082

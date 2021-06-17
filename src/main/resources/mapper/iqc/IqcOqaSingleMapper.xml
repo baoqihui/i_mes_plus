@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcOqaSingleMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 抽验个体ID
+            t.oqc_no oqcNo,  -- 抽检单号
+            t.ot_id otId,  -- 抽验ID
+            t.serial_number serialNumber,  -- 抽样条码
+            t.os_no osNo,  -- 样本号
+            t.os_result osResult,  -- 抽验结果OK NG
+            t.os_test_date osTestDate,  -- 抽检时间
+            t.os_examiner osExaminer,  -- 检验员
+            t.os_amount osAmount,  -- 数量
+            t.os_remark osRemark,  -- 备注
+            t.os_group_name osGroupName,  -- 回流工序
+            t.os_group_id osGroupId,  -- 回流工序ID
+            t.container_sn containerSn,  -- 包装SN
+            t.scrap_qty scrapQty,  -- 报废数
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.depa_code depaCode,  -- 机构代码
+            t.depa_name depaName  -- 部门名称
+        from iqc_oqa_single t
+        where 1=1
+        <if test="p.oqcNo != null and p.oqcNo != ''">
+            and t.oqc_no = #{p.oqcNo}
+        </if>
+        order by t.id desc
+    </select>
+    <select id="getMaxOsNoByOqcNoAndsn" resultType="java.lang.Long" parameterType="map">
+        select MAX(os_no) maxOsNo from iqc_oqa_single where oqc_no= #{p.oqcNo} and serial_number =#{p.sn}
+    </select>
+</mapper>

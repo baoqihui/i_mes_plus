@@ -59,10 +59,6 @@ public class SmsWmsChooseBarcodeServiceImpl extends ServiceImpl<SmsWmsChooseBarc
         return smsWmsChooseBarcodeMapper.findList(pages, params);
     }
 
-    public static void main(String[] args) {
-        String zodiac = DateUtil.getZodiac(Month.MAY.getValue(), 28);
-        System.out.println(zodiac);
-    }
     @Override
     public Result choose(Map<String, Object> params) {
         String docNo = MapUtil.getStr(params, "docNo");

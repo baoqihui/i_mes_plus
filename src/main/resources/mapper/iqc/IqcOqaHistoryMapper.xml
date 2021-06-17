@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcOqaHistoryMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 主键ID
+            t.oqc_no oqcNo,  -- 抽检单号
+            t.ots_code otsCode,  -- 检验阶代码
+            t.mo_number moNumber,  -- 制令号
+            t.item_code itemCode,  -- 机种代码
+            t.lot_number lotNumber,  -- 生产批次号
+            t.areaid areaid,  -- 区域ID(线别)
+            t.cust_code custCode,  -- 客户代码
+            t.oqc_status oqcStatus,  -- 状态(0-待检 1-检验中 2-检验完成 3-已审核 4-已撤销)
+            t.oqc_send_date oqcSendDate,  -- 送检时间
+            t.oqc_result_date oqcResultDate,  -- 判定时间
+            t.oqc_re_check oqcReCheck,  -- 检验次数
+            t.oqc_send_amount oqcSendAmount,  -- 送检数量
+            t.oqc_sample_amount oqcSampleAmount,  -- 样本数量
+            t.oqc_test_amount oqcTestAmount,  -- 抽检数量
+            t.oqc_ng_pcb oqcNgPcb,  -- NG数量
+            t.oqc_result oqcResult,  -- 抽验结果1-允收2-拒收3-让步接收4-批退
+            t.oqc_examiner oqcExaminer,  -- 检验员
+            t.oqc_audit oqcAudit,  -- 审核人
+            t.oqc_remark oqcRemark,  -- 备注
+            t.oqc_audit_time oqcAuditTime,  -- 审核时间
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.depa_code depaCode,  -- 部门代码
+            t.depa_name depaName  -- 部门名称
+        from iqc_oqa_history t
+        order by t.id desc
+    </select>
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcTestItemModelMapper">
+    <select id="findList" resultType="map">
+        select
+        t.id id,
+        t.item_code itemCode,
+        i.CO_ITEM_NAME itemName,
+        s.ots_name otsName,
+        tiy.name tiyName,
+        t.ti_name tiName,
+        t.tim_range timRange,
+        t.lower_limit lowerLimit,
+        t.upper_limit upperLimit,
+        t.unit unit,
+        t.method method,
+        t.sort sort,
+        t.ms_code msCode
+        from iqc_test_item_model t
+        LEFT JOIN ums_item_sap i ON t.item_code=i.CO_ITEM_CODE
+        LEFT JOIN iqc_oqa_test_step s ON s.ots_code = t.ots_code
+        LEFT JOIN iqc_test_item_type tiy on tiy.id=t.tiy_id
+        where 1=1
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.otsCode != null and p.otsCode != ''">
+            and t.ots_code = #{p.otsCode}
+        </if>
+        <if test="p.msCode != null and p.msCode != ''">
+            and t.ms_code = #{p.msCode}
+        </if>
+        <if test="p.tiyId != null and p.tiyId != ''">
+            and t.tiy_id = #{p.tiyId}
+        </if>
+        <if test="p.tiName != null and p.tiName != ''">
+            and t.ti_name LIKE '%${p.tiName}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

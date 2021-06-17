@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcOqaBathMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 抽验个体ID
+            t.oqc_no oqcNo,  -- 抽检单号
+            t.mo_number moNumber,  -- 制令号
+            t.item_code itemCode,  -- 机种代码
+            t.lot_number lotNumber,  -- 抽样批次号
+            t.serial_number serialNumber,  -- 机器序列号(条码)
+            t.os_result osResult,  -- 抽验结果1、OK2、NG3、未检4、在检
+            t.os_amount osAmount,  -- 数量
+            t.os_qty_loss osQtyLoss, -- 损耗数量
+            t.is_os_sample isOsSample,  -- 样本标识(0/1)
+            t.is_rework isRework,  -- 重工标识(0/1)
+            t.is_erp_ok isErpOk,  -- 报工标识(0/1)
+            t.is_last isLast,  -- 最后标识(0/1)
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.depa_code depaCode,  -- 机构代码
+            t.depa_name depaName  -- 部门名称
+        from iqc_oqa_bath t
+        order by t.id desc
+    </select>
+</mapper>

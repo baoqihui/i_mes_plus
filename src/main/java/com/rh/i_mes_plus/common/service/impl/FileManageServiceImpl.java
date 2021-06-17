@@ -15,44 +15,42 @@ import java.net.InetAddress;
 @Service
 public class FileManageServiceImpl implements FileManageService {
 
-    @Value("${nginxFilePath}")
-    private String nginxFilePath;
-    @Value("${nginxFilePathForDownload}")
-    private String nginxFilePathForDownload;
+    @Value("${nginx.filePath}")
+    private String filePath;
+    @Value("${nginx.filePathForDownload}")
+    private String filePathForDownload;
+    @Value("${nginx.ipAndPortAndFilePrefix}")
+    private String ipAndPortAndFilePrefix;
 
     @Override
     public String uploadToNginxForOpen(MultipartFile file, String modelName)  {
         try {
             String path=modelName+ "/"+ IdUtil.simpleUUID() +"-"+file.getOriginalFilename();
-            File test = new File(nginxFilePath+path);
+            File test = new File(filePath+path);
             if (!test.exists()){
                 test.mkdirs();
             }
             file.transferTo(test);
-            InetAddress address = InetAddress.getLocalHost();
-            String ip=address.getHostAddress();
-            String prefix = "/"+StrUtil.subSuf(nginxFilePath,3);
-            String finalPath="http://"+ip+prefix+path;
+            String finalPath="http://"+ipAndPortAndFilePrefix+path;
+            log.info("上传直接打开文件{}",finalPath);
             return finalPath;
         }catch (Exception e){
             log.error(file.getOriginalFilename()+"文件上传失败", e);
             return file.getOriginalFilename()+"文件上传失败";
         }
     }
-    
+
     @Override
     public String uploadToNginxForDownload(MultipartFile file, String modelName) {
         try {
             String path=modelName+ "/"+ IdUtil.simpleUUID() +"-"+file.getOriginalFilename();
-            File test = new File(nginxFilePathForDownload+path);
+            File test = new File(filePathForDownload+path);
             if (!test.exists()){
                 test.mkdirs();
             }
             file.transferTo(test);
-            InetAddress address = InetAddress.getLocalHost();
-            String ip=address.getHostAddress();
-            String prefix = "/"+StrUtil.subSuf(nginxFilePathForDownload,3);
-            String finalPath="http://"+ip+prefix+path;
+            String finalPath="http://"+ipAndPortAndFilePrefix+path;
+            log.info("上传可下载文件{}",finalPath);
             return finalPath;
         }catch (Exception e){
             log.error(file.getOriginalFilename()+"文件上传失败", e);

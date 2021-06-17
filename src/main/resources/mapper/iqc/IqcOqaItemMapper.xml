@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcOqaItemMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 抽样项目ID
+            t.oqc_no oqcNo,  -- 抽检单号
+            t.tiy_id tiyId,  -- 检验项目ID
+            t.ott_name ottName,  -- 抽样方案
+            t.otg_id otgId,  -- 检验水平ID
+            t.oi_aql oiAql,  -- AQL值
+            t.oi_ac oiAc,  -- AC
+            t.oi_re oiRe,  -- RE
+            t.oi_ng_count oiNgCount,  -- NG板数
+            t.oi_sample_qyt oiSampleQyt,  -- 应抽检数
+            t.oi_check_qyt oiCheckQyt,  -- 已抽检数
+            t.oi_result oiResult,  -- 判定结果(NG/OK)
+            t.is_check isCheck,  -- 是否做为检验单判定标准(0/1)
+            t.odl_code odlCode,  -- 缺陷等级代码 
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.depa_code depaCode,  -- 机构代码
+            t.depa_name depaName  -- 部门名称
+        from iqc_oqa_item t
+        order by t.id desc
+    </select>
+</mapper>

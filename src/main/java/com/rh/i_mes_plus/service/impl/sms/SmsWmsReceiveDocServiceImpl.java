@@ -22,12 +22,14 @@ import com.rh.i_mes_plus.mapper.sms.SmsWmsReceiveDocMapper;
 import com.rh.i_mes_plus.model.other.PdaMesLog;
 import com.rh.i_mes_plus.model.sms.*;
 import com.rh.i_mes_plus.model.ums.UmsUser;
+import com.rh.i_mes_plus.service.iqc.IIqcOqaService;
 import com.rh.i_mes_plus.service.other.IPdaMesLogService;
 import com.rh.i_mes_plus.service.sms.*;
 import com.rh.i_mes_plus.service.ums.IUmsUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -61,8 +63,9 @@ public class SmsWmsReceiveDocServiceImpl extends ServiceImpl<SmsWmsReceiveDocMap
     private IUmsUserService umsUserService;
     @Autowired
     private ISmsWmsStockInfoService smsWmsStockInfoService;
-/***********    @Autowired
-    private IIqcOqaService iqcOqaService;*/
+    @Autowired
+    @Lazy
+    private IIqcOqaService iqcOqaService;
     @Autowired
     private ISmsWmsReloadDocDetailService smsWmsReloadDocDetailService;
     @Autowired
@@ -446,7 +449,7 @@ public class SmsWmsReceiveDocServiceImpl extends ServiceImpl<SmsWmsReceiveDocMap
             Map<String,Object> oqaMap=new HashMap<>();
             oqaMap.put("wrDocNum",docNum);
             oqaMap.put("userAccount",empNo);
-            //***********************iqcOqaService.saveOqaAndBath(oqaMap);
+            iqcOqaService.saveOqaAndBath(oqaMap);
         }
         receiveDoc.setWrState("4");
         smsWmsReceiveDocMapper.updateById(receiveDoc);

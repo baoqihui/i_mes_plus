@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcTestItemMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 检测项目ID
+            t.tiy_id tiyId,  -- 项目类型ID
+            t.ots_code otsCode,  -- 检验阶代码
+            t.name name,  -- 检测项名称
+            t.ranges ranges,  -- 值域(0:单值 1:范围值 2:状态值)
+            t.unit unit,  -- 单位
+            t.method method,  -- 检测方法
+            t.groupes groupes,  -- 检测工序
+            t.lower_limit lowerLimit,  -- 下限值
+            t.upper_limit upperLimit,  -- 上限值
+            t.remark remark,  -- 说明
+            t.sort sort,  -- 显示顺序
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.depa_code depaCode,  -- 机构代码
+            t.depa_name depaName,  -- 部门名称
+            tiy.name typeName
+        from iqc_test_item t
+        left join iqc_test_item_type tiy on t.tiy_id=tiy.id
+        where 1=1
+        <if test="p.name != null and p.name != ''">
+            and t.name LIKE '%${p.name}%'
+        </if>
+        <if test="p.otsCode  != null and p.otsCode  != ''">
+            and t.ots_code LIKE '%${p.otsCode}%'
+        </if>
+        <if test="p.tiyId != null and p. tiyId != ''">
+            and t.tiy_id = #{p.tiyId}
+        </if>
+        order by t.ranges,t.id desc
+    </select>
+</mapper>

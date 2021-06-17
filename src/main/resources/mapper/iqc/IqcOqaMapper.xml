@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcOqaMapper">
+    <select id="findList" resultType="map">
+        select
+        distinct t.id id,  --
+        t.oqc_no oqcNo,  -- 抽检单号
+        t.wr_doc_num wrDocNum,  -- 收料单号（入库单）
+        t.ots_code otsCode,  -- 检验阶代码
+        t.item_code itemCode,  -- 机种代码
+        t.lot_number lotNumber,  -- 生产批次号
+        t.line_code lineCode,  -- 线别
+        t.cust_code custCode,  -- 供应商/客户代码
+        t.oqc_re_check oqcReCheck,  -- 检验次数
+        t.oqc_send_amount oqcSendAmount,  -- 送检数量
+        t.oqc_sample_amount oqcSampleAmount,  -- 应抽数量
+        t.oqc_test_amount oqcTestAmount,  -- 抽检数量
+        t.oqc_ng_pcb oqcNgPcb,  -- NG数量(轻缺陷数量)
+        t.oqc_scrap_qty oqcScrapQty,  -- 报废数量
+        t.ng_num ngNum,  -- 拒收数
+        t.ok_num okNum,  -- 允收数
+        t.oqc_route_groupid oqcRouteGroupid,  -- 回流工序ID
+        t.oqc_group_name oqcGroupName,  -- 回流工序名称
+        t.mo_number moNumber,  -- 制令号
+        t.oqc_examiner oqcExaminer,  -- 检验员
+        t.oqc_creator oqcCreator,  -- 开单人
+        t.oqc_send_date oqcSendDate,  -- 送检时间
+        t.oqc_result_date oqcResultDate,  -- 判定时间(检验时间)
+        t.oqc_status oqcStatus,  -- 状态(0-待检 1-检验中 2-检验完成 3-已审核 4-已撤销)
+        t.oqc_audit oqcAudit,  -- 审核人
+        t.oqc_result oqcResult,  -- 抽验结果1-允收2-拒收3-让步接收4-批退
+        t.oqc_audit_time oqcAuditTime,  -- 审核时间
+        t.oqc_audit_remark oqcAuditRemark,  -- 备注
+        t.create_time createTime,  -- 创建时间:按当前时间自动创建
+        t.update_time updateTime,  -- 更新时间
+        t.depa_code depaCode,  -- 部门代码
+        t.depa_name depaName,  -- 部门名称
+        I.CO_ITEM_NAME itemName,-- 品名
+        A.line_name areaname,-- 线别名称
+        C.CUSTOMER customer,-- 客户名称
+        S.SUPPLIER_NAME supplierName,-- 供应商名称
+        EE.user_name examinerName,-- 检验员姓名
+        AE.user_name auditName,-- 审核人姓名
+        CE.user_name creatorName,-- 开单人姓名
+        (SELECT DISTINCT l.tbl_manufacturer_date FROM iqc_oqa_bath b INNER JOIN sms_wms_barcode_info l ON b.serial_number = l.tbl_barcode WHERE b.oqc_no = T.OQC_NO) AS tblSuppro -- 生产时间
+        from iqc_oqa t
+        LEFT JOIN ums_item_sap I ON I.CO_ITEM_CODE = T.item_code
+        LEFT JOIN ums_line_body A ON A.line_code = T.line_code
+        LEFT JOIN ums_customer C ON C.CUST_CODE = T.CUST_CODE
+        LEFT JOIN ums_supplier S ON S.SUPPLIER_CODE = T.CUST_CODE
+        LEFT JOIN ums_user EE ON EE.user_account = T.OQC_EXAMINER
+        LEFT JOIN ums_user AE ON AE.user_account = T.OQC_AUDIT
+        LEFT JOIN ums_user CE ON CE.user_account = T.OQC_CREATOR
+        Left join iqc_oqa_bath iob on t.oqc_no = iob.oqc_no
+        where 1=1
+        <if test="p.serialNumber != null and p.serialNumber != ''">
+            and iob.serial_number LIKE '%${p.serialNumber}%'
+        </if>
+        <if test="p.otsCode != null and p.otsCode != ''">
+            and t.ots_code LIKE '%${p.otsCode}%'
+        </if>
+        <if test="p.oqcNo != null and p.oqcNo != ''">
+            and t.oqc_no LIKE '%${p.oqcNo}%'
+        </if>
+        <if test="p.wrDocNum != null and p.wrDocNum != ''">
+            and t.wr_doc_num LIKE '%${p.wrDocNum}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.customer != null and p.customer != ''">
+            and C.CUSTOMER LIKE '%${p.customer}%'
+        </if>
+        <if test="p.lineName != null and p.lineName != ''">
+            and A.line_name LIKE '%${p.lineName}%'
+        </if>
+        <if test="p.oqcStatus != null and p.oqcStatus != ''">
+            and t.oqc_status = #{p.oqcStatus}
+        </if>
+        <if test="p.oqcResult != null and p.oqcResult != ''">
+            and t.oqc_result = #{p.oqcResult}
+        </if>
+        <if test="p.custCode != null and p.custCode != ''">
+            and C.cust_code LIKE '%${p.custCode}%'
+        </if>
+        <if test="p.auditStartTime != null and p.auditStartTime != '' ">
+            and t.oqc_audit_time >= '${p.auditStartTime}'
+        </if>
+        <if test="p.auditEndTime !=null and p.auditEndTime != '' ">
+            and '${p.auditEndTime}' >= t.oqc_audit_time
+        </if>
+        <if test="p.sendStartTime != null and p.sendStartTime != '' ">
+            and t.oqc_send_date >= '${p.sendStartTime}'
+        </if>
+        <if test="p.sendEndTime !=null and p.sendEndTime != '' ">
+            and '${p.sendEndTime}' >= t.oqc_send_date
+        </if>
+        <if test="p.resultStartTime != null and p.resultStartTime != '' ">
+            and t.oqc_result_date >= '${p.resultStartTime}'
+        </if>
+        <if test="p.resultEndTime !=null and p.resultEndTime != '' ">
+            and '${p.resultEndTime}' >= t.oqc_result_date
+        </if>
+        order by t.oqc_status asc,t.id desc
+    </select>
+    <select id="getMaxOqcNo" resultType="java.lang.String">
+        SELECT MAX(i.oqc_no) FROM iqc_oqa i WHERE i.oqc_no like '${prefix}%'
+    </select>
+    <select id="selOIList" resultType="java.util.Map">
+        SELECT
+            t.id id,  -- 抽样项目ID
+            t.oqc_no oqcNo,  -- 抽检单号
+            t.tiy_id tiyId,  -- 检验项目类型ID
+            t.otg_id otgId,  -- 检验水平ID
+            D.name typeName, -- 类型名称
+            t.ott_name ottName, -- 抽样方案类型名
+            C.ol_name olName, -- 检验水准
+            B.otg_level otgLevel, -- 抽样水平
+            t.oi_sample_qyt oiSampleQyt,  -- 应抽检数
+            t.oi_check_qyt oiCheckQyt,  -- 已抽检数
+            t.odl_code odlCode,  -- 缺陷等级代码
+            t.oi_aql oiAql,  -- AQL值
+            t.oi_ac oiAc,  -- AC
+            t.oi_re oiRe,  -- RE
+            t.oi_ng_count oiNgCount,  -- NG板数
+            t.oi_result oiResult,  -- 判定结果(NG/OK)
+            t.is_check isCheck  -- 是否做为检验单判定标准(0/1)
+        FROM
+            iqc_oqa_item t
+                LEFT JOIN iqc_oqa_test_grade B ON T.OTG_ID = B.id
+                LEFT JOIN iqc_oqa_level C ON B.OL_ID = C.id
+                LEFT JOIN iqc_test_item_type D ON T.tiy_id = D.id
+        WHERE
+            1 = 1
+          AND T.OQC_NO = #{oqcNo}
+    </select>
+    <select id="selectAllByOqcNo" resultType="java.util.Map">
+        select
+            t.id id,  --
+            t.ots_code otsCode,  -- 检验阶代码
+            t.lot_number lotNumber,  -- 生产批次号
+            I.MPN mpn,-- MPN
+            t.oqc_re_check oqcReCheck,  -- 检验次数
+            t.wr_doc_num wrDocNum,  -- 收料单号（入库单）
+            t.oqc_no oqcNo,  -- 抽检单号
+            I.project_code projectId, -- 项目号
+            t.oqc_status oqcStatus,  -- 状态(0-待检 1-检验中 2-检验完成 3-已审核 4-已撤销)
+            t.oqc_send_amount oqcSendAmount,  -- 送检数量
+            t.oqc_sample_amount oqcSampleAmount,  -- 应抽数量
+            t.oqc_test_amount oqcTestAmount,  -- 抽检数量
+            t.oqc_ng_pcb oqcNgPcb,  -- NG数量(轻缺陷数量)
+            (SELECT DISTINCT l.tbl_manufacturer_date FROM iqc_oqa_bath b INNER JOIN sms_wms_barcode_info l ON b.serial_number = l.tbl_barcode WHERE b.oqc_no = T.OQC_NO) AS tblSuppro, -- 生产时间
+            t.oqc_audit_remark oqcAuditRemark,  -- 备注
+            t.oqc_send_date oqcSendDate,  -- 送检时间
+            t.item_code itemCode,  -- 机种代码
+            I.MANUFACTURER_CODE manufacturerCode, -- 制造商
+            I.CO_ITEM_NAME itemName, -- 描述
+            t.oqc_examiner oqcExaminer,  -- 检验员
+            EE.user_name examinerName,-- 检验员姓名
+            t.oqc_result oqcResult,  -- 抽验结果1-允收2-拒收3-让步接收4-批退
+            t.oqc_audit oqcAudit,  -- 审核人
+            AE.user_name auditName-- 审核人姓名
+        from iqc_oqa t
+                 LEFT JOIN ums_item_sap I ON I.CO_ITEM_CODE = T.item_code
+                 LEFT JOIN ums_user EE ON EE.user_account = T.OQC_EXAMINER
+                 LEFT JOIN ums_user AE ON AE.user_account = T.OQC_AUDIT
+        where t.oqc_no=#{oqcNo}
+    </select>
+</mapper>

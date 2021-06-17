@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcCoQcSamplesMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 样本主键ID
+            t.otg_id otgId,  -- 检验水平ID
+            t.fr_lotcount frLotcount,  -- 批量启始数
+            t.to_lotcount toLotcount,  -- 批量结束数
+            t.code_values codeValues,  -- 样本大小代码
+            t.depa_code depaCode,  -- 机构代码
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.depa_name depaName  -- 部门名称
+        from iqc_co_qc_samples t
+        order by t.id desc
+    </select>
+    <select id="getCodeBySendAmount" resultType="java.lang.String">
+        SELECT code_values FROM iqc_co_qc_samples WHERE otg_id=#{otgId} and #{oqcSendAmount} >= fr_lotcount and to_lotcount >= #{oqcSendAmount}
+    </select>
+    <select id="selList" resultType="java.util.Map">
+        SELECT
+            qs.id,
+            qs.otg_id otgId,
+            qs.fr_lotcount frLotcount,
+            qs.to_lotcount toLotcount,
+            qs.code_values codeValues,
+            qs.depa_code depaCode,
+            qs.create_time createTime,
+            qs.update_time updateTime,
+            qs.depa_name depa_name,
+            tg.otg_level otgLevel,
+            ol.ol_name olName
+        FROM
+            iqc_co_qc_samples qs
+                LEFT JOIN iqc_oqa_test_grade tg on tg.id=qs.otg_id
+                LEFT JOIN iqc_oqa_level ol on tg.ol_id=ol.id
+        WHERE ol.ots_code=#{p.otsCode}
+        GROUP BY
+            qs.otg_id,
+            qs.fr_lotcount,
+            qs.to_lotcount
+        ORDER BY qs.fr_lotcount
+    </select>
+</mapper>

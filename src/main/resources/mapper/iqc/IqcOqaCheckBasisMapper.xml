@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.iqc.IqcOqaCheckBasisMapper">
+    <select id="findList" resultType="com.rh.i_mes_plus.model.iqc.IqcOqaCheckBasis">
+        select * from iqc_oqa_check_basis t
+        where 1=1
+        <if test="p.memo != null and p.memo != ''">
+            and t.memo LIKE '%${p.memo}%'
+        </if>
+        <if test="p.otsCode != null and p.otsCode != ''">
+            and t.ots_code LIKE '%${p.otsCode}%'
+        </if>
+        order by t.id desc
+    </select>
+</mapper>
