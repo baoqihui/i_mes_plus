@@ -48,24 +48,13 @@ Oos:
   endpoint: oss-cn-hangzhou.aliyuncs.com
   filedir: image/
 
-#swagger配置
-Swagger:
-  description: (gtoa-接口文档) restful 风格接口
-  title: gtoa
-  version: 1.0
-
-#redis
-redis:
-  host: 120.27.244.176 # Redis服务器地址
-  database: 0 # Redis数据库索引（默认为0）
-  port: 6379 # Redis服务器连接端口
-  password: # Redis服务器连接密码（默认为空）
-  timeout: 3000ms # 连接超时时间（毫秒）
-
-
 nginx:
   filePath: /file/
   filePathForDownload: /file/download/
   ipAndPortAndFilePrefix: 120.27.244.176:8000/file/
 
+#shiro配置
+shiro:
+  session-timeout: 86400000 #1天
+  session-id-cookie: MES_PLUS_COOKIE
 zhaoIpAndPort: 192.168.50.97:8090
