@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtWmsStockInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 仓库主键ID
+            t.doc_no docNo,  -- 单据号
+            t.cust_code custCode,  -- 客户代码
+            t.model_code modelCode,  -- 物料编码
+            t.model_name modelName,  -- 物料名称
+            t.model_ver modelVer,  --
+            t.batch batch,  -- 生产批次号
+            t.box_no boxNo,  -- 箱号
+            t.barcode barcode, -- 条码
+            t.amount amount,  -- 数量
+            t.order_no orderNo,  -- 订单号/采购单号
+            t.wh_code whCode,  -- 仓库SN
+            t.reservoir_code reservoirCode,  -- 库区SN
+            t.area_sn areaSn,  -- 库位
+            t.quality quality,  -- 品质标识Y:良品 N:不良品
+            t.quality_date qualityDate,  -- 品质失效期
+            t.supplier_code supplierCode,  -- 供应商代码
+            t.pdate pdate,  -- 制造商生产日期
+            t.have_check haveCheck,  -- 检验状态:Y为已检 N为未检
+            t.subatch subatch,  -- 
+            t.in_stock_time inStockTime,  -- 入库时间
+
+            t.in_stock_man inStockMan,  -- 入库人
+            t.number_type numberType,  -- SN类型：0表示工单  1表示批次  2表示单个
+            t.vmi vmi,  -- VMI标志
+            t.stock_flag stockFlag,  -- 库存状态（1：在库，2：已备料，3：调拨，4盘点）
+            t.project_id projectId,  -- 工单号
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.depa_code depaCode,  -- 部门代码
+            t.depa_name depaName  -- 部门名称
+        from pdt_wms_stock_info t
+        order by t.id desc
+    </select>
+    <select id="findList2" resultType="com.rh.i_mes_plus.model.ums.UmsItemMes">
+        select
+            m.*
+        from pdt_wms_stock_info t
+        left join ums_item_sap m on t.model_code=m.CO_ITEM_CODE
+        where t.stock_flag='1'
+        <if test="p.coItemCode != null and p.coItemCode != ''">
+            and m.CO_ITEM_CODE LIKE '%${p.coItemCode}%'
+        </if>
+        <if test="p.coItemName != null and p.coItemName != ''">
+            and m.CO_ITEM_NAME LIKE '%${p.coItemName}%'
+        </if>
+        GROUP BY t.model_code
+    </select>
+    <select id="listAll" resultType="java.util.Map">
+        select
+            t.barcode barcode, -- 条码
+            t.box_no boxNo,  -- 箱号
+            t.model_code modelCode,  -- 物料编码
+            t.amount amount,  -- 数量
+            t.wh_code whCode,  -- 仓库SN
+            t.reservoir_code reservoirCode,  -- 库区SN
+            t.area_sn areaSn,  -- 库位
+            t.stock_flag stockFlag,  -- 库存状态（1：在库，2：已备料，3：调拨，4盘点）
+            left(t.barcode,8) batch,
+            t.doc_no docNo,  -- 单据号
+            (select pwosl.doc_no from pdt_wms_out_stock_list pwosl where pwosl.barcode=t.barcode order by pwosl.id desc limit 1) outDocNo,
+            t.model_name modelName,  -- 物料名称
+            bb.mo_no moNo,
+            t.in_stock_man inStockMan,  -- 入库人
+            t.in_stock_time inStockTime,  -- 入库时间
+            t.quality quality,  -- 品质标识Y:良品 N:不良品
+            sa.MPN mpn,  -- mpn
+            s.supplier_name supplierName,  -- 供应商名称
+            right(t.barcode,3) ver,
+
+            t.id id,  -- 仓库主键ID
+            t.cust_code custCode,  -- 客户代码
+            t.model_ver modelVer,  --
+            t.order_no orderNo,  -- 订单号/采购单号
+            t.quality_date qualityDate,  -- 品质失效期
+            t.supplier_code supplierCode,  -- 供应商代码
+            t.pdate pdate,  -- 制造商生产日期
+            t.have_check haveCheck,  -- 检验状态:Y为已检 N为未检
+            t.subatch subatch,  --
+            t.number_type numberType,  -- SN类型：0表示工单  1表示批次  2表示单个
+            t.vmi vmi,  -- VMI标志
+            t.project_id projectId,  -- 工单号
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.depa_code depaCode,  -- 部门代码
+            t.depa_name depaName,  -- 部门名称
+            aa.AR_NAME whName,  -- 仓库名称
+            u.user_name userName -- 入库人名
+        from pdt_wms_stock_info t
+        LEFT JOIN ums_item_sap i on t.model_code=i.CO_ITEM_CODE
+        LEFT JOIN ums_customer c on c.CUST_CODE=i.CUST_CODE
+        LEFT JOIN ums_supplier s on s.supplier_code=i.SUPPLIER_CODE
+        LEFT JOIN ums_item_sap sa on sa.CO_ITEM_CODE=i.CO_ITEM_CODE
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=t.wh_code
+        LEFT JOIN ums_user u on t.in_stock_man=u.user_account
+        LEFT JOIN pdt_wms_box_barcode bb on t.barcode=bb.barcode
+        where 1=1
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.boxNo != null and p.boxNo != ''">
+            and t.box_no LIKE '%${p.boxNo}%'
+        </if>
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and s.supplier_name LIKE '%${p.supplierName}%'
+        </if>
+        <if test="p.docNo != null and p.docNo != ''">
+            and t.doc_no LIKE '%${p.docNo}%'
+        </if>
+        <if test="p.batch != null and p.batch != ''">
+            and t.batch LIKE '%${p.batch}%'
+        </if>
+        <if test="p.orderNo != null and p.orderNo != ''">
+            and t.order_no LIKE '%${p.orderNo}%'
+        </if>
+        <if test="p.stockFlag != null and p.stockFlag != ''">
+            and t.stock_flag LIKE '%${p.stockFlag}%'
+        </if>
+        <if test="p.userDefinedStockFlag != null and p.userDefinedStockFlag != ''">
+            and t.stock_flag ${p.userDefinedStockFlag}
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.reservoirCode != null and p.reservoirCode != ''">
+            and t.reservoir_code LIKE '%${p.reservoirCode}%'
+        </if>
+
+        <if test="p.areaSn != null and p.areaSn != ''">
+            and t.area_sn LIKE '%${p.areaSn}%'
+        </if>
+        <if test="p.haveCheck != null and p.haveCheck != ''">
+            and t.have_check LIKE '%${p.haveCheck}%'
+        </if>
+
+        <if test="p.projectId != null and p.projectId != ''">
+            and t.project_id LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.barcode != null and p.barcode != ''">
+            and t.barcode = #{p.barcode}
+        </if>
+
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.in_stock_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.in_stock_time
+        </if>
+    </select>
+    <select id="listAllCollect" resultType="java.util.Map">
+        SELECT
+            t.model_code modelCode, -- 物料编码
+            t.wh_code whCode, -- 仓库SN
+            aa.AR_NAME whName,  -- 仓库名称
+            SUM(t.amount) amount, -- 数量
+            t.stock_flag stockFlag,  -- 库存状态（1：在库，2：已备料，3：调拨，4盘点）
+            i.CO_ITEM_NAME modelName, -- 物料名称
+            t.supplier_code supplierCode, -- 供应商代码
+            s.supplier_name supplierName, -- 供应商名称
+            t.cust_code custCode, -- 客户编码
+            c.CUSTOMER custName, -- 客户名称
+
+            i.CO_ITEM_SPEC modelSpec, -- 物料描述
+            i.CO_UNIT coUnit, -- 单位
+            t.depa_code depaCode, -- 部门代码
+            t.depa_name depaName -- 部门名称
+        FROM
+        pdt_wms_stock_info t
+        LEFT JOIN ums_item_sap i ON t.model_code = i.CO_ITEM_CODE
+        LEFT JOIN ums_customer c ON c.CUST_CODE = i.CUST_CODE
+        LEFT JOIN ums_supplier s ON s.supplier_code = t.SUPPLIER_CODE
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=t.wh_code
+        where 1=1
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.boxNo != null and p.boxNo != ''">
+            and t.box_no LIKE '%${p.boxNo}%'
+        </if>
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and s.supplier_name LIKE '%${p.supplierName}%'
+        </if>
+        <if test="p.docNo != null and p.docNo != ''">
+            and t.doc_no LIKE '%${p.docNo}%'
+        </if>
+        <if test="p.batch != null and p.batch != ''">
+            and t.batch LIKE '%${p.batch}%'
+        </if>
+        <if test="p.orderNo != null and p.orderNo != ''">
+            and t.order_no LIKE '%${p.orderNo}%'
+        </if>
+        <if test="p.stockFlag != null and p.stockFlag != ''">
+            and t.stock_flag LIKE '%${p.stockFlag}%'
+        </if>
+        <if test="p.userDefinedStockFlag != null and p.userDefinedStockFlag != ''">
+            and t.stock_flag ${p.userDefinedStockFlag}
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.reservoirCode != null and p.reservoirCode != ''">
+            and t.reservoir_code LIKE '%${p.reservoirCode}%'
+        </if>
+
+        <if test="p.areaSn != null and p.areaSn != ''">
+            and t.area_sn LIKE '%${p.areaSn}%'
+        </if>
+        <if test="p.haveCheck != null and p.haveCheck != ''">
+            and t.have_check LIKE '%${p.haveCheck}%'
+        </if>
+
+        <if test="p.projectId != null and p.projectId != ''">
+            and t.project_id LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.barcode != null and p.barcode != ''">
+            and t.barcode = #{p.barcode}
+        </if>
+
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.in_stock_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.in_stock_time
+        </if>
+        GROUP BY
+        t.model_code,
+        t.wh_code,
+        t.stock_flag,
+        t.cust_code,
+        t.supplier_code
+    </select>
+    <select id="listAllCollectByBoxNo" resultType="java.util.Map">
+        SELECT
+            t.box_no boxNo, -- 箱码
+            t.model_code modelCode, -- 物料编码
+            left(barcode,8) batch,
+            SUM(t.amount) amount, -- 数量
+            t.stock_flag stockFlag,  -- 库存状态（1：在库，2：已备料，3：调拨，4盘点）
+            i.CO_ITEM_NAME modelName, -- 物料名称
+            t.wh_code whCode, -- 仓库SN
+            aa.AR_NAME whName,  -- 仓库名称
+            t.reservoir_code reservoirCode,
+            t.area_sn areaSn,
+            t.create_time createTime,
+            (select pwosl.create_time from pdt_wms_out_stock_list pwosl where pwosl.barcode=t.barcode order by pwosl.id desc limit 1) outCreateTime,
+            t.doc_no docNo,
+            (select pwosl.doc_no from pdt_wms_out_stock_list pwosl where pwosl.barcode=t.barcode order by pwosl.id desc limit 1) outDocNo,
+            t.cust_code custCode, -- 客户编码
+            c.CUSTOMER custName, -- 客户名称
+
+            i.CO_ITEM_SPEC modelSpec, -- 物料描述
+            i.CO_UNIT coUnit, -- 单位
+            t.supplier_code supplierCode, -- 供应商代码
+            s.supplier_name supplierName, -- 供应商名称
+            t.depa_code depaCode, -- 部门代码
+            t.depa_name depaName -- 部门名称
+        FROM
+        pdt_wms_stock_info t
+        LEFT JOIN ums_item_sap i ON t.model_code = i.CO_ITEM_CODE
+        LEFT JOIN ums_customer c ON c.CUST_CODE = i.CUST_CODE
+        LEFT JOIN ums_supplier s ON s.supplier_code = t.SUPPLIER_CODE
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=t.wh_code
+        where 1=1
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.boxNo != null and p.boxNo != ''">
+            and t.box_no LIKE '%${p.boxNo}%'
+        </if>
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and s.supplier_name LIKE '%${p.supplierName}%'
+        </if>
+        <if test="p.docNo != null and p.docNo != ''">
+            and t.doc_no LIKE '%${p.docNo}%'
+        </if>
+        <if test="p.batch != null and p.batch != ''">
+            and t.batch LIKE '%${p.batch}%'
+        </if>
+        <if test="p.orderNo != null and p.orderNo != ''">
+            and t.order_no LIKE '%${p.orderNo}%'
+        </if>
+        <if test="p.stockFlag != null and p.stockFlag != ''">
+            and t.stock_flag LIKE '%${p.stockFlag}%'
+        </if>
+        <if test="p.userDefinedStockFlag != null and p.userDefinedStockFlag != ''">
+            and t.stock_flag ${p.userDefinedStockFlag}
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.reservoirCode != null and p.reservoirCode != ''">
+            and t.reservoir_code LIKE '%${p.reservoirCode}%'
+        </if>
+
+        <if test="p.areaSn != null and p.areaSn != ''">
+            and t.area_sn LIKE '%${p.areaSn}%'
+        </if>
+        <if test="p.haveCheck != null and p.haveCheck != ''">
+            and t.have_check LIKE '%${p.haveCheck}%'
+        </if>
+
+        <if test="p.projectId != null and p.projectId != ''">
+            and t.project_id LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.barcode != null and p.barcode != ''">
+            and t.barcode = #{p.barcode}
+        </if>
+
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.in_stock_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.in_stock_time
+        </if>
+        GROUP BY
+        t.box_no,
+        t.wh_code,
+        t.stock_flag,
+        t.cust_code,
+        t.supplier_code
+    </select>
+
+</mapper>

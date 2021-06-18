@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtWmsBoxBarcodeMapper">
+    <select id="findList" resultType="map">
+        select
+            distinct t.id id,  --
+            t.mo_no moNo,  -- 指令单号
+            t.box_no boxNo,  -- 箱号
+            t.barcode barcode,  -- 条码
+            b.model_code modelCode, -- 机型
+            b.create_name createNo, -- 创建人
+            i.stock_flag stockFlag,  -- 库存状态（1：在库，2：已备料，3：调拨，4盘点）
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime  -- 更新时间
+        from pdt_wms_box_barcode t
+        left join pdt_wms_box b on b.box_no=t.box_no
+        left join pdt_wms_stock_info i on i.box_no=t.box_no
+        where 1=1
+        <if test="p.moNo != null and p.moNo != ''">
+            and t.mo_no = #{p.moNo}
+        </if>
+        <if test="p.boxNo != null and p.boxNo != ''">
+            and t.box_no = #{p.boxNo}
+        </if>
+        <if test="p.barcode != null and p.barcode != ''">
+            and t.barcode = #{p.barcode}
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and b.model_code = #{p.modelCode}
+        </if>
+        <if test="p.createName != null and p.createName != ''">
+            and b.create_name = #{p.createName}
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+    <select id="selBoxBarcode" resultType="java.util.Map">
+        SELECT
+            b.*,
+            s.CO_ITEM_DESC,
+            CASE WHEN s.project_code='P00025-2' THEN 'new' ELSE 'old' END AS type,
+            CONCAT(B.box_qty,'*',ifnull(s.ITEM_JIGSAW_NUMBER,1),'/',B.max_qty,' ','PCS') AS extra,
+            pb.data_code
+        FROM
+            pdt_wms_box b
+        LEFT JOIN ums_item_sap s ON s.CO_ITEM_CODE = b.model_code
+        LEFT JOIN wms_project_base pb ON pb.project_id=SUBSTR(b.mo_no,1,5)
+        where b.box_no=#{boxNo}
+    </select>
+    <select id="listByBoxNo" resultType="java.util.Map">
+        select
+        distinct t.id id,  --
+        t.mo_no moNo,  -- 指令单号
+        t.box_no boxNo,  -- 箱号
+        t.barcode barcode,  -- 条码
+        b.create_name createNo, -- 创建人
+        b.box_qty boxQty,   -- 当前数量
+        b.max_qty maxQty,   -- 最大容量
+        i.stock_flag stockFlag,  -- 库存状态（1：在库，2：已备料，3：调拨，4盘点）
+        t.create_time createTime,  -- 创建时间
+        t.update_time updateTime  -- 更新时间
+        from pdt_wms_box_barcode t
+        left join pdt_wms_box b on b.box_no=t.box_no
+        left join pdt_wms_stock_info i on i.box_no=t.box_no
+        where t.box_no = #{boxNo}
+        order by t.id desc
+    </select>
+</mapper>

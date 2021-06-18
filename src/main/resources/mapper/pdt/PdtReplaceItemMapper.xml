@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtReplaceItemMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  --
+            t.replace_group replaceGroup,  -- 替代组编号
+            t.model_code modelCode,  -- 适用机种
+            t.item_code itemCode,  -- 物料编号
+            t.item_name itemName,  -- 物料名称
+            t.sort sort,  -- 优先级排序
+            t.is_open isOpen,  -- 是否启用
+            t.remark1 remark1,    -- 备注
+            t.remark2 remark2,    -- 类型
+            t.create_time createTime,  -- 创建时间
+            t.create_name createName,  -- 创建人
+            t.update_time updateTime  -- 更新时间
+        from pdt_replace_item t
+        where 1=1
+        <if test="p.replaceGroup != null and p.replaceGroup != ''">
+            and t.replace_group LIKE '%${p.replaceGroup}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.itemName != null and p.itemName != ''">
+            and t.item_name LIKE '%${p.itemName}%'
+        </if>
+        <if test="p.sort != null and p.sort != ''">
+            and t.sort LIKE '%${p.sort}%'
+        </if>
+        <if test="p.isOpen != null and p.isOpen != ''">
+            and t.is_open LIKE '%${p.isOpen}%'
+        </if>
+        <if test="p.createName != null and p.createName != ''">
+            and t.create_name LIKE '%${p.createName}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.replace_group asc,t.sort asc,t.id desc
+    </select>
+
+    <select id="getBefore" resultType="com.rh.i_mes_plus.model.pdt.PdtReplaceItem">
+        SELECT
+            *
+        FROM
+            pdt_replace_item
+        WHERE
+            replace_group=#{replaceGroup}
+          AND #{ownerSort} > sort
+        ORDER BY sort DESC,id DESC
+        LIMIT 0,1;
+    </select>
+    <select id="getAfter" resultType="com.rh.i_mes_plus.model.pdt.PdtReplaceItem">
+        SELECT
+            *
+        FROM
+            pdt_replace_item
+        WHERE
+            replace_group=#{replaceGroup}
+          AND sort > #{ownerSort}
+        ORDER BY sort ASC,id ASC
+        LIMIT 0,1;
+    </select>
+    <select id="minSort" resultType="java.lang.Long">
+        select MIN(sort) from pdt_replace_item where replace_group=#{replaceGroup}
+    </select>
+    <select id="maxSort" resultType="java.lang.Long">
+        select MAX(sort) from pdt_replace_item where replace_group=#{replaceGroup}
+    </select>
+    <select id="getGroupItemListByItemCode" resultType="com.rh.i_mes_plus.model.pdt.PdtReplaceItem">
+        SELECT
+            t.id id,  --
+            t.replace_group replaceGroup,  -- 替代组编号
+            t.item_code itemCode,  -- 物料编号
+            t.item_name itemName,  -- 物料名称
+            t.sort sort,  -- 优先级排序
+            t.is_open isOpen,  -- 是否启用
+            t.create_time createTime,  -- 创建时间
+            t.create_name createName,  -- 创建人
+            t.update_time updateTime  -- 更新时间
+        FROM
+            pdt_replace_item t
+        WHERE
+            t.replace_group = ( SELECT j.replace_group FROM pdt_replace_item j WHERE j.item_code = #{itemCode} AND j.model_code=#{modelCode} )
+        <if test="isExcludeItself == 1 ">
+            AND t.item_code != #{itemCode}
+        </if>
+        ORDER BY t.sort
+    </select>
+</mapper>

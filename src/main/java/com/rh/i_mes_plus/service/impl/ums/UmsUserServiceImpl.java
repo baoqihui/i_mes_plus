@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -19,6 +20,8 @@ import com.rh.i_mes_plus.service.ums.IUmsPermissionService;
 import com.rh.i_mes_plus.service.ums.IUmsUserRoleService;
 import com.rh.i_mes_plus.service.ums.IUmsUserService;
 import com.rh.i_mes_plus.vo.PermissionTreeVO;
+import com.rh.i_mes_plus.vo.UmsPermissionVO;
+import com.rh.i_mes_plus.vo.UmsUserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.shiro.SecurityUtils;
@@ -186,5 +189,30 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
     @Override
     public List<UmsUser> getManager(Map<String, Object> params) {
         return umsUserMapper.getManager(params);
+    }
+
+    @Override
+    public Result pdaLogin(UmsUser umsUser) {
+        String userAccount = umsUser.getUserAccount();
+        String userPwd = umsUser.getUserPwd();
+        UmsUser existUmsUser = umsUserService.getOne(new QueryWrapper<UmsUser>()
+                .eq("user_account", userAccount)
+                .eq("user_pwd", userPwd)
+        );
+        if (existUmsUser!=null){
+            UmsUserVO umsUserVO=new UmsUserVO();
+            BeanUtil.copyProperties(existUmsUser,umsUserVO);
+            umsUserVO.setToken(SecureUtil.md5(existUmsUser.getUserAccount()));
+            Long id = existUmsUser.getId();
+            List<UmsPermissionVO> umsPermissionVOS=umsUserMapper.selectPermissionOfUser(id);
+            if (umsPermissionVOS.size()<=0){
+                return Result.failed(umsUserVO,"无用户权限，请联系管理员分配角色");
+            }
+            List list=(List) umsPermissionVOS.stream().distinct().collect(Collectors.toList());
+            umsUserVO.setUmsPermissionVOS(list);
+            log.info("用户：{} 登录成功",userAccount);
+            return Result.succeed(umsUserVO,"登录成功");
+        }
+        return Result.failed("登录失败，账号或密码错误");
     }
 }

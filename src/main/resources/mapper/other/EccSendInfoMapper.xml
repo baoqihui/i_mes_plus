@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.other.EccSendInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.REQUEST_NO requestNo,  -- 请求号
+            t.BATCH_COUNT batchCount,  -- 批次数量
+            t.BATCHCODE batchcode,  -- 批次号
+            t.MATERIALCODE materialcode,  -- 板卡物料
+            t.SHIP_COUNT shipCount,  -- 
+            t.SHIP_DATE shipDate,  -- 交货时间
+            t.COUNT count,  -- 采购数量
+            t.COMPONENTCODE componentcode,  -- 组件物料号
+            t.COMPONENTCOUNT componentcount,  -- 组件用料数量
+            t.LINECODE linecode,  -- 交货行号
+            t.UNIT unit,  -- 单位
+            t.ORDERCODE ordercode,  -- 采购订单
+            t.SUPPLIERCODE suppliercode,  -- 供应商
+            t.FACTORY factory,  -- 工厂
+            t.WO_NO woNo,  -- 工单号
+            t.WO_NO_COUNT woNoCount,  -- 工单数
+            t.DOC_ID docId  -- 销售发货单号
+        from ecc_send_info t
+        order by t.id desc
+    </select>
+</mapper>

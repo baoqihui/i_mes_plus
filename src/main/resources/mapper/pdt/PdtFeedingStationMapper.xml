@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtFeedingStationMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.fs_sn fsSn,  -- 料站表sn
+            t.fs_name fsName,  -- 料站表名称
+            t.model_code modelCode,  -- 机种代码
+            t.model_name modelName,  -- 机种名称
+            t.pcb_item_code pcbItemCode,  -- PCB料号
+            t.line_code lineCode,  -- 线别代码
+            ulb.line_name lineName, -- 线别名称
+            t.wc_code wcCode,  -- 工作中心
+            uwc.wc_name wcName, -- 工作中心名称
+            t.model_spec modelSpec,  -- 机种规格
+            t.paster_type pasterType,  -- 贴片类型（0：贴片 1：立插 2：卧插）
+            t.paster_qty pasterQty,  -- 贴片点数（考虑删除）
+            t.paster_speed pasterSpeed,  -- 贴片速率
+            t.pcb_type pcbType,  -- 加工面（正面：T，反面：B）
+            t.is_value isValue,  -- 生效标识
+            t.remark remark,  -- 变更说明
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from pdt_feeding_station t
+        left join ums_line_body ulb on t.line_code = ulb.line_code
+        left join ums_work_center uwc on t.wc_code = uwc.wc_code
+        where 1=1
+        <if test="p.fsSn != null and p.fsSn != ''">
+            and t.fs_sn LIKE '%${p.fsSn}%'
+        </if>
+        <if test="p.fsName != null and p.fsName != ''">
+            and t.fs_name LIKE '%${p.fsName}%'
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.modelName != null and p.modelName != ''">
+            and t.model_name LIKE '%${p.modelName}%'
+        </if>
+        <if test="p.pcbItemCode != null and p.pcbItemCode != ''">
+            and t.pcb_item_code LIKE '%${p.pcbItemCode}%'
+        </if>
+        <if test="p.lineCode != null and p.lineCode != ''">
+            and t.line_code LIKE '%${p.lineCode}%'
+        </if>
+        <if test="p.wcCode != null and p.wcCode != ''">
+            and t.wc_code LIKE '%${p.wcCode}%'
+        </if>
+        <if test="p.modelSpec != null and p.modelSpec != ''">
+            and t.model_spec LIKE '%${p.modelSpec}%'
+        </if>
+        <if test="p.pasterType != null and p.pasterType != ''">
+            and t.paster_type LIKE '%${p.pasterType}%'
+        </if>
+        <if test="p.pasterQty != null and p.pasterQty != ''">
+            and t.paster_qty LIKE '%${p.pasterQty}%'
+        </if>
+        <if test="p.pasterSpeed != null and p.pasterSpeed != ''">
+            and t.paster_speed LIKE '%${p.pasterSpeed}%'
+        </if>
+        <if test="p.pcbType != null and p.pcbType != ''">
+            and t.pcb_type LIKE '%${p.pcbType}%'
+        </if>
+        <if test="p.isValue != null and p.isValue != ''">
+            and t.is_value LIKE '%${p.isValue}%'
+        </if>
+        <if test="p.remark != null and p.remark != ''">
+            and t.remark LIKE '%${p.remark}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

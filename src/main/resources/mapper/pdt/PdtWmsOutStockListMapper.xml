@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtWmsOutStockListMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 明细主键ID
+            t.doc_no docNo,  -- 出库单据号
+            t.osd_id osdId,  -- 出库物料表id
+            t.box_no boxNo,  -- 箱号
+            t.barcode barcode,  -- 物料sn
+            t.model_code modelCode,  -- 物料编码
+            t.model_name modelName,  -- 生产批次号
+            t.amount amount,  -- 数量
+            t.out_stock_man_name outStockManName,  -- 出库人
+            t.out_stock_time outStockTime,  -- 出库时间
+            t.remark remark,  -- 
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from pdt_wms_out_stock_list t
+        order by t.id desc
+    </select>
+    <select id="ecc" resultType="com.rh.i_mes_plus.vo.EccVO">
+        SELECT DISTINCT
+            l.doc_no,
+            l.model_code,
+            d.sale_order,
+            SUBSTRING( l.barcode, 1, 8 ) BATCH,
+            COUNT( 1 ) QTY
+        FROM
+            pdt_wms_out_stock_list l
+                LEFT JOIN pdt_wms_out_stock_detail d ON l.osd_id=d.id
+                LEFT JOIN wms_project_base b ON SUBSTRING( l.barcode, 1, 8 ) = SUBSTRING( b.qn_begin, 1, 8 )
+                AND B.PROJECT_ID NOT LIKE 'A%%'
+        WHERE
+            l.doc_no = #{docNo}
+        GROUP BY
+            l.doc_no,
+            l.model_code,
+            d.sale_order,
+            SUBSTRING(l.barcode,1,8)
+    </select>
+    <select id="getMaxSubGroup" resultType="java.lang.Integer">
+        SELECT MAX(SUBSTRING(sub_group,1,1)) maxSub FROM ecc_material_detail WHERE wo_no=#{mo} and sub_group!='' ORDER BY sub_group
+    </select>
+    <select id="getMaterialList" resultType="com.rh.i_mes_plus.model.other.EccMaterialDetail">
+        SELECT * FROM ecc_material_detail WHERE wo_no=#{mo} and SUBSTRING(sub_group,1,1)=#{i} ORDER BY sub_group;
+    </select>
+    <select id="listAll" resultType="java.util.Map">
+        select
+            t.barcode barcode,  -- 物料sn
+            t.box_no boxNo,  -- 箱号
+            t.model_code modelCode,  -- 物料编码
+            t.model_name modelName,  -- 物料名称
+            i.wh_code whCode, -- 仓库代码
+            aa.AR_NAME whName,  -- 仓库名称
+            i.dt_code dtCode,  -- 出库类型
+            swit.dt_name dtName, --
+            pwosd.cust_order custOrder,
+            i.doc_ship_address docShipAddress,
+            t.update_time updateTime,  -- 更新时间
+            t.remark remark,  --
+            t.id id,  -- 明细主键ID
+            t.doc_no docNo,  -- 出库单据号
+            t.osd_id osdId,  -- 出库物料表id
+            t.amount amount,  -- 数量
+            t.out_stock_man_name outStockManName,  -- 出库人
+            t.out_stock_time outStockTime,  -- 出库时间
+            t.create_time createTime  -- 创建时间:按当前时间自动创建
+        from pdt_wms_out_stock_list t
+        left join pdt_wms_out_stock_doc i on i.doc_no=t.doc_no
+        left join pdt_wms_out_stock_detail pwosd on pwosd.id=t.osd_id
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=i.wh_code
+        LEFT JOIN sms_wms_io_type swit on swit.dt_code=i.dt_code
+        where 1=1
+        <if test="p.boxNo != null and p.boxNo != ''">
+            and t.box_no LIKE '%${p.boxNo}%'
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and i.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.barcode != null and p.barcode != ''">
+            and t.barcode LIKE '%${p.barcode}%'
+        </if>
+        <if test="p.docStatus != null and p.docStatus != ''">
+            and i.doc_status LIKE '%${p.docStatus}%'
+        </if>
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and i.dt_code LIKE '%${p.dtCode}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+    <select id="listAllCollect" resultType="java.util.Map">
+        select
+            t.model_code modelCode,  -- 物料编码
+            t.model_name modelName,  -- 物料名称
+            i.wh_code whCode, -- 仓库代码
+            aa.AR_NAME whName,  -- 仓库名称
+            count(t.model_code) amount
+        from pdt_wms_out_stock_list t
+        left join pdt_wms_out_stock_doc i on i.doc_no=t.doc_no
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=i.wh_code
+        where 1=1
+        <if test="p.boxNo != null and p.boxNo != ''">
+            and t.box_no LIKE '%${p.boxNo}%'
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and i.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.barcode != null and p.barcode != ''">
+            and t.barcode LIKE '%${p.barcode}%'
+        </if>
+        <if test="p.docStatus != null and p.docStatus != ''">
+            and i.doc_status LIKE '%${p.docStatus}%'
+        </if>
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and i.dt_code LIKE '%${p.dtCode}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        group by  t.model_code
+    </select>
+    <select id="listAllCollectByBoxNo" resultType="java.util.Map">
+        select
+            t.box_no boxNo,  -- 箱号
+            t.model_code modelCode,  -- 机型
+            LEFT(barcode,8) batch,
+            count(t.box_no) amount,
+            i.doc_no docNo,
+            t.model_name modelName,  -- 机型名称
+            i.wh_code whCode, -- 仓库代码
+            pwosd.cust_order custOrder,
+            i.doc_ship_address docShipAddress,
+            t.out_stock_man_name outStockManName,
+            t.create_time createTime,
+            t.remark remark
+        from pdt_wms_out_stock_list t
+        left join pdt_wms_out_stock_detail pwosd on pwosd.id=t.osd_id
+        left join pdt_wms_out_stock_doc i on i.doc_no=t.doc_no
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=i.wh_code
+        where 1=1
+        <if test="p.boxNo != null and p.boxNo != ''">
+            and t.box_no LIKE '%${p.boxNo}%'
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and i.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.barcode != null and p.barcode != ''">
+            and t.barcode LIKE '%${p.barcode}%'
+        </if>
+        <if test="p.docStatus != null and p.docStatus != ''">
+            and i.doc_status LIKE '%${p.docStatus}%'
+        </if>
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and i.dt_code LIKE '%${p.dtCode}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        group by  t.box_no,t.model_code
+    </select>
+
+</mapper>

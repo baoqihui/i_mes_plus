@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtBomDetailReplaceItemMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.pbd_id pbdId,  -- bom明细id
+            t.item_code itemCode,  -- 物料代码
+            t.item_name itemName,  -- 物料名称
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from pdt_bom_detail_replace_item t
+        where 1=1
+        <if test="p.pbdId != null and p.pbdId != ''">
+            and t.pbd_id LIKE '%${p.pbdId}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.itemName != null and p.itemName != ''">
+            and t.item_name LIKE '%${p.itemName}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

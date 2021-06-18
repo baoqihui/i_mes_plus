@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.other.EccMaterialDetailMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.wo_no woNo,  -- 工单号
+            t.line_no lineNo,  -- 行号
+            t.material_pn materialPn,  -- 物料编号
+            t.material_name materialName,  -- 物料名称
+            t.panel_qty panelQty,  -- 单板用量
+            t.total_qty totalQty,  -- 总数
+            t.has_send_qty hasSendQty,  -- 已扣数量
+            t.sub_group subGroup,  -- 替代组
+            t.sc_flag scFlag  -- 正反面标识
+        from ecc_material_detail t
+        where 1=1
+        <if test="p.woNo != null and p.woNo != ''">
+            and t.wo_no = #{p.woNo}
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

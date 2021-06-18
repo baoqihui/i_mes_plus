@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtWmsBoxMapper">
+    <select id="findList" resultType="map">
+        select
+        t.id id,  --
+        t.mo_no moNo,  -- 指令单号
+        t.box_no boxNo,  -- 箱号
+        t.batch batch,  -- 批次
+        t.weight weight,    -- 重量
+        t.model_code modelCode,  -- 成品料号
+        t.model_name modelName,  -- 成品名
+        t.model_ver modelVer,  -- 成品版本
+        t.gt_no gtNo,  -- GT号
+        t.mpn mpn,  -- MPN
+        t.box_qty boxQty, -- 数量
+        t.max_qty maxQty, -- 最大容量
+        t.create_name createName,  -- 创建人
+        t.create_time createTime,  -- 创建时间
+        t.update_time updateTime  -- 更新时间
+        from pdt_wms_box t
+        WHERE t.box_no not in (SELECT pwsi.box_no FROM pdt_wms_stock_info as pwsi)
+        <if test="p.moNo != null and p.moNo != ''">
+            and t.mo_no = #{p.moNo}
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtBomMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.item_code itemCode,  -- 物料代码
+            t.item_name itemName,  -- 物料名称
+            t.item_spec itemSpec,  -- 物料描述
+            t.ver ver,  -- 版本
+            t.cust_code custCode,  -- 客户编号
+            uc.CUSTOMER customer,  --
+            t.project_code projectCode,  -- 项目号
+            t.is_default isDefault,  -- 是否默认(0,不默认 1,默认)
+            t.ecns ecns,  -- 关联ecn（","分割）
+            t.remark remark,  -- 备注
+            t.is_value isValue,  -- 是否生效（0，无效 1，有效）
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.create_name createName,  -- 创建人
+            t.update_time updateTime,  -- 更新时间
+            t.update_name updateName  -- 编辑人
+        from pdt_bom t
+        left join ums_customer uc on t.cust_code = uc.CUST_CODE
+        where 1=1
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.itemName != null and p.itemName != ''">
+            and t.item_name LIKE '%${p.itemName}%'
+        </if>
+        <if test="p.itemSpec != null and p.itemSpec != ''">
+            and t.item_spec LIKE '%${p.itemSpec}%'
+        </if>
+        <if test="p.ver != null and p.ver != ''">
+            and t.ver LIKE '%${p.ver}%'
+        </if>
+        <if test="p.custCode != null and p.custCode != ''">
+            and t.cust_code LIKE '%${p.custCode}%'
+        </if>
+        <if test="p.projectCode != null and p.projectCode != ''">
+            and t.project_code LIKE '%${p.projectCode}%'
+        </if>
+        <if test="p.isDefault != null and p.isDefault != ''">
+            and t.is_default LIKE '%${p.isDefault}%'
+        </if>
+        <if test="p.ecns != null and p.ecns != ''">
+            and t.ecns LIKE '%${p.ecns}%'
+        </if>
+        <if test="p.remark != null and p.remark != ''">
+            and t.remark LIKE '%${p.remark}%'
+        </if>
+        <if test="p.isValue != null and p.isValue != ''">
+            and t.is_value LIKE '%${p.isValue}%'
+        </if>
+        <if test="p.createName != null and p.createName != ''">
+            and t.create_name LIKE '%${p.createName}%'
+        </if>
+        <if test="p.updateName != null and p.updateName != ''">
+            and t.update_name LIKE '%${p.updateName}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+    <select id="getPcbMapByItemCode" resultType="java.util.Map">
+        select
+            d.item_code itemCode,
+            s.CONNECT_PLANK_NUM pcbCount
+        from pdt_bom t
+        left join pdt_bom_detail d on t.id=d.parent_id and d.pcb_flag=1
+        left join ums_item_sap s on d.item_code=s.CO_ITEM_CODE
+        where t.item_code=#{p.itemCode}
+        and t.is_value=1 and d.is_value=1
+    </select>
+</mapper>

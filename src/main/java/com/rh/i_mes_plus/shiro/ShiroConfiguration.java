@@ -62,20 +62,10 @@ public class ShiroConfiguration {
 		//放行登录接口
 		filterChainDefinitionMap.put("/ums/auth", "anon");
 		filterChainDefinitionMap.put("/ums/logout", "anon");
-		//放行移动端接口
-		filterChainDefinitionMap.put("/sms/smsReceiveDoc/scanSN", "anon");
-		filterChainDefinitionMap.put("/sms/smsOutStockDoc/scanSN", "anon");
-		filterChainDefinitionMap.put("/sms/smsCheckDoc/scanSN", "anon");
-		filterChainDefinitionMap.put("/sms/smsStockInfo/putAway", "anon");
-		filterChainDefinitionMap.put("/sms/smsStockInfo/soldOut", "anon");
-		filterChainDefinitionMap.put("/sms/smsStockInfo/change", "anon");
-		filterChainDefinitionMap.put("/sms/smsStockInfo/getInfoBySn", "anon");
-		filterChainDefinitionMap.put("/sms/smsOutStockDoc/scanCancel", "anon");
-		filterChainDefinitionMap.put("/sms/smsStockInfo/spilt", "anon");
-		filterChainDefinitionMap.put("/sms/smsStockInfo/combine", "anon");
-		filterChainDefinitionMap.put("/sms/smsReceiveDoc/list", "anon");
-		filterChainDefinitionMap.put("/sms/smsOutStockDoc/list", "anon");
-		filterChainDefinitionMap.put("/sms/smsCheckDoc/list", "anon");
+		//放行webservice
+		filterChainDefinitionMap.put("/webservice/**", "anon");
+
+		filterChainDefinitionMap.put("/show2", "anon");
 
 		//其余全部认证
 		filterChainDefinitionMap.put("/**", "authc");

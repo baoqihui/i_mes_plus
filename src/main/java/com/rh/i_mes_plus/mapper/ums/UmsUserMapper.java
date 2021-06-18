@@ -2,6 +2,7 @@ package com.rh.i_mes_plus.mapper.ums;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rh.i_mes_plus.common.mapper.SuperMapper;
 import com.rh.i_mes_plus.model.ums.UmsUser;
+import com.rh.i_mes_plus.vo.UmsPermissionVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,4 +26,6 @@ public interface UmsUserMapper extends SuperMapper<UmsUser> {
     Page<UmsUser> findList(Page<UmsUser> pages, @Param("p") Map<String, Object> params);
 
     List<UmsUser> getManager(@Param("p") Map<String, Object> params);
+
+    List<UmsPermissionVO> selectPermissionOfUser(@Param("userId") Long userId);
 }

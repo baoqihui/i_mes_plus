@@ -34,4 +34,24 @@
             </foreach>
         </if>
     </select>
+    <select id="selectPermissionOfUser" resultType="com.rh.i_mes_plus.vo.UmsPermissionVO">
+        SELECT
+            p.id id,
+            p.parent_id parentId,
+            p.icon icon,
+            p.per_name title,
+            p.per_type perType,
+            p.path href,
+            p.remark remark,
+            p.status status
+        FROM
+            ums_permission p
+                LEFT JOIN ums_role_per rp ON rp.per_id = p.id
+                LEFT JOIN ums_role ro ON ro.id = rp.role_id
+                LEFT JOIN ums_user_role ur ON ur.role_id = ro.id
+        WHERE
+            ro.status = 1 and
+            ur.user_id = #{userId} and p.status = 1
+        order by p.per_sort asc,p.id asc
+    </select>
 </mapper>

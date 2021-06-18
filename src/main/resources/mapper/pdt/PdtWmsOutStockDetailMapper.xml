@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtWmsOutStockDetailMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 主键ID
+            t.doc_no docNo,  -- 出库单据号
+            t.model_code modelCode,  -- 出库料号
+            t.model_name modelName,  -- 品名
+            t.plan_num planNum,  -- 计划出库数量
+            t.receive_num receiveNum,  -- 实际出库数量
+            t.sale_order saleOrder, -- 销售单号
+            t.po_line poLine, -- 行项目
+            t.cust_order custOrder, -- 客户订单号
+            t.remark remark,  -- 备注
+            t.supplier_code supplierCode,  -- 供应商代码
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from pdt_wms_out_stock_detail t
+        order by t.id desc
+    </select>
+    <select id="getListByDocNo" resultType="java.util.Map">
+        select
+            t.model_code modelCode,
+            t.plan_num planNum,
+            t.receive_num receiveNum,
+            sd.doc_remark docRemark
+        from pdt_wms_out_stock_detail t
+        LEFT JOIN pdt_wms_out_stock_doc sd ON t.doc_no = sd.doc_no
+        where t.doc_no=#{p.docNo}
+    </select>
+</mapper>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtWmsPmMoBaseMapper">
+    <select id="findList" resultType="map">
+        select
+        t.id id,  --
+        t.ms_code msCode,  -- 生产阶别
+        t.project_id projectId,  -- 工单ID(PROJECT_BASE_ID)
+        t.cust_code custCode,  -- 客户名称
+        t.mo_no moNo,  -- 制令号
+        t.model_code modelCode,  -- 机种名(生产料件)
+        t.model_name modelName,  -- 品名
+        t.sc_flag scFlag,  -- 加工面(A单面 S 正面 C 反面)
+        t.line_code lineCode,  -- 线别ID
+        t.technics_id technicsId,  -- 工艺ID
+        t.mo_schedule_date moScheduleDate,  -- 预投产时间
+        t.mo_due_date moDueDate,  -- 预关结时间
+        t.pcb_count pcbCount,  -- 联板数
+        t.fs_sn fsSn,  -- 料站表sn
+        t.master_flag masterFlag,  -- 产出面标识（Y/N）
+        t.mo_input moInput,  -- 工单投入阶（Y/N）
+        t.mo_output moOutput,  -- 工单产出阶（Y/N）
+        t.create_no createNo,  -- 员工号
+        t.mo_start_date moStartDate,  -- 实际投入时间
+        t.mo_close_date moCloseDate,  -- 实际关结时间
+        t.mo_create_date moCreateDate,  -- 开立时间
+        t.target_qty targetQty,  -- 生产数量
+        t.input_qty inputQty,  -- 已投入量
+        t.output_qty outputQty,  -- 已产出量
+        t.turn_out_qty turnOutQty,  -- 回流数量
+        t.total_scrap_qty totalScrapQty,  -- 作废数量
+        t.close_flag closeFlag,  -- 生产制令单状态(1:开立,2:上线,3:异常关结,4:投产,5:挂线,6:生产结束,7:离线)
+        t.default_group defaultGroup,  -- 起始工序
+        t.end_group endGroup,  -- 最后一道工序
+        t.tp_number tpNumber,  -- 贴片点数
+        t.product_control_type productControlType,  -- 成品管控类型1批次、2个体
+        t.jigsaw_number jigsawNumber,  -- 条码拼板数
+        t.half_model_code halfModelCode,  -- 半成品机种
+        t.create_time createTime,  -- 创建时间
+        t.update_time updateTime,  -- 更新时间
+        t.depa_code depaCode,  -- 部门代码
+        t.depa_name depaName,  -- 部门名称
+        t.remark remark  -- 备注
+        from pdt_wms_pm_mo_base t
+        where 1=1
+        <if test="p.msCode != null and p.msCode != ''">
+            and t.ms_code LIKE '%${p.msCode}%'
+        </if>
+        <if test="p.projectId != null and p.projectId != ''">
+            and t.project_id LIKE '%${p.projectId}%'
+        </if>
+        <if test="p.custCode != null and p.custCode != ''">
+            and t.cust_code LIKE '%${p.custCode}%'
+        </if>
+        <if test="p.moNo != null and p.moNo != ''">
+            and t.mo_no LIKE '%${p.moNo}%'
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.modelName != null and p.modelName != ''">
+            and t.model_name LIKE '%${p.modelName}%'
+        </if>
+        <if test="p.scFlag != null and p.scFlag != ''">
+            and t.sc_flag LIKE '%${p.scFlag}%'
+        </if>
+        <if test="p.lineCode != null and p.lineCode != ''">
+            and t.line_code LIKE '%${p.lineCode}%'
+        </if>
+        <if test="p.technicsId != null and p.technicsId != ''">
+            and t.technics_id LIKE '%${p.technicsId}%'
+        </if>
+        <if test="p.moScheduleDate != null and p.moScheduleDate != ''">
+            and t.mo_schedule_date LIKE '%${p.moScheduleDate}%'
+        </if>
+        <if test="p.moDueDate != null and p.moDueDate != ''">
+            and t.mo_due_date LIKE '%${p.moDueDate}%'
+        </if>
+        <if test="p.pcbCount != null and p.pcbCount != ''">
+            and t.pcb_count LIKE '%${p.pcbCount}%'
+        </if>
+        <if test="p.fsSn != null and p.fsSn != ''">
+            and t.fs_sn LIKE '%${p.fsSn}%'
+        </if>
+        <if test="p.masterFlag != null and p.masterFlag != ''">
+            and t.master_flag LIKE '%${p.masterFlag}%'
+        </if>
+        <if test="p.moInput != null and p.moInput != ''">
+            and t.mo_input LIKE '%${p.moInput}%'
+        </if>
+        <if test="p.moOutput != null and p.moOutput != ''">
+            and t.mo_output LIKE '%${p.moOutput}%'
+        </if>
+        <if test="p.createNo != null and p.createNo != ''">
+            and t.create_no LIKE '%${p.createNo}%'
+        </if>
+        <if test="p.moStartDate != null and p.moStartDate != ''">
+            and t.mo_start_date LIKE '%${p.moStartDate}%'
+        </if>
+        <if test="p.moCloseDate != null and p.moCloseDate != ''">
+            and t.mo_close_date LIKE '%${p.moCloseDate}%'
+        </if>
+        <if test="p.moCreateDate != null and p.moCreateDate != ''">
+            and t.mo_create_date LIKE '%${p.moCreateDate}%'
+        </if>
+        <if test="p.targetQty != null and p.targetQty != ''">
+            and t.target_qty LIKE '%${p.targetQty}%'
+        </if>
+        <if test="p.inputQty != null and p.inputQty != ''">
+            and t.input_qty LIKE '%${p.inputQty}%'
+        </if>
+        <if test="p.outputQty != null and p.outputQty != ''">
+            and t.output_qty LIKE '%${p.outputQty}%'
+        </if>
+        <if test="p.turnOutQty != null and p.turnOutQty != ''">
+            and t.turn_out_qty LIKE '%${p.turnOutQty}%'
+        </if>
+        <if test="p.totalScrapQty != null and p.totalScrapQty != ''">
+            and t.total_scrap_qty LIKE '%${p.totalScrapQty}%'
+        </if>
+        <if test="p.closeFlag != null and p.closeFlag != ''">
+            and t.close_flag LIKE '%${p.closeFlag}%'
+        </if>
+        <if test="p.defaultGroup != null and p.defaultGroup != ''">
+            and t.default_group LIKE '%${p.defaultGroup}%'
+        </if>
+        <if test="p.endGroup != null and p.endGroup != ''">
+            and t.end_group LIKE '%${p.endGroup}%'
+        </if>
+        <if test="p.tpNumber != null and p.tpNumber != ''">
+            and t.tp_number LIKE '%${p.tpNumber}%'
+        </if>
+        <if test="p.productControlType != null and p.productControlType != ''">
+            and t.product_control_type LIKE '%${p.productControlType}%'
+        </if>
+        <if test="p.jigsawNumber != null and p.jigsawNumber != ''">
+            and t.jigsaw_number LIKE '%${p.jigsawNumber}%'
+        </if>
+        <if test="p.halfModelCode != null and p.halfModelCode != ''">
+            and t.half_model_code LIKE '%${p.halfModelCode}%'
+        </if>
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code LIKE '%${p.depaCode}%'
+        </if>
+        <if test="p.depaName != null and p.depaName != ''">
+            and t.depa_name LIKE '%${p.depaName}%'
+        </if>
+        <if test="p.remark != null and p.remark != ''">
+            and t.remark LIKE '%${p.remark}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+    <select id="selDetailByMoNo" resultType="java.util.Map">
+        select
+        t.id id,  --
+        t.mo_no moNo,  -- 制令号
+        (SELECT COUNT(*) FROM pdt_wms_box_barcode bb WHERE bb.mo_no=#{moNo})  packedQty -- 已包装量
+        from pdt_wms_pm_mo_base t
+        where 1=1
+        <if test="moNo != null and moNo != ''">
+            and t.mo_no = #{moNo}
+        </if>
+    </select>
+</mapper>

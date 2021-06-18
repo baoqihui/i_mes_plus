@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.rh.i_mes_plus.common.model.Result;
 import com.rh.i_mes_plus.dto.UserRoleDTO;
 import com.rh.i_mes_plus.model.ums.UmsUser;
+import com.rh.i_mes_plus.vo.UmsUserVO;
 
 import java.util.List;
 import java.util.Map;
@@ -34,5 +35,7 @@ public interface IUmsUserService extends IService<UmsUser> {
     Result saveOrUpdateUser(UserRoleDTO userRoleDTO);
 
     List<UmsUser> getManager(Map<String, Object> params);
+
+    Result<UmsUserVO> pdaLogin(UmsUser umsUser);
 }
 

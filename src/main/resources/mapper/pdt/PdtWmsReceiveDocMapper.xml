@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtWmsReceiveDocMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.doc_no docNo,  -- 入库单号
+            t.mo_no moNo, -- 指令单号
+            t.model_code modelCode,  -- 物料代码
+            t.model_name modelName,  -- 物料名称
+            t.batch batch,  -- 批次
+            t.in_date inDate,  -- 入库日期
+            t.dt_code dtCode,  -- 单据类型代码
+            t.supper_code supperCode,  -- 供应商代码
+            t.customer customer,  -- 客户名称
+            t.wh_code whCode,  -- 仓库代码
+            t.oqa_flag oqaFlag,  -- 检验状态(0未送检1已送检2未接检3检验中4允收5拒收5让步接收)
+            t.create_name createName,  -- 录入人
+            t.status status,  -- 1=录入、2=入库中、3=已审核、4=关结
+            t.remark remark,  -- 备注
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.depa_code depaCode,  -- 部门代码
+            t.depa_name depaName  -- 部门名称
+        from pdt_wms_receive_doc t
+        where 1=1
+        <if test="p.docNo != null and p.docNo != ''">
+            and t.doc_no = #{p.docNo}
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code = #{p.modelCode}
+        </if>
+        order by t.status asc,t.id desc
+    </select>
+    <select id="getReceiveDocListByDtCode" resultType="java.lang.String">
+        select t.doc_no docNo from pdt_wms_receive_doc t
+        where t.status !='4'
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and t.dt_code = #{p.dtCode}
+        </if>
+        order by id desc
+    </select>
+</mapper>

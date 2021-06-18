@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtWmsOutStockDocMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.doc_no docNo,  -- 出库单据号
+            t.dt_code dtCode,  -- 出库类型(关联单据类型表ID) t_co_wh_doc_type
+            t.cust_code custCode,  -- 客户代码
+            c.customer customer, -- 客户名称
+            t.doc_out_time docOutTime,  -- 备料日期
+            t.doc_time docTime,  -- 开单时间
+            t.doc_man_name docManName,  -- 制单人
+            t.doc_ship_logistics docShipLogistics, -- 物流名称
+            t.doc_ship_address docShipAddress,  -- 发货地址
+            t.doc_ship_account docShipAccount,  -- 运单号
+            t.doc_status docStatus,  -- 状态(1录入、2、出库中 4、关结)
+            t.doc_close_date docCloseDate,  -- 关结时间
+            t.supplier_code supplierCode,  -- 供应商代码
+            t.twt_did twtDid,  -- 收发类型ID
+            t.wh_code whCode,  -- 仓库代码
+            ar.AR_NAME whName, -- 仓库名称
+            CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,'')) as twtTypeName, -- 收发类型
+            t.doc_remark docRemark,  -- 备注
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.depa_code depaCode,  -- 部门代码
+            t.depa_name depaName  -- 部门名称
+        from pdt_wms_out_stock_doc t
+        LEFT JOIN sms_wms_io_type A on t.DT_CODE=A.dt_code
+        LEFT JOIN sms_wms_erp_doc_type B ON t.twt_did=B.d_id
+        LEFT JOIN ums_wms_area ar ON t.wh_code=ar.AR_SN
+        LEFT JOIN ums_customer C ON C.CUST_CODE=t.cust_code
+        WHERE 1=1
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and t.dt_code LIKE '%${p.dtCode}%'
+        </if>
+        <if test="p.docNo != null and p.docNo != ''">
+            and t.doc_no LIKE '%${p.docNo}%'
+        </if>
+        <if test="p.whCode != null and p.whCode != ''">
+            and t.wh_code LIKE '%${p.whCode}%'
+        </if>
+        <if test="p.docStatus != null and p.docStatus != ''">
+            and t.doc_status LIKE '%${p.docStatus}%'
+        </if>
+        <if test="p.twtDid != null and p.twtDid != ''">
+            and t.twt_did LIKE '%${p.twtDid}%'
+        </if>
+        <if test="p.twtTypeName != null and p.twtTypeName != ''">
+            and CONCAT(IFNULL(A.dt_name,''),'-',IFNULL(B.TYPE_NAME,''))  LIKE '%${p.twtTypeName}%'
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and (SELECT GROUP_CONCAT(DISTINCT d.model_code) FROM pdt_wms_out_stock_detail d WHERE d.doc_no = t.doc_no) LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.barcode != null and p.barcode != ''">
+            and (SELECT GROUP_CONCAT(DISTINCT l.barcode) FROM pdt_wms_out_stock_list l WHERE l.doc_no = t.doc_no) LIKE '%${p.barcode}%'
+        </if>
+        order by t.doc_status asc,t.id desc
+    </select>
+    <select id="getOutStockDocListByDtCode" resultType="java.lang.String">
+        select t.doc_no docNo from pdt_wms_out_stock_doc t
+        where t.doc_status !='4'
+        <if test="p.dtCode != null and p.dtCode != ''">
+            and t.dt_code = #{p.dtCode}
+        </if>
+        order by t.id desc
+    </select>
+    <select id="statement" resultType="java.util.Map">
+        select
+            t.model_code modelCode,  -- 物料编码
+            t.model_name modelName,  -- 物料名称
+            t.box_no boxNo, -- 箱号
+            t.barcode barcode,  -- 物料sn
+            sd.plan_num planNum,  -- 计划数量
+            sum(si.amount) amount, -- SN库存数量
+            SUBSTRING( t.barcode, 1, 8 ) batch,
+            d.wh_code whCode, -- 仓库代码
+            aa.AR_NAME whName,  -- 仓库名称
+            si.reservoir_code reservoirCode, -- 库区SN
+            si.area_sn areaSn, -- 库位
+            si.pdate pdate, -- 生产日期
+            si.PROJECT_ID projectId, -- 工单号
+            d.doc_remark docRemark
+        from pdt_wms_out_stock_list t
+        left join pdt_wms_out_stock_detail sd on t.osd_id=sd.id
+        LEFT JOIN pdt_wms_out_stock_doc d ON d.doc_no=t.doc_no
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=d.wh_code
+        left join pdt_wms_stock_info si on t.barcode=si.barcode
+        where 1=1
+        <if test="p.docNo != null and p.docNo != ''">
+            and t.doc_no LIKE '%${p.docNo}%'
+        </if>
+        group by t.box_no
+    </select>
+    <select id="statementStock" resultType="java.util.Map">
+        select
+            si.model_code modelCode, -- 物料代码
+            si.model_name modelName,  -- 物料名称
+            si.box_no boxNo, -- 箱号
+            sum(si.amount) amount,  -- SN库存数量
+            SUBSTRING( si.barcode, 1, 8 ) batch,    -- 批次
+            si.wh_code whCode,  -- 仓库SN
+            aa.AR_NAME whName,  -- 仓库名称
+            si.reservoir_code reservoirCode, -- 库区SN
+            si.area_sn areaSn, -- 库位
+            si.pdate pdate, -- 生产日期
+            si.PROJECT_ID projectId -- 工单号
+        from pdt_wms_stock_info si
+        LEFT JOIN ums_wms_area aa on aa.AR_SN=si.wh_code
+        where 1=1
+          and si.model_code=#{modelCode}
+          and si.stock_flag='1'
+        group by si.box_no
+    </select>
+</mapper>

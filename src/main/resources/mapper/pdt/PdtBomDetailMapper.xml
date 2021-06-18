@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtBomDetailMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.parent_id parentId,  -- 
+            t.assy_level assyLevel,  -- 阶别
+            t.item_code itemCode,  -- 料号
+            t.item_name itemName,   -- 料名
+            t.front_point_location frontPointLocation,  -- 正面点位
+            t.front_use_num frontUseNum,  -- 正面用量
+            t.reverse_point_location reversePointLocation,  -- 反面点位
+            t.reverse_use_num reverseUseNum,  -- Bom层
+            t.unit unit,  -- 单位
+            t.remark1 remark1,  -- 备注1
+            t.remark2 remark2,  -- 备注2
+            t.remark3 remark3,  -- 备注3
+            t.desc1 desc1,  -- 描述1
+            t.desc2 desc2,  -- 描述2
+            t.desc3 desc3,  -- 描述3
+            t.process_code processCode,  -- 工序
+            t.bom_stratum bomStratum,  -- Bom层
+            t.pcb_flag pcbFlag, -- pcb版本
+            t.is_value isValue,  -- 是否生效（0，无效 1，有效）
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from pdt_bom_detail t
+        where 1=1
+        <if test="p.parentId != null and p.parentId != ''">
+            and t.parent_id = #{p.parentId}
+        </if>
+        <if test="p.assyLevel != null and p.assyLevel != ''">
+            and t.assy_level LIKE '%${p.assyLevel}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.frontPointLocation != null and p.frontPointLocation != ''">
+            and t.front_point_location LIKE '%${p.frontPointLocation}%'
+        </if>
+        <if test="p.frontUseNum != null and p.frontUseNum != ''">
+            and t.front_use_num LIKE '%${p.frontUseNum}%'
+        </if>
+        <if test="p.reversePointLocation != null and p.reversePointLocation != ''">
+            and t.reverse_point_location LIKE '%${p.reversePointLocation}%'
+        </if>
+        <if test="p.reverseUseNum != null and p.reverseUseNum != ''">
+            and t.reverse_use_num LIKE '%${p.reverseUseNum}%'
+        </if>
+        <if test="p.unit != null and p.unit != ''">
+            and t.unit LIKE '%${p.unit}%'
+        </if>
+        <if test="p.remark1 != null and p.remark1 != ''">
+            and t.remark1 LIKE '%${p.remark1}%'
+        </if>
+        <if test="p.remark2 != null and p.remark2 != ''">
+            and t.remark2 LIKE '%${p.remark2}%'
+        </if>
+        <if test="p.remark3 != null and p.remark3 != ''">
+            and t.remark3 LIKE '%${p.remark3}%'
+        </if>
+        <if test="p.processCode != null and p.processCode != ''">
+            and t.process_code LIKE '%${p.processCode}%'
+        </if>
+        <if test="p.bomStratum != null and p.bomStratum != ''">
+            and t.bom_stratum LIKE '%${p.bomStratum}%'
+        </if>
+        <if test="p.isValue != null and p.isValue != ''">
+            and t.is_value LIKE '%${p.isValue}%'
+        </if>
+        <if test="p.pcbFlag != null and p.pcbFlag != ''">
+            and t.pcb_flag LIKE '%${p.pcbFlag}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>
