@@ -1,6 +1,6 @@
 package com.rh.i_mes_plus.controller.other;
 
-import com.rh.i_mes_plus.service.WebServiceDemoService;
+import com.rh.i_mes_plus.service.other.WebServiceDemoService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;

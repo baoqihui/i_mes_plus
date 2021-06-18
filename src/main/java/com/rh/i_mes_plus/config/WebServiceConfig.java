@@ -1,6 +1,6 @@
 package com.rh.i_mes_plus.config;
 
-import com.rh.i_mes_plus.service.WebServiceDemoService;
+import com.rh.i_mes_plus.service.other.WebServiceDemoService;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.jaxws.EndpointImpl;

@@ -1,4 +1,4 @@
-package com.rh.i_mes_plus.service;
+package com.rh.i_mes_plus.service.other;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;

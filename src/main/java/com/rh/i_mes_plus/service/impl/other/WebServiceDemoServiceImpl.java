@@ -1,4 +1,4 @@
-package com.rh.i_mes_plus.service.impl;
+package com.rh.i_mes_plus.service.impl.other;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -9,7 +9,7 @@ import com.rh.i_mes_plus.model.sms.SmsWmsMoveDoc;
 import com.rh.i_mes_plus.model.sms.SmsWmsOutStockDoc;
 import com.rh.i_mes_plus.model.sms.SmsWmsReloadDoc;
 import com.rh.i_mes_plus.model.ums.UmsUser;
-import com.rh.i_mes_plus.service.*;
+import com.rh.i_mes_plus.service.other.WebServiceDemoService;
 import com.rh.i_mes_plus.service.pdt.IPdtWmsBoxBarcodeService;
 import com.rh.i_mes_plus.service.pdt.IPdtWmsOutStockDocService;
 import com.rh.i_mes_plus.service.pdt.IPdtWmsReceiveDocService;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 @WebService(serviceName = "fileDeviceService",//对外发布的服务名
         targetNamespace = "http://service.i_mes.rh.com",//指定你想要的名称空间，通常使用使用包名反转
-        endpointInterface = "com.rh.i_mes_plus.service.WebServiceDemoService")
+        endpointInterface = "com.rh.i_mes_plus.service.other.WebServiceDemoService")
 @Slf4j
 @Service
 public class WebServiceDemoServiceImpl implements WebServiceDemoService {
