@@ -8,6 +8,7 @@ import com.rh.i_mes_plus.model.ums.UmsDepa;
 import com.rh.i_mes_plus.service.ums.IUmsDepaService;
 import com.rh.i_mes_plus.vo.ChildVO;
 import com.rh.i_mes_plus.vo.DepaTreeVO;
+import com.rh.i_mes_plus.vo.TwoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -136,4 +137,10 @@ public class UmsDepaController {
         return Result.succeed(umsDepas,"查询成功");
     }
 
+    @ApiOperation(value = "（三级）查询树形列表（仅机构）")
+    @PostMapping("/umsDepa/treeOrgList")
+    public Result treeOrgList() {
+        List<TwoVO> depaTwoVOS=umsDepaService.treeOrgList();
+        return Result.succeed(depaTwoVOS,"查询成功");
+    }
 }

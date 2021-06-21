@@ -6,6 +6,7 @@ import com.rh.i_mes_plus.common.model.Result;
 import com.rh.i_mes_plus.model.ums.UmsDepa;
 import com.rh.i_mes_plus.vo.ChildVO;
 import com.rh.i_mes_plus.vo.DepaTreeVO;
+import com.rh.i_mes_plus.vo.TwoVO;
 
 import java.util.List;
 import java.util.Map;
@@ -45,5 +46,7 @@ public interface IUmsDepaService extends IService<UmsDepa> {
     List<UmsDepa> selectRootListByCode(List<UmsDepa> umsDepas,String code);
 
     List<String> getDepaexclude();
+
+    List<TwoVO> treeOrgList();
 }
 

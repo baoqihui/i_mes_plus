@@ -12,6 +12,7 @@ import com.rh.i_mes_plus.model.ums.UmsDepa;
 import com.rh.i_mes_plus.service.ums.IUmsDepaService;
 import com.rh.i_mes_plus.vo.ChildVO;
 import com.rh.i_mes_plus.vo.DepaTreeVO;
+import com.rh.i_mes_plus.vo.TwoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Service;
@@ -211,5 +212,10 @@ public class UmsDepaServiceImpl extends ServiceImpl<UmsDepaMapper, UmsDepa> impl
     @Override
     public List<String> getDepaexclude() {
         return umsDepaMapper.getDepaexclude();
+    }
+
+    @Override
+    public List<TwoVO> treeOrgList() {
+        return umsDepaMapper.treeOrgList();
     }
 }
