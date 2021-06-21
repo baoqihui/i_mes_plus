@@ -9,36 +9,20 @@
             t.WR_DOC_NUM wrDocNum,  -- 收料单号
             t.CO_ITEM_CODE coItemCode,  -- 物料代码
             t.tbl_barcode tblBarcode,  -- 物料SN
-            t.ITEM_VER itemVer,  -- 版本号
             t.RECEIVE_NUM receiveNum,  -- 实收数量
-            t.CURRENT_NUM currentNum,  -- 当前数量
-            t.LOT_NUMBER lotNumber,  -- 批次号
-            t.AREA_SN areaSn,  -- 货位SN(库位SN)
-            t.CURRENT_AREA_SN currentAreaSn,  -- 当前所在区域SN
-            t.WRDS_CL_BCODE wrdsClBcode,  -- 标识码
             t.WRDS_IN_DATE wrdsInDate,  -- 入库时间
             t.tbl_manufacturer_bat wrdsGyph,  -- 供应商批号
             t.tbl_manufacturer_date wrdsGyscrq,  -- 供应商生产日期
-            t.WRDS_TICKET_NUM wrdsTicketNum,  -- 客户传票号
-            t.WRDS_REPOST_BAR wrdsRepostBar,  -- 重贴条码标志(Y是N否)，默认否
-            t.WRDS_IN_DOC wrdsInDoc,  -- 领料单物料标志(Y是N否)，默认是
             t.WRDS_EMP_NO wrdsEmpNo,  -- 操作人工号
             t.WRDS_EMP_NAME wrdsEmpName,  -- 操作人工姓名
             t.WH_CODE whCode,  -- 仓库SN
-            t.RESERVOIR_CODE reservoirCode,  -- 库区SN
             t.SUPPLIER_CODE supplierCode,  -- 供应商
             t.WRDS_RETURN_FLAG wrdsReturnFlag,  -- 退库标识 Y是N否
-            t.WRDS_CONTAINER wrdsContainer,  -- 容器SN
-            t.WRDS_CONTAINER_BAT wrdsContainerBat,  -- 成品下线堆栈批号
             t.CUST_CODE custCode,  -- 客户编号
             t.PROJECT_ID projectId,  -- 工单号
-            t.VMI_FLAG vmiFlag,  -- VMI标志
-            t.TO_ERP toErp,  -- 是否回写，Y为是；N/null为否
-            t.PALLET_SN palletSn,  -- 栈板SN
             t.CAN_TO_ERP canToErp,  -- 成品完工入库上传标识(0不上传1可以上传)
             t.OQC_NO oqcNo,  -- iqc抽检单号
             t.OS_QC_RESULT osQcResult,  -- 是否允收(y/n),挑选时允收才能入库 
-            t.OS_QTY_LOSS osQtyLoss,  -- 损耗数量 
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.update_time updateTime  -- 更新时间
         from sms_wms_receive_detail_sub t

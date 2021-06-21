@@ -333,7 +333,6 @@ public class SmsWmsReceiveDocServiceImpl extends ServiceImpl<SmsWmsReceiveDocMap
                 smsWmsReceiveDetailSub.setTblBarcode(barcode);
                 smsWmsReceiveDetailSub.setReceiveNum(skAmount);
 
-                smsWmsReceiveDetailSub.setLotNumber(barcodeInfo.getTblManufacturerBat());
                 smsWmsReceiveDetailSub.setWrdsInDate(receiveDoc.getWrDate());
                 smsWmsReceiveDetailSub.setWhCode(smsWmsReceiveDetail.getWhCode());
                 smsWmsReceiveDetailSub.setTblManufacturerBat(barcodeInfo.getTblManufacturerBat());

@@ -41,15 +41,6 @@ public class SmsWmsOutStockDoc extends SuperEntity {
         @Excel(name = "发货地址")
         @ApiModelProperty(value = "发货地址")
         private String docShipAddress;
-        @Excel(name = "发货方式ID")
-        @ApiModelProperty(value = "发货方式ID")
-        private Long svId;
-        @Excel(name = "发货付款方式")
-        @ApiModelProperty(value = "发货付款方式")
-        private String docShipTern;
-        @Excel(name = "特定发货方式")
-        @ApiModelProperty(value = "特定发货方式")
-        private String docSpecificType;
         @Excel(name = "运单号")
         @ApiModelProperty(value = "运单号")
         private String docShipAccount;
@@ -74,24 +65,9 @@ public class SmsWmsOutStockDoc extends SuperEntity {
         @Excel(name = "仓库代码")
         @ApiModelProperty(value = "仓库代码")
         private String whCode;
-        @Excel(name = "车间现场库区，回传ERP接口需要，WMS未做任何业务逻辑处理")
-        @ApiModelProperty(value = "车间现场库区，回传ERP接口需要，WMS未做任何业务逻辑处理")
-        private String docShopreservoirCode;
-        @Excel(name = "调入仓库SN")
-        @ApiModelProperty(value = "调入仓库SN")
-        private String moveinWhCode;
         @Excel(name = "备料类型：1手工创建 2自EXCEL 3自料站表  4自生产工单")
         @ApiModelProperty(value = "备料类型：1手工创建 2自EXCEL 3自料站表  4自生产工单")
         private String pickupType;
-        @Excel(name = "ERP单号(同步时写入)")
-        @ApiModelProperty(value = "ERP单号(同步时写入)")
-        private String erpDoc;
-        @Excel(name = "ERP单据类型(同步时写入)")
-        @ApiModelProperty(value = "ERP单据类型(同步时写入)")
-        private String erpDocType;
-        @Excel(name = "ERP审核码")
-        @ApiModelProperty(value = "ERP审核码")
-        private String erpVerificationCode;
         @Excel(name = "OQC确认时间",format="yyyy-MM-dd HH:mm:ss")
         @ApiModelProperty(value = "OQC确认时间")
         private Date oqcTime;
@@ -101,30 +77,9 @@ public class SmsWmsOutStockDoc extends SuperEntity {
         @Excel(name = "OQC标志:Y是N否默认否")
         @ApiModelProperty(value = "OQC标志:Y是N否默认否")
         private String oqcAccountsFlag;
-        @Excel(name = "仓库确认时间",format="yyyy-MM-dd HH:mm:ss")
-        @ApiModelProperty(value = "仓库确认时间")
-        private Date wmsTime;
-        @Excel(name = "仓库确认人")
-        @ApiModelProperty(value = "仓库确认人")
-        private String wmsManNo;
-        @Excel(name = "仓库标志是，否，默认否")
-        @ApiModelProperty(value = "仓库标志是，否，默认否")
-        private String wmsAccountsFlag;
-        @Excel(name = "是否放行标识")
-        @ApiModelProperty(value = "是否放行标识")
-        private String docFlag;
-        @Excel(name = "插单发货(Y是N否)")
-        @ApiModelProperty(value = "插单发货(Y是N否)")
-        private String insertOutFlag;
         @Excel(name = "是否回写，Y为是；N/null为否")
         @ApiModelProperty(value = "是否回写，Y为是；N/null为否")
         private String toErp;
-        @Excel(name = "全部领料允许上传(Y是N否)")
-        @ApiModelProperty(value = "全部领料允许上传(Y是N否)")
-        private String canToErp;
-        @Excel(name = "是否场外库")
-        @ApiModelProperty(value = "是否场外库")
-        private String docOutstockFlag;
         @Excel(name = "备注")
         @ApiModelProperty(value = "备注")
         private String docRemark;

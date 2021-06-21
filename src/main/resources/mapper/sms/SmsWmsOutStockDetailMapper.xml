@@ -8,7 +8,6 @@
             t.doc_no docNo,  -- 出库单据号
             t.item_code itemCode,  -- 出库料号
             t.item_name itemName,  -- 品名
-            t.item_spec itemSpec,  -- 规格
             t.osd_amount_plan osdAmountPlan,  -- 计划出库数量
             t.osd_amount_real osdAmountReal,  -- 实际出库数量
             t.os_order_did osOrderDid,  -- 订单号
@@ -16,33 +15,12 @@
             t.osd_po_no osdPoNo,  -- 客户订单号
             t.osd_line_no osdLineNo,  -- 行号
             t.osd_po_line osdPoLine,  -- 客户行号
-            t.osd_serial_no osdSerialNo,  -- 第几次发货
-            t.osd_amount_order osdAmountOrder,  -- 订单量
             t.remark remark,  -- 备注
             t.unit unit,  -- 单位
             t.osd_fifo_flag osdFifoFlag,  -- 启用FIFO
             t.oqc_state oqcState,  -- OQC状态0、正常 1、允收2、拒收3、批退审批4、批退5、让步审批6、让步接收
-            t.from_wh_code fromWhCode,  -- 转出仓库
-            t.to_wh_code toWhCode,  -- 转入仓库
-            t.product_item_code productItemCode,  -- 成品料号
-            t.project_id projectId,  -- 工单号
-            t.edition_code editionCode,  -- 版本
-            t.supplier_code supplierCode,  -- 供应商代码
-            t.supplier_name supplierName,  -- 供应商名称
-            t.erp_po erpPo,  -- 采购单号
-            t.erp_po_item_no erpPoItemNo,  -- 项次
-            t.pack_amount_plan packAmountPlan,  -- 计划出库数量(SMT理论计划出库数量)
-            t.osd_order_type osdOrderType,  -- 销售订单别
-            t.osd_rev_doc osdRevDoc,  -- 采购入库单号
-            t.osd_smt_out_amount osdSmtOutAmount,  -- SMT领料调拨中扣减线边仓数量
-            t.materieldetailid materieldetailid,  -- 未知-料站表ID
             t.sap_out_stock_doc sapOutStockDoc,  -- SAP出货单
             t.sap_out_stock_line sapOutStockLine,  -- SAP出库单行号
-            t.cost_station costStation,  -- 成本中心
-            t.uncleared uncleared,  -- 未清数量
-            t.osd_is_close osdIsClose,  -- 是否关闭
-            t.osd_is_use osdIsUse,  -- 使用可用
-            t.replace_flag replaceFlag,  -- 替代码
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.update_time updateTime  -- 更新时间
         from sms_wms_out_stock_detail t
@@ -51,7 +29,6 @@
     <select id="getListByDocNo" resultType="java.util.Map">
         select
             t.item_code coItemCode,
-            t.replace_flag replaceFlag,
             t.osd_amount_plan osdAmountPlan,
             t.osd_amount_real osdAmountReal,
             sd.doc_remark docRemark

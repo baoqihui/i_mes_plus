@@ -64,18 +64,9 @@ public class SmsWmsStockInfo extends SuperEntity {
         @Excel(name = "退料标识0:否 1:是")
         @ApiModelProperty(value = "退料标识0:否 1:是")
         private String isReturn;
-        @Excel(name = "退料单号，多个使用英文全角逗号分割")
-        @ApiModelProperty(value = "退料单号，多个使用英文全角逗号分割")
-        private String returnNo;
-        @Excel(name = "品质失效期",format="yyyy-MM-dd HH:mm:ss")
-        @ApiModelProperty(value = "品质失效期")
-        private Date qualityDate;
         @Excel(name = "供应商代码")
         @ApiModelProperty(value = "供应商代码")
         private String supplierCode;
-        @Excel(name = "fifo基准时间")
-        @ApiModelProperty(value = "fifo基准时间")
-        private String fifoTime;
         @Excel(name = "制造商生产日期",format="yyyy-MM-dd HH:mm:ss")
         @ApiModelProperty(value = "制造商生产日期")
         private Date pdate;
@@ -94,27 +85,15 @@ public class SmsWmsStockInfo extends SuperEntity {
         @Excel(name = "入库人")
         @ApiModelProperty(value = "入库人")
         private String inStockMan;
-        @Excel(name = "SN类型：0表示工单  1表示批次  2表示单个")
-        @ApiModelProperty(value = "SN类型：0表示工单  1表示批次  2表示单个")
-        private BigDecimal numberType;
-        @Excel(name = "VMI标志")
-        @ApiModelProperty(value = "VMI标志")
-        private String vmi;
         @Excel(name = "库存状态（1：在库，2：已备料，3：调拨，4盘点）")
         @ApiModelProperty(value = "库存状态（1：在库，2：已备料，3：调拨，4盘点）")
         private String stockFlag;
-        @Excel(name = "栈板SN")
-        @ApiModelProperty(value = "栈板SN")
-        private String palletSn;
         @Excel(name = "版本")
         @ApiModelProperty(value = "版本")
         private String editionCode;
         @Excel(name = "工单号")
         @ApiModelProperty(value = "工单号")
         private String projectId;
-        @Excel(name = "供应商追溯")
-        @ApiModelProperty(value = "供应商追溯")
-        private String supplierTrace;
         @Excel(name = "部门代码")
         @ApiModelProperty(value = "部门代码")
         private String depaCode;

@@ -57,15 +57,9 @@ public class SmsWmsReceiveDetail extends SuperEntity {
         @Excel(name = "",format="yyyy-MM-dd HH:mm:ss")
         @ApiModelProperty(value = "")
         private Date lastupdate;
-        @Excel(name = "")
-        @ApiModelProperty(value = "")
-        private Long didTmp;
         @Excel(name = "工单号")
         @ApiModelProperty(value = "工单号")
         private String projectId;
-        @Excel(name = "销售订单号")
-        @ApiModelProperty(value = "销售订单号")
-        private String saleOrder;
         @Excel(name = "赠品数量")
         @ApiModelProperty(value = "赠品数量")
         private Long giftNum;

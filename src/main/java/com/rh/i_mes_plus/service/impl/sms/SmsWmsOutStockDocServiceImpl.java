@@ -234,7 +234,6 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
             List<SmsWmsOutStockList> lists = smsWmsOutStockListService.list(new QueryWrapper<SmsWmsOutStockList>().eq("doc_no", docNum));
             //修改出库单状态
             outStockDoc.setDocStatus(lists.size()<=0?"1":"2");
-            outStockDoc.setCanToErp(lists.size()<=0?"N":"Y");
 
             //修改仓库信息
             stockInfo.setStockFlag("1");
@@ -308,12 +307,6 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
             if (outStockDetail==null){
                 return Result.failed("备料单与物料不匹配");
             }
-            /*Long planTotal=outStockDetail.getOsdAmountPlan();
-            Long receiveTotal=outStockDetail.getOsdAmountReal();
-            Long remainTotal=planTotal-receiveTotal;
-            if (remainTotal<skAmount){
-                return Result.failed("条码数量超出待收数量");
-            }*/
             //修改DETAIL表数据
             outStockDetail.setOsdAmountReal(outStockDetail.getOsdAmountReal()+skAmount);
 
@@ -338,21 +331,11 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
             smsWmsOutStockList.setWhCode(stockInfo.getWhCode());
             smsWmsOutStockList.setReservoirCode(stockInfo.getReservoirCode());
             smsWmsOutStockList.setAreaSn(stockInfo.getAreaSn());
-            smsWmsOutStockList.setPalletSn(stockInfo.getPalletSn());
-            smsWmsOutStockList.setSupplierCode(stockInfo.getSupplierCode());
-            smsWmsOutStockList.setSkQualityFlag(stockInfo.getQuality());
             smsWmsOutStockList.setProjectId(stockInfo.getProjectId());
             smsWmsOutStockListService.save(smsWmsOutStockList);
 
             //修改出库单状态
             outStockDoc.setDocStatus("2");
-            outStockDoc.setCanToErp("N");
-            //备料单关结去除
-            /*int totalCount = smsWmsOutStockDetailService.count(new QueryWrapper<SmsWmsOutStockDetail>().eq("doc_no", docNum));
-            int outedCount = smsWmsOutStockDetailService.count(new QueryWrapper<SmsWmsOutStockDetail>().eq("doc_no", docNum).last("and osd_amount_plan=osd_amount_real"));
-            if (totalCount==outedCount) {
-                outStockDoc.setDocStatus("4");
-            }*/
             updateById(outStockDoc);
             //pda操作日志
             pdaMesLogService.save(PdaMesLog.builder()

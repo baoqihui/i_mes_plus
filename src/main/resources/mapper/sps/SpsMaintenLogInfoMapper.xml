@@ -20,12 +20,14 @@
             usti.type_name typeName,  -- 大类名
             usiti.item_type_name itemTypeName,  -- 小类名称
             smci.cycle_name cycleName,      -- 周期名称
+            sefdi.model_code modelCode,     -- 机型
             sefri.mo_no moNo
         from sps_mainten_log_info t
         left join ums_spares_item_type_info usiti on t.item_type_code = usiti.item_type_code
         left join sps_mainten_cycle_info smci on t.cycle_code = smci.cycle_code
         left join ums_spares_type_info usti on t.type_code = usti.type_code
         left join sps_eng_fix_req_info sefri on t.req_no = sefri.req_no
+        left join sps_eng_fix_detail_info sefdi on sefdi.fix_no=t.spares_no
         where 1=1
         <if test="p.typeCode != null and p.typeCode != ''">
             and t.type_code LIKE '%${p.typeCode}%'
@@ -35,6 +37,9 @@
         </if>
         <if test="p.reqNo != null and p.reqNo != ''">
             and t.req_no LIKE '%${p.reqNo}%'
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and sefdi.model_code LIKE '%${p.modelCode}%'
         </if>
         <if test="p.cycleName != null and p.cycleName != ''">
             and smci.cycle_name LIKE '%${p.cycleName}%'

@@ -22,23 +22,16 @@
         t.area_sn areaSn,  -- 库位
         t.quality quality,  -- 品质标识Y:良品 N:不良品
         t.is_return isReturn,  -- 退料标识0:否 1:是
-        t.return_no returnNo,  -- 退料单号，多个使用英文全角逗号分割
-        t.quality_date qualityDate,  -- 品质失效期
         t.supplier_code supplierCode,  -- 供应商代码
-        t.fifo_time fifoTime,  -- fifo基准时间
         t.pdate pdate,  -- 制造商生产日期
         t.freeze_flag freezeFlag,  -- 冻结标志（Y冻结/N解冻）
         t.have_check haveCheck,  -- 检验状态:Y为已检 N为未检
         t.subatch subatch,  --
         t.in_stock_time inStockTime,  -- 入库时间
         t.in_stock_man inStockMan,  -- 入库人
-        t.number_type numberType,  -- SN类型：0表示工单  1表示批次  2表示单个
-        t.vmi vmi,  -- VMI标志
         t.stock_flag stockFlag,  -- 库存状态（1：在库，2：已备料，3：调拨，4盘点）
-        t.pallet_sn palletSn,  -- 栈板SN
         t.edition_code editionCode,  -- 版本
         t.project_id projectId,  -- 工单号
-        t.supplier_trace supplierTrace,  -- 供应商追溯
         t.create_time createTime,  -- 创建时间:按当前时间自动创建
         t.update_time updateTime,  -- 更新时间
         t.depa_code depaCode,  -- 部门代码
@@ -103,16 +96,9 @@
         t.product_ver productVer,  --
         t.quality quality,  -- 品质标识Y:良品 N:不良品
         t.is_return isReturn,  -- 退料标识0:否 1:是
-        t.return_no returnNo,  -- 退料单号，多个使用英文全角逗号分割
-        t.quality_date qualityDate,  -- 品质失效期
-        t.fifo_time fifoTime,  -- fifo基准时间
         t.subatch subatch,  --
-        t.number_type numberType,  -- SN类型：0表示工单  1表示批次  2表示单个
-        t.vmi vmi,  -- VMI标志
-        t.pallet_sn palletSn,  -- 栈板SN
         t.edition_code editionCode,  -- 版本
         t.project_id projectId,  -- 工单号
-        t.supplier_trace supplierTrace,  -- 供应商追溯
         t.create_time createTime,  -- 创建时间:按当前时间自动创建
         t.update_time updateTime,  -- 更新时间
         t.depa_code depaCode,  -- 部门代码
