@@ -39,7 +39,6 @@ public class SpsSparesCheckDocServiceImpl extends ServiceImpl<SpsSparesCheckDocM
     @Resource
     private SpsSparesCheckDocMapper spsSparesCheckDocMapper;
     @Autowired
-    @Lazy
     private ISpsSparesCheckDetailService spsSparesCheckDetailService;
     /**
      * 列表

@@ -63,7 +63,7 @@
             ums_permission t
         WHERE
             t.parent_id = #{parentId}
-        order by t.id
+        order by t.per_sort asc,t.id
     </select>
 
     <select id="getUserButtonPermission" resultType="string">

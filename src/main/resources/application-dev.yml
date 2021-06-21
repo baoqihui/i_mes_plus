@@ -2,7 +2,7 @@
 spring:
   datasource:                   #mysql
     driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-    url: jdbc:p6spy:mysql://192.168.50.74:3306/gtoa?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:p6spy:mysql://192.168.50.74:3306/mes_plus?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: Muyuer1986
     hikari:

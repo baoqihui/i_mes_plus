@@ -38,12 +38,10 @@ import java.util.Map;
 @RequestMapping("pdt")
 public class PdtWmsBoxBarcodeController {
     @Autowired
-    @Lazy
     private IPdtWmsBoxBarcodeService pdtWmsBoxBarcodeService;
     @Autowired
-    @Lazy
     private IPdtWmsBoxService pdtWmsBoxService;
-    /**
+    /**https://web.doggo.top/auth/register?code=Th3t
      * 列表
      */
     @ApiOperation(value = "查询列表")

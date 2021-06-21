@@ -45,7 +45,6 @@ public class EmailConfigServiceImpl extends ServiceImpl<EmailConfigMapper, Email
     @Autowired
     private IEmailLogService emailLogService;
     @Autowired
-    @Lazy
     private IEcnDocInfoService ecnDocInfoService;
     /**
      * 列表
