@@ -102,7 +102,8 @@ public class UmsWmsAreaServiceImpl extends ServiceImpl<UmsWmsAreaMapper, UmsWmsA
             }
             for (int i=oneStart;i<=oneEnd;i++){
                 for (int j=twoStart;j<=twoEnd;j++){
-                    String newSn=arSn+umsWmsAreaDTO.getConnector()+String.format("%2d", i).replace(" ", "0")+umsWmsAreaDTO.getConnector()+String.format("%2d",j).replace(" ", "0");
+                    //String newSn=arSn+umsWmsAreaDTO.getConnector()+String.format("%2d", i).replace(" ", "0")+umsWmsAreaDTO.getConnector()+String.format("%2d",j).replace(" ", "0");
+                    String newSn=String.format("%3d", i).replace(" ", "0")+umsWmsAreaDTO.getConnector()+String.format("%4d",j).replace(" ", "0");
                     newUmsWmsArea.setArPath(wmsAreaPathS+newSn);
                     newUmsWmsArea.setArSn(newSn);
                     newUmsWmsArea.setArName(newSn);

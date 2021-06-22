@@ -42,6 +42,7 @@
             </foreach>
             )
         </if>
+        order by c1.id asc,c2.id asc,c3.id asc
     </select>
     <select id="getParent" resultType="com.rh.i_mes_plus.model.ums.UmsWmsArea">
         SELECT * FROM ums_wms_area d1 WHERE d1.`AR_SN`=#{arSn}
