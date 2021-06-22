@@ -74,6 +74,7 @@
             sps_eng_fix_detail_info t
                 LEFT JOIN ums_spares_item_type_info ti ON t.item_type_code=ti.item_type_code
         WHERE
+            1=1 and
             t.model_code LIKE '%${modelCode}%'
         GROUP BY t.item_type_code,ti.item_type_name
     </select>
