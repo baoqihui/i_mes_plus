@@ -74,7 +74,7 @@
             sps_eng_fix_detail_info t
                 LEFT JOIN ums_spares_item_type_info ti ON t.item_type_code=ti.item_type_code
         WHERE
-            t.model_code LIKE '%${p.modelCode}%'
+            t.model_code LIKE '%${modelCode}%'
         GROUP BY t.item_type_code,ti.item_type_name
     </select>
     <select id="getPosesByFixNos" resultType="java.lang.String">
