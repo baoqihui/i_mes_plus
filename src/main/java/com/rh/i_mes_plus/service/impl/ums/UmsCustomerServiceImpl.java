@@ -60,9 +60,8 @@ public class UmsCustomerServiceImpl extends ServiceImpl<UmsCustomerMapper, UmsCu
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Result saveAll(List<Map<String, Object>> maps) {
-        try{
+
             List<String> s=new ArrayList<>();
             List<String> f=new ArrayList<>();
             Map<String,List<String>> resultMap=new HashMap();
@@ -71,14 +70,15 @@ public class UmsCustomerServiceImpl extends ServiceImpl<UmsCustomerMapper, UmsCu
                 String code = MapUtil.getStr(map, "code");
                 String name = MapUtil.getStr(map, "name");
                 String address = MapUtil.getStr(map, "address");
-
+                String projectCode = MapUtil.getStr(map, "projectCode");
                 UmsCustomer umsCustomer = new UmsCustomer();
                 umsCustomer.setCustomer(name);
                 umsCustomer.setCustCode(code);
                 umsCustomer.setCustomerAddress(address);
-                UmsCustomerAddress umsCustomerAddress = new UmsCustomerAddress();
+                umsCustomer.setProjectCode(projectCode);
+/*                UmsCustomerAddress umsCustomerAddress = new UmsCustomerAddress();
                 umsCustomerAddress.setCustCode(code);
-                umsCustomerAddress.setCustomerAddress(address);
+                umsCustomerAddress.setCustomerAddress(address);*/
                 UmsCustomer existUmsCustomer = getOne(new QueryWrapper<UmsCustomer>()
                         .eq("CUST_CODE", code)
                         .eq("is_del", 0)
@@ -91,7 +91,7 @@ public class UmsCustomerServiceImpl extends ServiceImpl<UmsCustomerMapper, UmsCu
                 }else {
                     successFlag=save(umsCustomer);
                 }
-                UmsCustomerAddress existUmsCustomerAddress = umsCustomerAddressService.getOne(new QueryWrapper<UmsCustomerAddress>()
+               /* UmsCustomerAddress existUmsCustomerAddress = umsCustomerAddressService.getOne(new QueryWrapper<UmsCustomerAddress>()
                         .eq("CUST_CODE", code)
                         .eq("is_del", 0)
                 );
@@ -102,7 +102,7 @@ public class UmsCustomerServiceImpl extends ServiceImpl<UmsCustomerMapper, UmsCu
                     );
                 }else {
                     umsCustomerAddressService.save(umsCustomerAddress);
-                }
+                }*/
                 if (successFlag){
                     s.add(umsCustomer.getCustCode());
                 }else{
@@ -120,7 +120,7 @@ public class UmsCustomerServiceImpl extends ServiceImpl<UmsCustomerMapper, UmsCu
                 resultMap.put("s",s);
                 resultMap.put("f",f);
             }
-           return Result.succeed(resultMap,"保存成功");
+        try{  return Result.succeed(resultMap,"保存成功");
         }
         catch (Exception e){
             // 事务回滚

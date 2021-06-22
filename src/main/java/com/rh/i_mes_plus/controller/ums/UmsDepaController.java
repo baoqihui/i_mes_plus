@@ -84,6 +84,12 @@ public class UmsDepaController {
         return Result.succeed(childVOS, "查询成功");
     }
 
+    @ApiOperation(value = "（三级）查询树形列表（仅机构）")
+    @PostMapping("/umsDepa/treeOrgList")
+    public Result treeOrgList() {
+        List<TwoVO> depaTwoVOS=umsDepaService.treeOrgList();
+        return Result.succeed(depaTwoVOS,"查询成功");
+    }
     /**********************************************
      ******* 下方接口只做为递归调用示例，不参与项目 ******
      ******************************************** */
@@ -137,10 +143,5 @@ public class UmsDepaController {
         return Result.succeed(umsDepas,"查询成功");
     }
 
-    @ApiOperation(value = "（三级）查询树形列表（仅机构）")
-    @PostMapping("/umsDepa/treeOrgList")
-    public Result treeOrgList() {
-        List<TwoVO> depaTwoVOS=umsDepaService.treeOrgList();
-        return Result.succeed(depaTwoVOS,"查询成功");
-    }
+
 }

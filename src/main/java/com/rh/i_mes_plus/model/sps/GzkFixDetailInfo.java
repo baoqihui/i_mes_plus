@@ -24,6 +24,9 @@ public class GzkFixDetailInfo extends SuperEntity {
         @Excel(name = "治具编号")
         @ApiModelProperty(value = "治具编号")
         private String fixNo;
+        @Excel(name = "gt编号")
+        @ApiModelProperty(value = "gt编号")
+        private String gtNo;
         @Excel(name = "治具大类代码")
         @ApiModelProperty(value = "治具大类代码")
         private String typeCode;

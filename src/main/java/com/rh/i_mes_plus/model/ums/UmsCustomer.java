@@ -76,6 +76,9 @@ public class UmsCustomer extends SuperEntity {
         @Excel(name = "客户地址")
         @ApiModelProperty(value = "客户地址")
         private String customerAddress;
+        @Excel(name = "项目号")
+        @ApiModelProperty(value = "项目号")
+        private String projectCode;
         @TableLogic
         @ApiModelProperty(value = "",hidden = true)
         private Boolean isDel;

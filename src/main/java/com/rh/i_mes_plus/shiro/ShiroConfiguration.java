@@ -62,6 +62,9 @@ public class ShiroConfiguration {
 		//放行登录接口
 		filterChainDefinitionMap.put("/ums/auth", "anon");
 		filterChainDefinitionMap.put("/ums/logout", "anon");
+		//放行zhao服务器
+		filterChainDefinitionMap.put("/ums/umsCustomer/saveAll", "anon");
+
 		//放行webservice
 		filterChainDefinitionMap.put("/webservice/**", "anon");
 

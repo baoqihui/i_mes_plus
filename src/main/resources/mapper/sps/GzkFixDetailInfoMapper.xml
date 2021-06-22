@@ -6,6 +6,7 @@
         select
         t.id id,  --
         t.fix_no fixNo,  -- 治具编号
+        t.gt_no gtNo,   -- gt编号
         t.type_code typeCode,  -- 治具大类代码
         i.type_name typeName,  -- 类型名
         t.item_type_code itemTypeCode,  -- 小类别代码
@@ -38,6 +39,9 @@
         </if>
         <if test="p.fixNo != null and p.fixNo != ''">
             and t.fix_no LIKE '%${p.fixNo}%'
+        </if>
+        <if test="p.gtNo != null and p.gtNo != ''">
+            and t.gt_no LIKE '%${p.gtNo}%'
         </if>
         <if test="p.finalFixNo != null and p.finalFixNo != ''">
             and t.fix_no = #{p.finalFixNo}

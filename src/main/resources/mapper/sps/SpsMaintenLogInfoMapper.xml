@@ -53,6 +53,9 @@
         <if test="p.moNo != null and p.moNo != ''">
             and sefri.mo_no LIKE '%${p.moNo}%'
         </if>
+        <if test="p.state != null and p.state != ''">
+            and t.state LIKE '%${p.state}%'
+        </if>
         order by t.id desc
     </select>
 </mapper>
