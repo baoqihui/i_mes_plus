@@ -25,4 +25,8 @@ public class UmsSparesTypeInfo extends SuperEntity {
         @Excel(name = "备品类型：1. 工程治具；2. 工程设备； 3. 工装治具； 4. 工装备件； 5. 钢网； 6. 其他")
         @ApiModelProperty(value = "备品类型：1. 工程治具；2. 工程设备； 3. 工装治具； 4. 工装备件； 5. 钢网； 6. 其他")
         private String typeName;
+        @Excel(name = "部门")
+        @ApiModelProperty(value = "部门")
+        private String depaCode;
+
 }

@@ -1,9 +1,12 @@
 package com.rh.i_mes_plus.controller.ums;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rh.i_mes_plus.common.model.PageResult;
 import com.rh.i_mes_plus.common.model.Result;
 import com.rh.i_mes_plus.model.ums.UmsSparesItemTypeInfo;
+import com.rh.i_mes_plus.service.ums.IUmsDepaService;
 import com.rh.i_mes_plus.service.ums.IUmsSparesItemTypeInfoService;
 import com.rh.i_mes_plus.util.EasyPoiExcelUtil;
 import io.swagger.annotations.Api;
@@ -33,7 +36,8 @@ import java.util.Map;
 public class UmsSparesItemTypeInfoController {
     @Autowired
     private IUmsSparesItemTypeInfoService umsSparesItemTypeInfoService;
-
+    @Autowired
+    private IUmsDepaService umsDepaService;
     /**
      * 根据类别代码查询要生成的小类代码
      */
@@ -49,6 +53,9 @@ public class UmsSparesItemTypeInfoController {
     @ApiOperation(value = "查询列表")
     @PostMapping("/umsSparesItemTypeInfo/list")
     public Result<PageResult> list(@RequestBody Map<String, Object> params) {
+        String code = MapUtil.getStr(params, "depaCode");
+        List<String> umsDepas = StrUtil.isNotEmpty(code)?umsDepaService.getSon(params):new ArrayList<>();
+        params.put("umsDepas",umsDepas);
         Page<Map> list= umsSparesItemTypeInfoService.findList(params);
         return Result.succeed(PageResult.restPage(list),"查询成功");
     }

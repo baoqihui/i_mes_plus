@@ -73,11 +73,6 @@ public class GzkPartsDetailInfoController {
     @ApiOperation(value = "新增or更新")
     @PostMapping("/gzkPartsDetailInfo/save")
     public Result save(@RequestBody GzkPartsDetailInfo gzkPartsDetailInfo) {
-        String itemTypeCode = gzkPartsDetailInfo.getItemTypeCode();
-        UmsSparesItemTypeInfo umsSparesItemTypeInfo = umsSparesItemTypeInfoService.getOne(new LambdaQueryWrapper<UmsSparesItemTypeInfo>()
-                .eq(UmsSparesItemTypeInfo::getItemTypeCode, itemTypeCode)
-        );
-        gzkPartsDetailInfo.setItemCode(umsSparesItemTypeInfo.getItemCode());
         gzkPartsDetailInfoService.saveOrUpdate(gzkPartsDetailInfo);
         return Result.succeed("保存成功");
     }

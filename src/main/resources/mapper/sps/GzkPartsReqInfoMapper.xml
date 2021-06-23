@@ -21,12 +21,24 @@
             t.remark remark,  -- 备注
             t.state state,  -- 状态
             t.create_time createTime,  -- 创建时间
-            t.update_time updateTime  -- 更新时间
+            t.update_time updateTime,  -- 更新时间
+            gpdi.pos pos,
+            gpdi.item_code itemCode
         from gzk_parts_req_info t
         left join ums_spares_item_type_info ti on t.item_type_code=ti.item_type_code
+        left join gzk_parts_detail_info gpdi on t.kgt_no = gpdi.kgt_no
         where 1=1
         <if test="p.reqNo != null and p.reqNo != ''">
             and t.req_no LIKE '%${p.reqNo}%'
+        </if>
+        <if test="p.kgtNo != null and p.kgtNo != ''">
+            and t.kgt_no LIKE '%${p.kgtNo}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.time_lend >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.time_lend
         </if>
         <if test="p.state != null and p.state != ''">
             and t.state LIKE '%${p.state}%'

@@ -18,10 +18,12 @@
             t.state state,  -- 状态（在库/已借出/报废）
             t.create_time createTime,  -- 创建时间
             t.update_time updateTime,  -- 更新时间
-            t.create_user createUser    -- 创建人
+            t.create_user createUser,    -- 创建人
+            gpi.item_desc itemDesc
         from gzk_parts_detail_info t
         left join ums_spares_type_info i on i.type_code=t.type_code
         left join ums_spares_item_type_info ti on t.item_type_code=ti.item_type_code
+        left join gzk_parts_item gpi on t.item_code = gpi.item_code
         where 1=1
         <if test="p.typeCode != null and p.typeCode != ''">
             and t.type_code LIKE '%${p.typeCode}%'

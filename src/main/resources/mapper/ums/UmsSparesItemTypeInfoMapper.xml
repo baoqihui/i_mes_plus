@@ -13,7 +13,8 @@
             t.item_code itemCode,   -- 物料代码
             t.min_qty minQty,  -- 最小库存
             t.create_time createTime,  -- 创建时间
-            t.update_time updateTime  -- 更新时间
+            t.update_time updateTime,  -- 更新时间
+            i.depa_code depaCode
         from ums_spares_item_type_info t
         left join ums_spares_type_info i on i.type_code=t.type_code
         where 1=1
@@ -31,6 +32,12 @@
         </if>
         <if test="p.itemCode != null and p.itemCode != ''">
             and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and i.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
         </if>
         order by t.id desc
     </select>

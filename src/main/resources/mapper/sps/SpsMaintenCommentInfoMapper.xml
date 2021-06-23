@@ -21,6 +21,12 @@
         left join ums_spares_type_info usti on t.type_code = usti.type_code
         left join sps_mainten_cycle_info smci on t.cycle_code = smci.cycle_code
         where 1=1
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and usti.depa_code in
+            <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">
+                #{item}
+            </foreach>
+        </if>
         <if test="p.commentName != null and p.commentName != ''">
             and t.comment_name LIKE '%${p.commentName}%'
         </if>

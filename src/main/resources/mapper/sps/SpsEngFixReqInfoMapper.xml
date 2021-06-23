@@ -26,6 +26,9 @@
         <if test="p.reqNo != null and p.reqNo != ''">
             and t.req_no LIKE '%${p.reqNo}%'
         </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
         <if test="p.usrLend != null and p.usrLend != ''">
             and t.usr_lend LIKE '%${p.usrLend}%'
         </if>
