@@ -69,6 +69,7 @@ public class ShiroConfiguration {
 		filterChainDefinitionMap.put("/sms/smsWmsPoDet/saveAll", "anon");
 		filterChainDefinitionMap.put("/sms/umsItemSap/save", "anon");
 		filterChainDefinitionMap.put("/wms/wmsProjectDetail/saveAll", "anon");
+		filterChainDefinitionMap.put("/sps/spsEngFixDetailInfo/save", "anon");
 
 		//放行webservice
 		filterChainDefinitionMap.put("/webservice/**", "anon");
