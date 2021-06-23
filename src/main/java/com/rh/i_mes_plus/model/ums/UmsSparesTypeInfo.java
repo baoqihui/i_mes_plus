@@ -28,5 +28,8 @@ public class UmsSparesTypeInfo extends SuperEntity {
         @Excel(name = "部门")
         @ApiModelProperty(value = "部门")
         private String depaCode;
+        @Excel(name = "部门名称")
+        @ApiModelProperty(value = "部门名称")
+        private String depaName;
 
 }

@@ -8,6 +8,7 @@
             t.type_code typeCode,  -- 类别代码
             t.type_name typeName,  -- 备品类型：1. 工程治具；2. 工程设备； 3. 工装治具； 4. 工装备件； 5. 钢网； 6. 其他
             t.depa_code depaCode,  -- 部门
+            t.depa_name depaName,  -- 部门
             t.create_time createTime,  -- 创建时间
             t.update_time updateTime  -- 更新时间
         from ums_spares_type_info t
