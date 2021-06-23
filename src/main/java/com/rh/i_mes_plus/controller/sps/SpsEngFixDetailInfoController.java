@@ -221,6 +221,9 @@ public class SpsEngFixDetailInfoController {
         int rowNum = 0;
         if (!excel.isEmpty()) {
             List<SpsEngFixDetailInfo> list = EasyPoiExcelUtil.importExcel(excel, 1, 1, SpsEngFixDetailInfo.class);
+            for (SpsEngFixDetailInfo spsEngFixDetailInfo : list) {
+                System.out.println(spsEngFixDetailInfo);
+            }
             rowNum = list.size();
             if (rowNum > 0) {
                 //无该用户信息

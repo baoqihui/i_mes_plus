@@ -18,15 +18,26 @@
             t.remark remark,  -- 备注
             t.state state,  -- 状态(1，借用中 2，已关结)
             t.create_time createTime,  -- 创建时间
-            t.update_time updateTime  -- 更新时间
+            t.update_time updateTime,  -- 更新时间
+            gfdi.pos pos
         from gzk_fix_req_info t
         left join ums_spares_item_type_info ti on t.item_type_code=ti.item_type_code
+        left join gzk_fix_detail_info gfdi on t.fix_no = gfdi.fix_no
         where 1=1
         <if test="p.reqNo != null and p.reqNo != ''">
             and t.req_no LIKE '%${p.reqNo}%'
         </if>
+        <if test="p.fixNo != null and p.fixNo != ''">
+            and t.fix_no LIKE '%${p.fixNo}%'
+        </if>
         <if test="p.usrLend != null and p.usrLend != ''">
             and t.usr_lend LIKE '%${p.usrLend}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.time_lend >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.time_lend
         </if>
         order by t.id desc
     </select>

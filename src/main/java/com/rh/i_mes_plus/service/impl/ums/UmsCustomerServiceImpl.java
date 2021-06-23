@@ -60,8 +60,9 @@ public class UmsCustomerServiceImpl extends ServiceImpl<UmsCustomerMapper, UmsCu
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Result saveAll(List<Map<String, Object>> maps) {
-
+        try{
             List<String> s=new ArrayList<>();
             List<String> f=new ArrayList<>();
             Map<String,List<String>> resultMap=new HashMap();
@@ -120,7 +121,7 @@ public class UmsCustomerServiceImpl extends ServiceImpl<UmsCustomerMapper, UmsCu
                 resultMap.put("s",s);
                 resultMap.put("f",f);
             }
-        try{  return Result.succeed(resultMap,"保存成功");
+          return Result.succeed(resultMap,"保存成功");
         }
         catch (Exception e){
             // 事务回滚

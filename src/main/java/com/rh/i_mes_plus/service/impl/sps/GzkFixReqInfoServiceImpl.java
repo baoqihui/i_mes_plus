@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rh.i_mes_plus.common.model.Result;
 import com.rh.i_mes_plus.common.model.SysConst;
+import com.rh.i_mes_plus.dto.GzkFixReqInfoDTO;
 import com.rh.i_mes_plus.mapper.sps.GzkFixReqInfoMapper;
 import com.rh.i_mes_plus.model.sps.GzkFixDetailInfo;
 import com.rh.i_mes_plus.model.sps.GzkFixReqInfo;
@@ -75,17 +76,18 @@ public class GzkFixReqInfoServiceImpl extends ServiceImpl<GzkFixReqInfoMapper, G
     }
 
     @Override
-    public Result close(GzkFixReqInfo gzkFixReqInfo) {
-        GzkFixReqInfo reqInfo = gzkFixReqInfoService.getById(gzkFixReqInfo);
+    public Result close(GzkFixReqInfoDTO gzkFixReqInfoDTO) {
+        GzkFixReqInfo reqInfo = gzkFixReqInfoService.getById(gzkFixReqInfoDTO);
         String fixNo = reqInfo.getFixNo();
         if (!"1".equals(reqInfo.getState())){
             return Result.failed( "借用单非借出状态");
         }
-        gzkFixReqInfoService.update(gzkFixReqInfo,new LambdaUpdateWrapper<GzkFixReqInfo>().eq(GzkFixReqInfo::getFixNo,fixNo));
+        gzkFixReqInfoService.update(gzkFixReqInfoDTO,new LambdaUpdateWrapper<GzkFixReqInfo>().eq(GzkFixReqInfo::getFixNo,fixNo));
 
         //更改备品状态
         gzkFixDetailInfoService.update(new LambdaUpdateWrapper<GzkFixDetailInfo>()
                 .eq(GzkFixDetailInfo::getFixNo,fixNo)
+                .set(GzkFixDetailInfo::getPos,gzkFixReqInfoDTO.getPos())
                 .set(GzkFixDetailInfo::getState,SysConst.FIX_STATE.ZK)
         );
         return Result.succeed( "保存成功");

@@ -64,6 +64,11 @@ public class ShiroConfiguration {
 		filterChainDefinitionMap.put("/ums/logout", "anon");
 		//放行zhao服务器
 		filterChainDefinitionMap.put("/ums/umsCustomer/saveAll", "anon");
+		filterChainDefinitionMap.put("/ums/umsSupplier/saveAll", "anon");
+		filterChainDefinitionMap.put("/sms/smsCoManufacturer/saveAll", "anon");
+		filterChainDefinitionMap.put("/sms/smsWmsPoDet/saveAll", "anon");
+		filterChainDefinitionMap.put("/sms/umsItemSap/save", "anon");
+		filterChainDefinitionMap.put("/wms/wmsProjectDetail/saveAll", "anon");
 
 		//放行webservice
 		filterChainDefinitionMap.put("/webservice/**", "anon");

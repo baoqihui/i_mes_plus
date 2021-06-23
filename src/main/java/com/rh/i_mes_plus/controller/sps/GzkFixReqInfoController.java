@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rh.i_mes_plus.common.model.PageResult;
 import com.rh.i_mes_plus.common.model.Result;
 import com.rh.i_mes_plus.common.model.SysConst;
+import com.rh.i_mes_plus.dto.GzkFixReqInfoDTO;
 import com.rh.i_mes_plus.model.sps.GzkFixDetailInfo;
 import com.rh.i_mes_plus.model.sps.GzkFixReqInfo;
 import com.rh.i_mes_plus.service.sps.IGzkFixDetailInfoService;
@@ -103,8 +104,8 @@ public class GzkFixReqInfoController {
      */
     @ApiOperation(value = "归还")
     @PostMapping("/gzkFixReqInfo/close")
-    public Result close(@RequestBody GzkFixReqInfo gzkFixReqInfo) {
-        return gzkFixReqInfoService.close(gzkFixReqInfo);
+    public Result close(@RequestBody GzkFixReqInfoDTO gzkFixReqInfoDTO) {
+        return gzkFixReqInfoService.close(gzkFixReqInfoDTO);
     }
     /**
          * 批量新增or更新
