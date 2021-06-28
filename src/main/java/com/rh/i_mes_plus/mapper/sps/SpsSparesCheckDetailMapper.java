@@ -6,6 +6,7 @@ import com.rh.i_mes_plus.model.sps.SpsSparesCheckDetail;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,4 +24,6 @@ public interface SpsSparesCheckDetailMapper extends SuperMapper<SpsSparesCheckDe
      * @return
      */
     Page<Map> findList(Page<Map> pages, @Param("p") Map<String, Object> params);
+
+    List<Map<String, Object>> getDetailByCheckNo(@Param("checkNo") String checkNo);
 }

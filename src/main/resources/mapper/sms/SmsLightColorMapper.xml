@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsLightColorMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.color_code colorCode,  -- 颜色码
+            t.color_name colorName,  -- 颜色名
+            t.sort sort,  -- 排序
+            t.state state,  -- 状态（0，未占用 1，已占用）
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime,  -- 更新时间
+        from sms_light_color t
+        where 1=1
+        <if test="p.colorCode != null and p.colorCode != ''">
+            and t.color_code LIKE '%${p.colorCode}%'
+        </if>
+        <if test="p.colorName != null and p.colorName != ''">
+            and t.color_name LIKE '%${p.colorName}%'
+        </if>
+        <if test="p.sort != null and p.sort != ''">
+            and t.sort LIKE '%${p.sort}%'
+        </if>
+        <if test="p.state != null and p.state != ''">
+            and t.state LIKE '%${p.state}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

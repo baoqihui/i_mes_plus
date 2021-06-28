@@ -107,16 +107,13 @@ public class SpsSparesCheckDocController {
     @PostMapping("/spsSparesCheckDoc/selAllByCheckNo")
     public Result selAllByCheckNo(@RequestBody Map<String, Object> params) {
         String checkNo = MapUtil.getStr(params, "checkNo");
-        SpsSparesCheckDocDTO spsSparesCheckDocDTO = new SpsSparesCheckDocDTO();
         SpsSparesCheckDoc spsSparesCheckDoc = spsSparesCheckDocService.getOne(new QueryWrapper<SpsSparesCheckDoc>()
                 .eq("check_no",checkNo)
         );
-        List<SpsSparesCheckDetail> sparesCheckDetails = spsSparesCheckDetailService.list(new QueryWrapper<SpsSparesCheckDetail>()
-                .eq("check_no", checkNo)
-        );
-        BeanUtil.copyProperties(spsSparesCheckDoc,spsSparesCheckDocDTO);
-        spsSparesCheckDocDTO.setSpsSparesCheckDetails(sparesCheckDetails);
-        return Result.succeed(spsSparesCheckDocDTO, "查询成功");
+        Map<String, Object> result = BeanUtil.beanToMap(spsSparesCheckDoc);
+        List<Map<String, Object>> sparesCheckDetails=spsSparesCheckDetailService.getDetailByCheckNo(checkNo);
+        result.put("sparesCheckDetails",sparesCheckDetails);
+        return Result.succeed(result, "查询成功");
     }
 
     /**

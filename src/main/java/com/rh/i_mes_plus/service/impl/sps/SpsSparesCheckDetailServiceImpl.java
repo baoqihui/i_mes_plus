@@ -10,6 +10,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,5 +40,10 @@ public class SpsSparesCheckDetailServiceImpl extends ServiceImpl<SpsSparesCheckD
         }
         Page<Map> pages = new Page<>(pageNum, pageSize);
         return spsSparesCheckDetailMapper.findList(pages, params);
+    }
+
+    @Override
+    public List<Map<String, Object>> getDetailByCheckNo(String checkNo) {
+        return spsSparesCheckDetailMapper.getDetailByCheckNo(checkNo);
     }
 }

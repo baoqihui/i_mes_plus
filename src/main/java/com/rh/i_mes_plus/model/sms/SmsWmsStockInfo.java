@@ -88,6 +88,9 @@ public class SmsWmsStockInfo extends SuperEntity {
         @Excel(name = "库存状态（1：在库，2：已备料，3：调拨，4盘点）")
         @ApiModelProperty(value = "库存状态（1：在库，2：已备料，3：调拨，4盘点）")
         private String stockFlag;
+        @Excel(name = "出库单号")
+        @ApiModelProperty(value = "出库单号")
+        private String outStockDoc;
         @Excel(name = "版本")
         @ApiModelProperty(value = "版本")
         private String editionCode;

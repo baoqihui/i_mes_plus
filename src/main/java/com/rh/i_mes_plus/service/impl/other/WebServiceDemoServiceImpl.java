@@ -60,6 +60,9 @@ public class WebServiceDemoServiceImpl implements WebServiceDemoService {
     private ISmsWmsBarcodeInfoService smsWmsBarcodeInfoService;
     @Autowired
     private ISmsWmsStockInfoService smsWmsStockInfoService;
+    @Autowired
+    private ISmsWmsIoTypeService smsWmsIoTypeService;
+
     @Override
     public String login(String param) {
         Map<String,Object> map=(Map) JSON.parse(param);
@@ -297,4 +300,12 @@ public class WebServiceDemoServiceImpl implements WebServiceDemoService {
         Result result = smsWmsStockInfoService.getInfoBySnAndQty(map);
         return result.getResp_msg();
     }
+
+    @Override
+    public String LightControl(String param) {
+        List list = JSON.parseObject(param, List.class);
+        Result result = smsWmsIoTypeService.LightControl(list);
+        return result.getResp_msg();
+    }
+
 }

@@ -1,27 +1,23 @@
 package com.rh.i_mes_plus.service.sms;
 
+import com.rh.i_mes_plus.model.sms.SmsLightColor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.rh.i_mes_plus.common.model.Result;
-import com.rh.i_mes_plus.model.sms.SmsWmsIoType;
 
-import java.util.List;
 import java.util.Map;
 
 /**
- * 单据类型表
+ * 仓库灯资源占用
  *
  * @author hbq
- * @date 2021-01-19 09:52:44
+ * @date 2021-06-24 15:19:55
  */
-public interface ISmsWmsIoTypeService extends IService<SmsWmsIoType> {
+public interface ISmsLightColorService extends IService<SmsLightColor> {
     /**
      * 列表
      * @param params
      * @return
      */
     Page<Map> findList(Map<String, Object> params);
-
-    Result LightControl(List<Map<String, Object>> params);
 }
 

@@ -37,13 +37,17 @@
         t.oqc_accounts_flag oqcAccountsFlag,  -- OQC标志:Y是N否默认否
         t.create_time createTime,  -- 创建时间:按当前时间自动创建
         t.update_time updateTime,  -- 更新时间
-        t.depa_code depaCode  -- 部门代码
+        t.depa_code depaCode,  -- 部门代码
+        t.color_id lcId,
+        slc.color_code colorCode,
+        slc.color_name colorName
         from sms_wms_out_stock_doc t
         LEFT JOIN sms_wms_io_type A on t.DT_CODE=A.dt_code
         LEFT JOIN sms_wms_erp_doc_type B ON t.twt_did=B.d_id
         LEFT JOIN ums_customer C ON C.CUST_CODE=t.cust_code
         LEFT JOIN ums_wms_area ar ON t.wh_code=ar.AR_SN
         LEFT JOIN ums_user u on u.user_account=t.doc_man_no
+        LEFT JOIN sms_light_color slc on slc.id=t.color_id
         WHERE
         1=1
         <if test="p.depaCode != null and p.depaCode != ''">

@@ -54,7 +54,23 @@ public class SmsWmsOutStockDocController {
     private ISmsWmsOutStockPmItemService smsWmsOutStockPmItemService;
     @Autowired
     private ISmsWmsOutStockListService smsWmsOutStockListService;
-    
+
+    /**
+     * 挑料亮灯
+     */
+    @ApiOperation(value = "挑料亮灯")
+    @PostMapping("/smsOutStockDoc/lightUp")
+    public Result lightUp(@RequestBody Map<String, Object> params) {
+        return smsWmsOutStockDocService.lightUp(params);
+    }
+    /**
+     * 取消挑料
+     */
+    @ApiOperation(value = "取消挑料")
+    @PostMapping("/smsOutStockDoc/cancelLightUp")
+    public Result cancelLightUp(@RequestBody Map<String, Object> params) {
+        return smsWmsOutStockDocService.cancelLightUp(params);
+    }
     @ApiOperation(value = "备料报表")
     @PostMapping("/smsWmsOutStockDoc/statement")
     public Result statement(@RequestBody Map<String,Object> map) {

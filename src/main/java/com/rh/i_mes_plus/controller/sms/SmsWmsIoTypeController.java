@@ -45,17 +45,13 @@ public class SmsWmsIoTypeController {
     private ISmsWmsIoTypeService smsWmsIoTypeService;
     @Value("${zhaoIpAndPort}")
     private String zhaoIpAndPort;
-    @Value("${liIpAndPort}")
-    private String liIpAndPort;
     @Autowired
     private ISmsWmsErpDocTypeService smsWmsErpDocTypeService;
 
     @ApiOperation(value = "亮灯")
     @PostMapping(value = "/LightControl")
     protected Result ApiEcnCheckFai(@RequestBody List<Map<String, Object>> params)  {
-        String result= HttpRequest.post(liIpAndPort+"/api/Light/LightControl").body(JSON.toJSONString(params)).execute().body();
-        System.out.println(result);
-        return Result.succeed(result,"成功");
+        return smsWmsIoTypeService.LightControl(params);
     }
     @ApiOperation(value = "获取看板信息1")
     @GetMapping(value = "/ApiKanbanGetFaultInfo")

@@ -42,5 +42,9 @@ public interface ISmsWmsOutStockDocService extends IService<SmsWmsOutStockDoc> {
     Result statement(Map<String, Object> map);
 
     Result pdaCancelOutStock(Map<String, Object> map);
+
+    Result lightUp(Map<String, Object> params);
+
+    Result cancelLightUp(Map<String, Object> params);
 }
 

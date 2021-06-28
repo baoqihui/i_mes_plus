@@ -15,4 +15,24 @@
         from sps_spares_check_detail t
         order by t.id desc
     </select>
+    <select id="getDetailByCheckNo" resultType="java.util.Map">
+        select
+            t.id id,  --
+            t.check_no checkNo,  -- 盘点单号
+            t.spares_no sparesNo,  -- 备品号
+            t.inventor inventor,  -- 盘点人
+            t.time_invent timeInvent,  -- 盘点时间
+            t.state state,  -- 状态
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime,  -- 更新时间
+            gpdi.pos pos,
+            gpdi.item_code itemCode,
+            usiti.item_type_name itemTypeName,
+            gpi.item_desc itemDesc
+        from sps_spares_check_detail t
+        left join gzk_parts_detail_info gpdi on gpdi.kgt_no=t.spares_no
+        left join ums_spares_item_type_info usiti on usiti.item_type_code=gpdi.item_type_code
+        left join gzk_parts_item gpi on gpi.item_code=gpdi.item_code
+        where t.check_no=#{checkNo}
+    </select>
 </mapper>

@@ -120,4 +120,7 @@ public interface WebServiceDemoService {
 
     @WebMethod
     public String getInfoBySnAndQty(@WebParam(name = "param")String param);
+
+    @WebMethod
+    public String LightControl(@WebParam(name = "param")String param);
 }

@@ -9,7 +9,7 @@
             t.item_name itemName,  -- 物料名称
             t.item_desc itemDesc,  -- 物料描述
             t.item_type_code itemTypeCode, -- 小类代码
-            usiti.item_type_name itemTypeName,
+            usiti.item_type_name itemTypeName,  -- 小类名称
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.update_time updateTime  -- 更新时间
         from gzk_parts_item t

@@ -89,4 +89,7 @@ public class SmsWmsOutStockDoc extends SuperEntity {
         @Excel(name = "部门名称")
         @ApiModelProperty(value = "部门名称")
         private String depaName;
+        @Excel(name = "灯颜色ID")
+        @ApiModelProperty(value = "灯颜色ID")
+        private Long colorId;
 }
