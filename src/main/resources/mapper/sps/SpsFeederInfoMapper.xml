@@ -31,6 +31,9 @@
         <if test="p.specCode != null and p.specCode != ''">
             and t.spec_code LIKE '%${p.specCode}%'
         </if>
+        <if test="p.specName != null and p.specName != ''">
+            and ufs.spec_name LIKE '%${p.specName}%'
+        </if>
         <if test="p.typeName != null and p.typeName != ''">
             and uft.type_name LIKE '%${p.typeName}%'
         </if>

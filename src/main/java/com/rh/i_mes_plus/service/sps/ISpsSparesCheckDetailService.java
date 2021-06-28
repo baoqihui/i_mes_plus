@@ -21,6 +21,12 @@ public interface ISpsSparesCheckDetailService extends IService<SpsSparesCheckDet
      */
     Page<Map> findList(Map<String, Object> params);
 
-    List<Map<String, Object>> getDetailByCheckNo(String checkNo);
+    List<Map<String, Object>> getGZBPDetailByCheckNo(String checkNo);
+
+    List<Map<String, Object>> getGWDetailByCheckNo(String checkNo);
+
+    List<Map<String, Object>> getLQDetailByCheckNo(String checkNo);
+
+    List<Map<String, Object>> getDefaultDetailByCheckNo(String checkNo);
 }
 

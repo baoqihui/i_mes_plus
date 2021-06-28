@@ -8,10 +8,15 @@
             t.item_code itemCode,  -- 物料代码
             t.item_name itemName,  -- 物料名称
             t.item_desc itemDesc,  -- 物料描述
+            t.min_qty minQty, -- 最小库存
             t.item_type_code itemTypeCode, -- 小类代码
             usiti.item_type_name itemTypeName,  -- 小类名称
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
-            t.update_time updateTime  -- 更新时间
+            t.update_time updateTime,  -- 更新时间
+        ifnull((SELECT sum(a.qty) FROM gzk_parts_detail_info a WHERE a.item_code = t.item_code and a.loc='1'),0) productionQty, -- 量产库数量
+        ifnull((SELECT sum(b.qty) FROM gzk_parts_detail_info b WHERE b.item_code = t.item_code and b.loc='2'),0) testQty,		  -- 实验库数量
+        ifnull((SELECT sum(c.qty) FROM gzk_parts_detail_info c WHERE c.item_code = t.item_code and c.loc='3'),0) scrapQty,	  -- 报废库数量
+        ifnull((SELECT sum(d.qty) FROM gzk_parts_detail_info d WHERE d.item_code = t.item_code and d.loc='4'),0) lendQty		  -- 借出库数量
         from gzk_parts_item t
         left join ums_spares_item_type_info usiti on t.item_type_code = usiti.item_type_code
         where 1=1

@@ -25,5 +25,11 @@ public interface SpsSparesCheckDetailMapper extends SuperMapper<SpsSparesCheckDe
      */
     Page<Map> findList(Page<Map> pages, @Param("p") Map<String, Object> params);
 
-    List<Map<String, Object>> getDetailByCheckNo(@Param("checkNo") String checkNo);
+    List<Map<String, Object>> getGZBPDetailByCheckNo(@Param("checkNo") String checkNo);
+
+    List<Map<String, Object>> getGWDetailByCheckNo(@Param("checkNo") String checkNo);
+
+    List<Map<String, Object>> getLQDetailByCheckNo(@Param("checkNo") String checkNo);
+
+    List<Map<String, Object>> getDefaultDetailByCheckNo(@Param("checkNo") String checkNo);
 }

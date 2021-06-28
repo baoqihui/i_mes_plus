@@ -8,5 +8,5 @@ import java.util.List;
 
 @Data
 public class SpsSparesCheckDocDTO extends SpsSparesCheckDoc {
-    private List<SpsSparesCheckDetail> spsSparesCheckDetails;
+    private List<SpsSparesCheckDetail> sparesCheckDetails;
 }

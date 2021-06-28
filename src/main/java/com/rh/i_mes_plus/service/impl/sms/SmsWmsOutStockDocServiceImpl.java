@@ -351,8 +351,8 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
                 .set(SmsLightColor::getState,0)
         );
         List<SmsWmsStockInfo> stockInfos = smsWmsStockInfoService.list(new LambdaQueryWrapper<SmsWmsStockInfo>().eq(SmsWmsStockInfo::getOutStockDoc, docNo));
-        List<Map<String, Object>> lightMaps=new ArrayList<>();
         for (SmsWmsStockInfo stockInfo : stockInfos) {
+            List<Map<String, Object>> lightMaps=new ArrayList<>();
             String areaSn = stockInfo.getAreaSn();
             Map<String, Object> lightMap = new HashMap<>();
             lightMap.put("MainBoard", Convert.toInt(areaSn.substring(0, 3)));
@@ -360,11 +360,10 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
             lightMap.put("LightState",0);
             lightMap.put("LightColor",stockDoc.getColorId());
             lightMaps.add(lightMap);
+            String param = JSONUtil.toJsonStr(lightMaps);
+            log.info(param);
+            HttpRequest.post(liIpAndPort+"/api/Light/LightControl").body(param).execute().body();
         }
-        String param = JSONUtil.toJsonStr(lightMaps);
-        log.info(param);
-        HttpRequest.post(liIpAndPort+"/api/Light/LightControl").body(param).execute().body();
-
         smsWmsStockInfoService.update(new LambdaUpdateWrapper<SmsWmsStockInfo>()
                 .eq(SmsWmsStockInfo::getOutStockDoc,docNo)
                 .set(SmsWmsStockInfo::getOutStockDoc,"")
@@ -401,6 +400,9 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
             }*/
             if (!("1".equals(stockInfo.getStockFlag()))) {
                 return Result.failed("此条码库存非在库状态");
+            }
+            if (StrUtil.isBlank(stockInfo.getOutStockDoc())) {
+                return Result.failed("此条码未挑料");
             }
             Long skAmount = stockInfo.getAmount();
             String coItemCode = stockInfo.getCoItemCode();

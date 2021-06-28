@@ -35,6 +35,7 @@
             msdi.item_code itemCode,  -- 物料代码
             msdi.item_name itemName,  -- 物料名称
             msdi.item_spec itemSpec,  -- 物料描述
+            msdi.model_code modelCode,
             msdi.used_times usedTimes  -- 累计使用次数
         from mfg_stencils_req_info t
         left join mfg_stencils_detail_info msdi on t.stencil_no = msdi.stencil_no

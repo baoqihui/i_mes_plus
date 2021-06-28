@@ -18,7 +18,6 @@ import com.rh.i_mes_plus.service.sps.ISpsSparesCheckDocService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
@@ -79,7 +78,7 @@ public class SpsSparesCheckDocServiceImpl extends ServiceImpl<SpsSparesCheckDocM
         try{
             SpsSparesCheckDoc spsSparesCheckDoc = spsSparesCheckDocDTO;
             String checkNo = spsSparesCheckDoc.getCheckNo();
-            List<SpsSparesCheckDetail> sparesCheckDetails = spsSparesCheckDocDTO.getSpsSparesCheckDetails();
+            List<SpsSparesCheckDetail> sparesCheckDetails = spsSparesCheckDocDTO.getSparesCheckDetails();
 
             for (SpsSparesCheckDetail spsSparesCheckDetail : sparesCheckDetails) {
                 SpsSparesCheckDetail existingDetail = spsSparesCheckDetailService.getOne(new LambdaQueryWrapper<SpsSparesCheckDetail>()

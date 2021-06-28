@@ -34,4 +34,8 @@ public class GzkPartsItem extends SuperEntity {
         @Excel(name = "小类代码")
         @ApiModelProperty(value = "小类代码")
         private String itemTypeCode;
+        @Excel(name = "最小库存")
+        @ApiModelProperty(value = "最小库存")
+        private String minQty;
+
 }

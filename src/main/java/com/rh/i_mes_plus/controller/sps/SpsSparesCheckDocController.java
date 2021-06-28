@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rh.i_mes_plus.common.model.PageResult;
 import com.rh.i_mes_plus.common.model.Result;
+import com.rh.i_mes_plus.common.model.SysConst;
 import com.rh.i_mes_plus.dto.SpsSparesCheckDocDTO;
 import com.rh.i_mes_plus.model.sps.ApprovalProcess;
 import com.rh.i_mes_plus.model.sps.SpsSparesCheckDetail;
@@ -110,8 +111,21 @@ public class SpsSparesCheckDocController {
         SpsSparesCheckDoc spsSparesCheckDoc = spsSparesCheckDocService.getOne(new QueryWrapper<SpsSparesCheckDoc>()
                 .eq("check_no",checkNo)
         );
+        String typeCode = spsSparesCheckDoc.getTypeCode();
         Map<String, Object> result = BeanUtil.beanToMap(spsSparesCheckDoc);
-        List<Map<String, Object>> sparesCheckDetails=spsSparesCheckDetailService.getDetailByCheckNo(checkNo);
+        List<Map<String, Object>> sparesCheckDetails;
+        if (SysConst.TYPE_CODE.GZBP.equals(typeCode)){
+            sparesCheckDetails=spsSparesCheckDetailService.getGZBPDetailByCheckNo(checkNo);
+        }
+        else if (SysConst.TYPE_CODE.GW.equals(typeCode)){
+            sparesCheckDetails=spsSparesCheckDetailService.getGWDetailByCheckNo(checkNo);
+        }
+        else if (SysConst.TYPE_CODE.LQ.equals(typeCode)){
+            sparesCheckDetails=spsSparesCheckDetailService.getLQDetailByCheckNo(checkNo);
+        }
+        else {
+            sparesCheckDetails=spsSparesCheckDetailService.getDefaultDetailByCheckNo(checkNo);
+        }
         result.put("sparesCheckDetails",sparesCheckDetails);
         return Result.succeed(result, "查询成功");
     }
@@ -135,7 +149,7 @@ public class SpsSparesCheckDocController {
         SpsSparesCheckDoc spsSparesCheckDoc=spsSparesCheckDocDTO;
         spsSparesCheckDocService.saveOrUpdate(spsSparesCheckDoc);
         String checkNo = spsSparesCheckDoc.getCheckNo();
-        List<SpsSparesCheckDetail> spsSparesCheckDetails = spsSparesCheckDocDTO.getSpsSparesCheckDetails();
+        List<SpsSparesCheckDetail> spsSparesCheckDetails = spsSparesCheckDocDTO.getSparesCheckDetails();
         spsSparesCheckDetailService.remove(new QueryWrapper<SpsSparesCheckDetail>().eq("check_no",spsSparesCheckDoc.getCheckNo()));
         spsSparesCheckDetails.forEach(u->u.setCheckNo(checkNo));
         spsSparesCheckDetailService.saveBatch(spsSparesCheckDetails);
@@ -153,8 +167,8 @@ public class SpsSparesCheckDocController {
     }
 
     /**
-         * 批量新增or更新
-         */
+     * 批量新增or更新
+     */
     @ApiOperation(value = "批量新增or更新")
     @PostMapping("/spsSparesCheckDoc/saveBatch")
     public Result saveBatch(@RequestBody Map<String,List<SpsSparesCheckDoc>> map) {
@@ -174,13 +188,13 @@ public class SpsSparesCheckDocController {
             SpsSparesCheckDoc checkDoc = spsSparesCheckDocService.getById(id);
             String checkNo = checkDoc.getCheckNo();
             spsSparesCheckDetailService.remove(new LambdaQueryWrapper<SpsSparesCheckDetail>()
-                .eq(SpsSparesCheckDetail::getCheckNo,checkNo)
+                    .eq(SpsSparesCheckDetail::getCheckNo,checkNo)
             );
         }
         spsSparesCheckDocService.removeByIds(ids);
         return Result.succeed("删除成功");
     }
-    
+
     /**
      * 导入
      */
@@ -194,14 +208,14 @@ public class SpsSparesCheckDocController {
             if (rowNum > 0) {
                 //无该用户信息
                 list.forEach(u -> {
-                        spsSparesCheckDocService.save(u);
+                    spsSparesCheckDocService.save(u);
                 });
                 return Result.succeed("成功导入信息"+rowNum+"行数据");
             }
         }
         return Result.failed("导入失败");
     }
-    
+
     /**
      * 导出
      */
