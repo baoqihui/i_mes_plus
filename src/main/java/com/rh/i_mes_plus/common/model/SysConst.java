@@ -60,4 +60,13 @@ public class SysConst {
         public static final String LQ="F";
         public static final String QT="Z";
     }
+    public static class FIELD_NAME{
+        public static final String PROJECT_ID="工单号";
+        public static final String MODEL_CODE="机型代码";
+        public static final String BATCH="批次号";
+        public static final String VER="版本";
+        public static final String SUPPLIER_CODE="供应商";
+        public static final String DC="时间";
+    }
+
 }

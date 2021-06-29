@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sms.SmsBarcodeRuleDetailMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  --
+            t.rule_code ruleCode,  -- 规则代码
+            t.rule_name ruleName,  -- 规则名称
+            t.field_name fieldName,  -- 字段名（工单号/机型代码/批次号/版本/供应商/时间）
+            t.joint_mark jointMark,  -- 连接符
+            t.field_limit fieldLimit,  -- 流水号长度
+            t.sort sort,  -- 排序
+            t.create_time createTime,  -- 创建时间
+            t.update_time updateTime  -- 更新时间
+        from sms_barcode_rule_detail t
+        where 1=1
+        <if test="p.ruleCode != null and p.ruleCode != ''">
+            and t.rule_code LIKE '%${p.ruleCode}%'
+        </if>
+        <if test="p.ruleName != null and p.ruleName != ''">
+            and t.rule_name LIKE '%${p.ruleName}%'
+        </if>
+        <if test="p.fieldName != null and p.fieldName != ''">
+            and t.field_name LIKE '%${p.fieldName}%'
+        </if>
+        <if test="p.jointMark != null and p.jointMark != ''">
+            and t.joint_mark LIKE '%${p.jointMark}%'
+        </if>
+        <if test="p.fieldLimit != null and p.fieldLimit != ''">
+            and t.field_limit LIKE '%${p.fieldLimit}%'
+        </if>
+        <if test="p.sort != null and p.sort != ''">
+            and t.sort LIKE '%${p.sort}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+    <select id="getBefore" resultType="com.rh.i_mes_plus.model.sms.SmsBarcodeRuleDetail">
+        SELECT
+            *
+        FROM
+            sms_barcode_rule_detail
+        WHERE
+            rule_code=#{ruleCode}
+          AND #{ownerSort} > sort
+        ORDER BY sort DESC,id DESC
+        LIMIT 0,1;
+    </select>
+    <select id="getAfter" resultType="com.rh.i_mes_plus.model.sms.SmsBarcodeRuleDetail">
+        SELECT
+            *
+        FROM
+            sms_barcode_rule_detail
+        WHERE
+            rule_code=#{ruleCode}
+          AND sort > #{ownerSort}
+        ORDER BY sort ASC,id ASC
+        LIMIT 0,1;
+    </select>
+</mapper>

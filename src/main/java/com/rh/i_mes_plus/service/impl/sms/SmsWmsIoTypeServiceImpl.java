@@ -49,8 +49,8 @@ public class SmsWmsIoTypeServiceImpl extends ServiceImpl<SmsWmsIoTypeMapper, Sms
 
     @Override
     public Result LightControl(List<Map<String, Object>> params) {
+        log.info("亮灯程序参数{}",params);
         String result= HttpRequest.post(liIpAndPort+"/api/Light/LightControl").body(JSON.toJSONString(params)).execute().body();
-        System.out.println(result);
         return Result.succeed(result,"成功");
     }
 }
