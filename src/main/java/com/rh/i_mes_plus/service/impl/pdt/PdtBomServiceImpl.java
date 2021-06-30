@@ -74,6 +74,7 @@ public class PdtBomServiceImpl extends ServiceImpl<PdtBomMapper, PdtBom> impleme
         for (int i = 0; i < size; i++) {
             PdtBomDetail pdtBomDetail = pdtBomDetails.get(i);
             if ("#".equals(pdtBomDetail.getSN())){
+                //todo:试产只写入bom中替代料，量产需要查询替代料清单pdt_replace_item中的列表去重后加入pdt_bom_detail_replace_item。
                 PdtBomDetailReplaceItem pdtBomDetailReplaceItem = new PdtBomDetailReplaceItem();
                 pdtBomDetailReplaceItem.setPbdId(pdtBomDetails.get(i-1).getId());
                 pdtBomDetailReplaceItem.setItemCode(pdtBomDetail.getItemCode());

@@ -28,9 +28,6 @@ public class SmsBarcodeRuleItem extends SuperEntity {
         @Excel(name = "机种名称")
         @ApiModelProperty(value = "机种名称")
         private String itemName;
-        @Excel(name = "客户代码")
-        @ApiModelProperty(value = "客户代码")
-        private String custCode;
         @Excel(name = "客户条码规则")
         @ApiModelProperty(value = "客户条码规则")
         private String ruleCode;

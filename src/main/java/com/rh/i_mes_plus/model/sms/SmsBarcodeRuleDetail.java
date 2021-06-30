@@ -22,22 +22,16 @@ import java.util.Date;
 public class SmsBarcodeRuleDetail extends SuperEntity {
     private static final long serialVersionUID=1L;
 
-        @Excel(name = "规则代码")
-        @ApiModelProperty(value = "规则代码")
-        private String ruleCode;
-        @Excel(name = "规则名称")
-        @ApiModelProperty(value = "规则名称")
-        private String ruleName;
-        @Excel(name = "字段名（工单号/机型代码/批次号/版本/供应商/时间）")
-        @ApiModelProperty(value = "字段名（工单号/机型代码/批次号/版本/供应商/时间）")
-        private String fieldName;
-        @Excel(name = "连接符")
-        @ApiModelProperty(value = "连接符")
-        private String jointMark;
-        @Excel(name = "流水号长度")
-        @ApiModelProperty(value = "流水号长度")
-        private Integer fieldLimit;
-        @Excel(name = "排序")
-        @ApiModelProperty(value = "排序")
-        private Long sort;
+    @Excel(name = "规则代码")
+    @ApiModelProperty(value = "规则代码")
+    private String ruleCode;
+    @Excel(name = "规则名称")
+    @ApiModelProperty(value = "规则名称")
+    private String ruleName;
+    @Excel(name = "字段名（工单号/机型代码/批次号/版本/供应商/时间）")
+    @ApiModelProperty(value = "字段名（工单号/机型代码/批次号/版本/供应商/时间）")
+    private String fieldName;
+    @Excel(name = "排序")
+    @ApiModelProperty(value = "排序")
+    private Long sort;
 }

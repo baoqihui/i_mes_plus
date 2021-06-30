@@ -16,6 +16,7 @@
             t.ecns ecns,  -- 关联ecn（","分割）
             t.remark remark,  -- 备注
             t.is_value isValue,  -- 是否生效（0，无效 1，有效）
+            t.stage stage,  -- 阶段（1，试产 2，量产）
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.create_name createName,  -- 创建人
             t.update_time updateTime,  -- 更新时间

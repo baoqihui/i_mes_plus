@@ -49,10 +49,14 @@ public class PdtBom extends SuperEntity {
         @Excel(name = "是否生效（0，无效 1，有效）")
         @ApiModelProperty(value = "是否生效（0，无效 1，有效）")
         private Integer isValue;
+        @Excel(name = "阶段（1，试产 2，量产）")
+        @ApiModelProperty(value = "阶段（1，试产 2，量产）")
+        private Integer stage;
         @Excel(name = "创建人")
         @ApiModelProperty(value = "创建人")
         private String createName;
         @Excel(name = "编辑人",format="yyyy-MM-dd HH:mm:ss")
         @ApiModelProperty(value = "编辑人")
         private String updateName;
+
 }

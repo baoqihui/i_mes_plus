@@ -7,11 +7,15 @@
             t.id id,  -- 
             t.item_code itemCode,  -- 机种代码
             t.item_name itemName,  -- 机种名称
-            t.cust_code custCode,  -- 客户代码
             t.rule_code ruleCode,  -- 客户条码规则
+            sbr.rule_name ruleName,
+            sbr.cust_code custCode, --
+            uc.CUSTOMER customer,
             t.create_time createTime,  -- 创建时间
             t.update_time updateTime  -- 更新时间
         from sms_barcode_rule_item t
+        left join sms_barcode_rule sbr on t.rule_code = sbr.rule_code
+        left join ums_customer uc on sbr.cust_code = uc.CUST_CODE
         where 1=1
         <if test="p.itemCode != null and p.itemCode != ''">
             and t.item_code LIKE '%${p.itemCode}%'

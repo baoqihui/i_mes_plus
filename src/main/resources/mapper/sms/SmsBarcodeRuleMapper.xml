@@ -13,12 +13,14 @@
             t.is_check_limit isCheckLimit,  -- 是否长度校验
             t.barcode_limit barcodeLimit,  -- 条码长度
             t.is_default isDefault,  -- 默认标识
+            t.joint_mark jointMark,  -- 连接符
+            t.field_limit fieldLimit,  -- 流水号长度
             t.create_time createTime,  -- 创建时间
             t.update_time updateTime  -- 更新时间
         from sms_barcode_rule t
         where 1=1
         <if test="p.ruleCode != null and p.ruleCode != ''">
-            and t.rule_code LIKE '%${p.ruleCode}%'
+            and t.rule_code = #{p.ruleCode}
         </if>
         <if test="p.ruleName != null and p.ruleName != ''">
             and t.rule_name LIKE '%${p.ruleName}%'
@@ -40,6 +42,12 @@
         </if>
         <if test="p.isDefault != null and p.isDefault != ''">
             and t.is_default LIKE '%${p.isDefault}%'
+        </if>
+        <if test="p.jointMark != null and p.jointMark != ''">
+            and t.joint_mark LIKE '%${p.jointMark}%'
+        </if>
+        <if test="p.fieldLimit != null and p.fieldLimit != ''">
+            and t.field_limit LIKE '%${p.fieldLimit}%'
         </if>
         <if test="p.startTime != null and p.startTime != '' ">
             and t.create_time >= '${p.startTime}'

@@ -8,8 +8,6 @@
             t.rule_code ruleCode,  -- 规则代码
             t.rule_name ruleName,  -- 规则名称
             t.field_name fieldName,  -- 字段名（工单号/机型代码/批次号/版本/供应商/时间）
-            t.joint_mark jointMark,  -- 连接符
-            t.field_limit fieldLimit,  -- 流水号长度
             t.sort sort,  -- 排序
             t.create_time createTime,  -- 创建时间
             t.update_time updateTime  -- 更新时间
@@ -23,12 +21,6 @@
         </if>
         <if test="p.fieldName != null and p.fieldName != ''">
             and t.field_name LIKE '%${p.fieldName}%'
-        </if>
-        <if test="p.jointMark != null and p.jointMark != ''">
-            and t.joint_mark LIKE '%${p.jointMark}%'
-        </if>
-        <if test="p.fieldLimit != null and p.fieldLimit != ''">
-            and t.field_limit LIKE '%${p.fieldLimit}%'
         </if>
         <if test="p.sort != null and p.sort != ''">
             and t.sort LIKE '%${p.sort}%'
