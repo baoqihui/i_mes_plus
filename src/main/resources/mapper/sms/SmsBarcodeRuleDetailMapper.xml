@@ -31,7 +31,7 @@
         <if test="p.endTime !=null and p.endTime != '' ">
             and '${p.endTime}' >= t.create_time
         </if>
-        order by t.id desc
+        order by t.sort,t.id asc
     </select>
     <select id="getBefore" resultType="com.rh.i_mes_plus.model.sms.SmsBarcodeRuleDetail">
         SELECT

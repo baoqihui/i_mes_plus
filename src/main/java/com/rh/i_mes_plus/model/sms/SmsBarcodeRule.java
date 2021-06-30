@@ -33,7 +33,7 @@ public class SmsBarcodeRule extends SuperEntity {
     private String ruleDesc;
     @Excel(name = "条码类型")
     @ApiModelProperty(value = "条码类型")
-    private String type;
+    private String typeCode;
     @Excel(name = "客户代码")
     @ApiModelProperty(value = "客户代码")
     private String custCode;

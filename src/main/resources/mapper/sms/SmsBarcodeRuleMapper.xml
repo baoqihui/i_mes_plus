@@ -8,7 +8,8 @@
             t.rule_code ruleCode,  -- 规则代码
             t.rule_name ruleName,  -- 名称
             t.rule_desc ruleDesc,  -- 描述
-            t.type type,  -- 条码类型(1，产品条码 2，箱号条码 3，栈板条码)
+            t.type_code typeCode,  -- 条码类型
+            sbt.type_name typeName,
             t.cust_code custCode,  -- 客户代码
             t.is_check_limit isCheckLimit,  -- 是否长度校验
             t.barcode_limit barcodeLimit,  -- 条码长度
@@ -18,6 +19,7 @@
             t.create_time createTime,  -- 创建时间
             t.update_time updateTime  -- 更新时间
         from sms_barcode_rule t
+        left join sms_barcode_type sbt on t.type_code = sbt.type_code
         where 1=1
         <if test="p.ruleCode != null and p.ruleCode != ''">
             and t.rule_code = #{p.ruleCode}
@@ -28,8 +30,8 @@
         <if test="p.ruleDesc != null and p.ruleDesc != ''">
             and t.rule_desc LIKE '%${p.ruleDesc}%'
         </if>
-        <if test="p.type != null and p.type != ''">
-            and t.type LIKE '%${p.type}%'
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and t.type_code LIKE '%${p.typeCode}%'
         </if>
         <if test="p.custCode != null and p.custCode != ''">
             and t.cust_code LIKE '%${p.custCode}%'

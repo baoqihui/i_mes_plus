@@ -67,6 +67,7 @@ public class SysConst {
         public static final String VER="版本";
         public static final String SUPPLIER_CODE="供应商";
         public static final String DC="时间";
+        public static final String LS="流水号";
     }
 
 }
