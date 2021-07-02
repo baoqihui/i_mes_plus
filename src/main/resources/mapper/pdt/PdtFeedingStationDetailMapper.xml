@@ -66,4 +66,16 @@
         </if>
         order by t.id desc
     </select>
+    <select id="getFeedingStation" resultType="com.rh.i_mes_plus.model.pdt.PdtFeedingStationDetail">
+        SELECT
+            pfsd.*
+        FROM
+            pdt_feeding_station_detail pfsd
+                LEFT JOIN pdt_feeding_station pfs on pfs.fs_sn=pfsd.fs_sn
+                LEFT JOIN pdt_bom_detail pbd on pfs.model_code=pbd.item_code
+                LEFT JOIN pdt_bom pb on pbd.parent_id=pb.id
+        WHERE
+                pfsd.item_code IN ( SELECT t.item_code FROM pdt_replace_item t WHERE t.replace_group = #{replaceGroup} )
+          and pb.stage=2
+    </select>
 </mapper>

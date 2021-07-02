@@ -1,9 +1,12 @@
 package com.rh.i_mes_plus.controller.pdt;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rh.i_mes_plus.common.model.PageResult;
 import com.rh.i_mes_plus.common.model.Result;
 import com.rh.i_mes_plus.dto.PdtFeedingStationDTO;
 import com.rh.i_mes_plus.model.pdt.PdtFeedingStation;
+import com.rh.i_mes_plus.model.pdt.PdtFeedingStationDetail;
+import com.rh.i_mes_plus.service.pdt.IPdtFeedingStationDetailService;
 import com.rh.i_mes_plus.service.pdt.IPdtFeedingStationService;
 import com.rh.i_mes_plus.util.EasyPoiExcelUtil;
 import io.swagger.annotations.Api;
@@ -32,7 +35,8 @@ import java.util.Map;
 public class PdtFeedingStationController {
     @Autowired
     private IPdtFeedingStationService pdtFeedingStationService;
-
+    @Autowired
+    private IPdtFeedingStationDetailService pdtFeedingStationDetailService;
     /**
      * 列表
      */
@@ -90,6 +94,11 @@ public class PdtFeedingStationController {
     @PostMapping("/pdtFeedingStation/del")
     public Result delete(@RequestBody Map<String,List<Long>> map) {
         List<Long> ids = map.get("ids");
+        for (Long id : ids) {
+            PdtFeedingStation station = pdtFeedingStationService.getById(id);
+            String fsSn = station.getFsSn();
+            pdtFeedingStationDetailService.remove(new LambdaQueryWrapper<PdtFeedingStationDetail>().eq(PdtFeedingStationDetail::getFsSn,fsSn));
+        }
         pdtFeedingStationService.removeByIds(ids);
         return Result.succeed("删除成功");
     }

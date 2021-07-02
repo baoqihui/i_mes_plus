@@ -2,6 +2,7 @@ package com.rh.i_mes_plus.mapper.pdt;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rh.i_mes_plus.common.mapper.SuperMapper;
+import com.rh.i_mes_plus.model.pdt.PdtBomDetail;
 import com.rh.i_mes_plus.model.pdt.PdtReplaceItem;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -52,4 +53,6 @@ public interface PdtReplaceItemMapper extends SuperMapper<PdtReplaceItem> {
     Long maxSort(@Param("replaceGroup") String replaceGroup);
 
     List<PdtReplaceItem> getGroupItemListByItemCode(@Param("itemCode") String itemCode,@Param("modelCode")String modelCode, @Param("isExcludeItself") int isExcludeItself);
+
+    List<PdtBomDetail> getBomDetailList(@Param("replaceGroup") String replaceGroup);
 }

@@ -3,6 +3,9 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -10,10 +13,7 @@ import com.rh.i_mes_plus.common.model.Result;
 import com.rh.i_mes_plus.dto.SmsWmsMoveDocDTO;
 import com.rh.i_mes_plus.mapper.sms.SmsWmsMoveDocMapper;
 import com.rh.i_mes_plus.model.other.PdaMesLog;
-import com.rh.i_mes_plus.model.sms.SmsWmsMoveDoc;
-import com.rh.i_mes_plus.model.sms.SmsWmsMoveDocDetail;
-import com.rh.i_mes_plus.model.sms.SmsWmsMoveDocDetailSub;
-import com.rh.i_mes_plus.model.sms.SmsWmsStockInfo;
+import com.rh.i_mes_plus.model.sms.*;
 import com.rh.i_mes_plus.model.ums.UmsUser;
 import com.rh.i_mes_plus.service.other.IPdaMesLogService;
 import com.rh.i_mes_plus.service.sms.ISmsWmsMoveDocDetailService;
@@ -29,9 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 调拨单
@@ -238,7 +236,18 @@ public class SmsWmsMoveDocServiceImpl extends ServiceImpl<SmsWmsMoveDocMapper, S
             return Result.failed( "扫码失败");
         }
     }
-    
+
+    @Override
+    public Result lightUp(Map<String, Object> params) {
+        return Result.succeed("亮灯成功");
+    }
+
+    @Override
+    public Result cancelLightUp(Map<String, Object> params) {
+
+        return null;
+    }
+
     /**判断该单号是否已经过pda扫码，如果是不允许删除*/
     private void hasPda(String moveNo){
         List<SmsWmsMoveDocDetailSub> smsWmsMoveDocDetailSubs = smsWmsMoveDocDetailSubService.list(new QueryWrapper<SmsWmsMoveDocDetailSub>().eq("move_no", moveNo));

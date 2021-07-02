@@ -74,6 +74,7 @@ public class PdtReplaceItemController {
         List<PdtReplaceItem> replaceItems = pdtReplaceItemService.getGroupItemListByItemCode(itemCode,modelCode, 0);
         return Result.succeed(replaceItems,"查询成功");
     }
+
     /**
      * 列表
      */
@@ -103,7 +104,14 @@ public class PdtReplaceItemController {
         pdtReplaceItemService.saveOrUpdate(pdtReplaceItem);
         return Result.succeed("保存成功");
     }
-
+    /**
+     * 通过替代组更新量产bom
+     */
+    @ApiOperation(value = "通过替代组更新量产bom")
+    @PostMapping("/pdtReplaceItem/updateBomByReplaceGroup")
+    public Result updateBomByReplaceGroup(@RequestBody PdtReplaceItem pdtReplaceItem) {
+        return pdtReplaceItemService.updateBomByReplaceGroup(pdtReplaceItem);
+    }
     /**
          * 批量新增or更新
          */

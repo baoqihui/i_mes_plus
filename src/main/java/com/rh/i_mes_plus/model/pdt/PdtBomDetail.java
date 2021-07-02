@@ -78,4 +78,7 @@ public class PdtBomDetail extends SuperEntity {
         @Excel(name = "是否生效（0，无效 1，有效）")
         @ApiModelProperty(value = "是否生效（0，无效 1，有效）")
         private Integer isValue;
+        @Excel(name = "成品机种编号（采用成品机种加串号形式）")
+        @ApiModelProperty(value = "成品机种编号（采用成品机种加串号形式）")
+        private String modelNo;
 }

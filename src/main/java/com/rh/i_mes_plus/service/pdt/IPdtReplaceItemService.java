@@ -33,5 +33,7 @@ public interface IPdtReplaceItemService extends IService<PdtReplaceItem> {
     Result exchange(Map<String, Object> map);
 
     List<PdtReplaceItem> getGroupItemListByItemCode(String itemCode,String modelCode, int isExcludeItself);
+
+    Result updateBomByReplaceGroup(PdtReplaceItem pdtReplaceItem);
 }
 

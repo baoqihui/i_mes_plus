@@ -70,6 +70,14 @@ public class PdtBomController {
     }
 
     /**
+     * 转量产
+     */
+    @ApiOperation(value = "转量产")
+    @PostMapping("/pdtBom/changeStage")
+    public Result changeStage(@RequestBody PdtBom pdtBom) {
+        return pdtBomService.changeStage(pdtBom);
+    }
+    /**
      * 新增or更新
      */
     @ApiOperation(value = "新增or更新")

@@ -53,6 +53,23 @@ public class SmsWmsMoveDocController {
     private ISmsWmsMoveDocDetailSubService smsWmsMoveDocDetailSubService;
     @Autowired
     private IUmsWmsAreaService umsWmsAreaService;
+
+    /**
+     * 挑料亮灯
+     */
+    @ApiOperation(value = "挑料亮灯")
+    @PostMapping("/smsWmsMoveDoc/lightUp")
+    public Result lightUp(@RequestBody Map<String, Object> params) {
+        return smsWmsMoveDocService.lightUp(params);
+    }
+    /**
+     * 取消挑料
+     */
+    @ApiOperation(value = "取消挑料")
+    @PostMapping("/smsWmsMoveDoc/cancelLightUp")
+    public Result cancelLightUp(@RequestBody Map<String, Object> params) {
+        return smsWmsMoveDocService.cancelLightUp(params);
+    }
     /**
      * 保存或更新(更新携带id)
      */

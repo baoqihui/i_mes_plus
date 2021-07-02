@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rh.i_mes_plus.common.model.CheckWarehouseEnum;
 import com.rh.i_mes_plus.common.model.Result;
+import com.rh.i_mes_plus.common.model.SysConst;
 import com.rh.i_mes_plus.dto.SmsWmsOutStockDocDTO;
 import com.rh.i_mes_plus.mapper.sms.SmsWmsOutStockDocMapper;
 import com.rh.i_mes_plus.model.other.PdaMesLog;
@@ -283,6 +284,7 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
         SmsLightColor smsLightColor = lightColors.get(0);
         String docNo = MapUtil.getStr(params, "docNo");
         SmsWmsOutStockDoc stockDoc = getOne(new LambdaQueryWrapper<SmsWmsOutStockDoc>().eq(SmsWmsOutStockDoc::getDocNo, docNo));
+        String dtCode = stockDoc.getDtCode();
         List<SmsWmsOutStockDetail> outStockDocDetails = smsWmsOutStockDetailService.list(new LambdaQueryWrapper<SmsWmsOutStockDetail>()
                 .eq(SmsWmsOutStockDetail::getDocNo, docNo)
         );
@@ -302,14 +304,19 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
             String itemCode = outStockDocDetail.getItemCode();
             Long planQty = outStockDocDetail.getOsdAmountPlan();
             Long realQty = outStockDocDetail.getOsdAmountReal();
+            LambdaQueryWrapper<SmsWmsStockInfo> wrapper=new  LambdaQueryWrapper<>();
+            wrapper.ne(SmsWmsStockInfo::getAreaSn,"");
+            wrapper.eq(SmsWmsStockInfo::getCoItemCode, itemCode);
+            wrapper.eq(SmsWmsStockInfo::getStockFlag, 1);
+            wrapper.eq(SmsWmsStockInfo::getOutStockDoc,"");
+            wrapper.orderByAsc(SmsWmsStockInfo::getId);
+            //2021.07.02加冻结物料无法冻结
+            if (SysConst.DT_CODE.BL.equals(dtCode)){
+                wrapper.eq(SmsWmsStockInfo::getFreezeFlag,"N");
+            }
             //该料号的库存时间升序
-            List<SmsWmsStockInfo> stockInfos = smsWmsStockInfoService.list(new LambdaQueryWrapper<SmsWmsStockInfo>()
-                    .ne(SmsWmsStockInfo::getAreaSn,"")
-                    .eq(SmsWmsStockInfo::getCoItemCode, itemCode)
-                    .eq(SmsWmsStockInfo::getStockFlag, 1)
-                    .eq(SmsWmsStockInfo::getOutStockDoc,"")
-                    .orderByAsc(SmsWmsStockInfo::getId)
-            );
+            List<SmsWmsStockInfo> stockInfos = smsWmsStockInfoService.list(wrapper);
+
             if (!stockInfos.isEmpty()){
                 List<Map<String, Object>> lightMaps=new ArrayList<>();
                 for (SmsWmsStockInfo stockInfo : stockInfos) {
@@ -328,7 +335,7 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
                     }
                 }
                 String param = JSONUtil.toJsonStr(lightMaps);
-                log.info(param);
+                log.info("亮灯参数{}",param);
                 HttpRequest.post(liIpAndPort+"/api/Light/LightControl").body(param).execute().body();
             }
         }

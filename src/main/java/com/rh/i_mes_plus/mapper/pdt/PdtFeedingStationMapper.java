@@ -3,9 +3,11 @@ package com.rh.i_mes_plus.mapper.pdt;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rh.i_mes_plus.common.mapper.SuperMapper;
 import com.rh.i_mes_plus.model.pdt.PdtFeedingStation;
+import com.rh.i_mes_plus.model.pdt.PdtFeedingStationDetail;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**

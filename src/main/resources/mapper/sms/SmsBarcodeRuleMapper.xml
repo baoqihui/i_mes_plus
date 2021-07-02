@@ -10,6 +10,7 @@
             t.rule_desc ruleDesc,  -- 描述
             t.type_code typeCode,  -- 条码类型
             sbt.type_name typeName,
+            uc.CUSTOMER customer,
             t.cust_code custCode,  -- 客户代码
             t.is_check_limit isCheckLimit,  -- 是否长度校验
             t.barcode_limit barcodeLimit,  -- 条码长度
@@ -20,6 +21,7 @@
             t.update_time updateTime  -- 更新时间
         from sms_barcode_rule t
         left join sms_barcode_type sbt on t.type_code = sbt.type_code
+        left join ums_customer uc on t.cust_code = uc.CUST_CODE
         where 1=1
         <if test="p.ruleCode != null and p.ruleCode != ''">
             and t.rule_code = #{p.ruleCode}

@@ -27,5 +27,7 @@ public interface IPdtBomService extends IService<PdtBom> {
     Result getListByItemCode(Map<String, Object> params);
 
     Result getPcbMapByItemCode(Map<String, Object> params);
+
+    Result changeStage(PdtBom pdtBom);
 }
 

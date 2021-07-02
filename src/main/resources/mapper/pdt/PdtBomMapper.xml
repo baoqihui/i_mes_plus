@@ -20,6 +20,7 @@
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.create_name createName,  -- 创建人
             t.update_time updateTime,  -- 更新时间
+            case when (t.item_code = left(t.model_no,length(t.model_no)-4)) then 1 else 0 end as isModel,
             t.update_name updateName  -- 编辑人
         from pdt_bom t
         left join ums_customer uc on t.cust_code = uc.CUST_CODE

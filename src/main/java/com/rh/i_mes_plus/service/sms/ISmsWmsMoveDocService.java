@@ -30,5 +30,9 @@ public interface ISmsWmsMoveDocService extends IService<SmsWmsMoveDoc> {
     Result removeAll(Map<String, List<Long>> map);
     
     Result pdaMove(Map<String, Object> map);
+
+    Result lightUp(Map<String, Object> params);
+
+    Result cancelLightUp(Map<String, Object> params);
 }
 

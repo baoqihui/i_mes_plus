@@ -1,7 +1,10 @@
 package com.rh.i_mes_plus.service.impl.sms;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -16,9 +19,13 @@ import com.rh.i_mes_plus.service.ums.IUmsUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +43,8 @@ public class SmsWmsStockInfoServiceImpl extends ServiceImpl<SmsWmsStockInfoMappe
     private IPdaMesLogService pdaMesLogService;
     @Autowired
     private IUmsUserService umsUserService;
+    @Value("${liIpAndPort}")
+    private String liIpAndPort;
     /**
      * 列表
      * @param params
@@ -155,7 +164,18 @@ public class SmsWmsStockInfoServiceImpl extends ServiceImpl<SmsWmsStockInfoMappe
         if (stockInfo==null){
             return Result.failed("无此条码");
         }
-
+        String areaSn = stockInfo.getAreaSn();
+        List<Map<String, Object>> lightMaps=new ArrayList<>();
+        Map<String, Object> lightMap = new HashMap<>();
+        lightMap.put("MainBoard", Convert.toInt(areaSn.substring(0, 3)));
+        lightMap.put("Position", Convert.toInt(areaSn.substring(3)));
+        lightMap.put("LightState",2);
+        lightMap.put("ContinuedTime",6);
+        lightMap.put("LightColor",1);
+        lightMaps.add(lightMap);
+        String param = JSONUtil.toJsonStr(lightMaps);
+        log.info("亮灯参数{}",param);
+        HttpRequest.post(liIpAndPort+"/api/Light/LightControl").body(param).execute().body();
         return Result.succeed(stockInfo.getAreaSn());
     }
 

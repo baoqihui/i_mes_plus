@@ -52,6 +52,9 @@ public class PdtBom extends SuperEntity {
         @Excel(name = "阶段（1，试产 2，量产）")
         @ApiModelProperty(value = "阶段（1，试产 2，量产）")
         private Integer stage;
+        @Excel(name = "成品机种编号（采用成品机种加串号形式）")
+        @ApiModelProperty(value = "成品机种编号（采用成品机种加串号形式）")
+        private String modelNo;
         @Excel(name = "创建人")
         @ApiModelProperty(value = "创建人")
         private String createName;

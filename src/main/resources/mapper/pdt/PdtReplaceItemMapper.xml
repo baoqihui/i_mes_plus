@@ -90,10 +90,21 @@
         FROM
             pdt_replace_item t
         WHERE
-            t.replace_group = ( SELECT j.replace_group FROM pdt_replace_item j WHERE j.item_code = #{itemCode} AND j.model_code=#{modelCode} )
+            t.replace_group = ( SELECT j.replace_group FROM pdt_replace_item j WHERE j.item_code = #{itemCode} AND (j.model_code='*' or j.model_code=#{modelCode}) )
         <if test="isExcludeItself == 1 ">
             AND t.item_code != #{itemCode}
         </if>
         ORDER BY t.sort
     </select>
+    <select id="getBomDetailList" resultType="com.rh.i_mes_plus.model.pdt.PdtBomDetail">
+        SELECT
+            pbd.*
+        FROM
+            pdt_bom_detail pbd
+                LEFT JOIN pdt_bom pb ON pb.id = pbd.parent_id
+        WHERE
+                pbd.item_code IN ( SELECT t.item_code FROM pdt_replace_item t WHERE t.replace_group = #{replaceGroup} )
+          AND pb.is_value=1 AND pb.stage=2 AND pb.item_code = LEFT(pb.model_no,length(pb.model_no)-4)
+    </select>
+
 </mapper>

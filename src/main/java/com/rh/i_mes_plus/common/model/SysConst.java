@@ -43,6 +43,7 @@ public class SysConst {
         public static final String CG="11";
         public static final String SC_TL="13";
         public static final String QT="15";
+        public static final String BL="21";
         public static final String TL="99";
     }
     public static class FIX_STATE{
