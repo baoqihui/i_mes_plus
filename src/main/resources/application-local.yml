@@ -3,8 +3,10 @@ spring:
   datasource:                   #mysql
     driver-class-name: com.p6spy.engine.spy.P6SpyDriver
     url: jdbc:p6spy:mysql://localhost:3306/mes_plus?useUnicode=true&characterEncoding=UTF-8
+    #url: jdbc:p6spy:mysql://192.168.50.74:3306/mes_plus?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: HBQ521521cf*
+    #password: Muyuer1986
     hikari:
       max-lifetime: 500000
   jackson:                     #时间格式化

@@ -21,10 +21,12 @@ import com.rh.i_mes_plus.dto.SmsWmsReceiveAllDTO;
 import com.rh.i_mes_plus.mapper.sms.SmsWmsReceiveDocMapper;
 import com.rh.i_mes_plus.model.other.PdaMesLog;
 import com.rh.i_mes_plus.model.sms.*;
+import com.rh.i_mes_plus.model.ums.UmsItemSap;
 import com.rh.i_mes_plus.model.ums.UmsUser;
 import com.rh.i_mes_plus.service.iqc.IIqcOqaService;
 import com.rh.i_mes_plus.service.other.IPdaMesLogService;
 import com.rh.i_mes_plus.service.sms.*;
+import com.rh.i_mes_plus.service.ums.IUmsItemSapService;
 import com.rh.i_mes_plus.service.ums.IUmsUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
@@ -74,6 +76,8 @@ public class SmsWmsReceiveDocServiceImpl extends ServiceImpl<SmsWmsReceiveDocMap
     private IPdaMesLogService pdaMesLogService;
     @Autowired
     private ISmsWmsIoTypeService smsWmsIoTypeService;
+    @Autowired
+    private IUmsItemSapService umsItemSapService;
     /**
      * 列表
      * @param params
@@ -275,7 +279,7 @@ public class SmsWmsReceiveDocServiceImpl extends ServiceImpl<SmsWmsReceiveDocMap
                 }
                 skAmount=amount;
             }
-            String poNo = barcodeInfo.getTblPoNum();
+
             SmsWmsStockInfo stockInfo = smsWmsStockInfoService.getOne(new QueryWrapper<SmsWmsStockInfo>()
                     .eq("DOC_NUM", docNum)
                     .eq("TBL_BARCODE", barcode)
@@ -289,6 +293,13 @@ public class SmsWmsReceiveDocServiceImpl extends ServiceImpl<SmsWmsReceiveDocMap
                 return Result.failed("单号条码信息不一致");
             }
             String itemCode = barcodeInfo.getTblItemcode();
+            UmsItemSap itemSap = umsItemSapService.getOne(new LambdaQueryWrapper<UmsItemSap>().eq(UmsItemSap::getCoItemCode, itemCode));
+            if (itemSap==null){
+                return Result.failed("未维护物料信息");
+            }
+            if ("Y".equals(itemSap.getFreezeFlag())){
+                return Result.failed("物料冻结，无法入库");
+            }
             SmsWmsReceiveDoc receiveDoc = smsWmsReceiveDocMapper.selectOne(new QueryWrapper<SmsWmsReceiveDoc>()
                     .eq("WR_DOC_NUM", docNum));
             if (receiveDoc == null) {

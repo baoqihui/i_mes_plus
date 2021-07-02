@@ -349,4 +349,7 @@ public class UmsItemSap extends SuperEntity {
         @Excel(name = "部门名称")
         @ApiModelProperty(value = "部门名称")
         private String depaName;
+        @Excel(name = "冻结标志（Y冻结/N解冻）")
+        @ApiModelProperty(value = "冻结标志（Y冻结/N解冻）")
+        private String freezeFlag;
 }
