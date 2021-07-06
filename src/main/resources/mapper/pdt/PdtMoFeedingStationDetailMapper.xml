@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.pdt.PdtMoFeedingStationDetailMapper">
+    <select id="findList" resultType="map">
+        select
+        t.id id,  --
+        t.mo_no moNo,  -- 制令单号
+        t.model_code modelCode,  -- 机种
+        t.item_code itemCode,  -- 料号
+        t.feeding_point_sn feedingPointSn,  -- 上料点sn
+        t.position position,  -- 点位
+        t.qty qty,  -- 点数
+        t.paster_type pasterType,  -- 贴片类型（0：贴片 1：立插 2：卧插）
+        t.replace_item_code replaceItemCode,  -- 替代料
+        t.item_sn itemSn,  -- 料盘条码
+        t.channel channel,  -- 通道(l：表示左 r：表示右 m：表中间)
+        t.status status,  -- 上料状态(0，未上料 1，已上料)
+        t.create_time createTime,  -- 创建时间
+        t.update_time updateTime,  -- 更新时间
+        from pdt_mo_feeding_station_detail t
+        where 1=1
+        <if test="p.moNo != null and p.moNo != ''">
+            and t.mo_no LIKE '%${p.moNo}%'
+        </if>
+        <if test="p.modelCode != null and p.modelCode != ''">
+            and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.feedingPointSn != null and p.feedingPointSn != ''">
+            and t.feeding_point_sn LIKE '%${p.feedingPointSn}%'
+        </if>
+        <if test="p.position != null and p.position != ''">
+            and t.position LIKE '%${p.position}%'
+        </if>
+        <if test="p.qty != null and p.qty != ''">
+            and t.qty LIKE '%${p.qty}%'
+        </if>
+        <if test="p.pasterType != null and p.pasterType != ''">
+            and t.paster_type LIKE '%${p.pasterType}%'
+        </if>
+        <if test="p.replaceItemCode != null and p.replaceItemCode != ''">
+            and t.replace_item_code LIKE '%${p.replaceItemCode}%'
+        </if>
+        <if test="p.itemSn != null and p.itemSn != ''">
+            and t.item_sn LIKE '%${p.itemSn}%'
+        </if>
+        <if test="p.channel != null and p.channel != ''">
+            and t.channel LIKE '%${p.channel}%'
+        </if>
+        <if test="p.status != null and p.status != ''">
+            and t.status LIKE '%${p.status}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

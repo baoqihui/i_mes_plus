@@ -52,9 +52,9 @@ public class PdtFeedingStation extends SuperEntity {
         @Excel(name = "贴片速率")
         @ApiModelProperty(value = "贴片速率")
         private Integer pasterSpeed;
-        @Excel(name = "加工面（正面：T，反面：B）")
-        @ApiModelProperty(value = "加工面（正面：T，反面：B）")
-        private String pcbType;
+        @Excel(name = "加工面（正面：S，反面：C）")
+        @ApiModelProperty(value = "加工面（正面：S，反面：C）")
+        private String scFlag;
         @Excel(name = "生效标识")
         @ApiModelProperty(value = "生效标识")
         private Integer isValue;

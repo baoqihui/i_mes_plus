@@ -18,7 +18,7 @@
             t.paster_type pasterType,  -- 贴片类型（0：贴片 1：立插 2：卧插）
             t.paster_qty pasterQty,  -- 贴片点数（考虑删除）
             t.paster_speed pasterSpeed,  -- 贴片速率
-            t.pcb_type pcbType,  -- 加工面（正面：T，反面：B）
+            t.sc_flag scFlag,  -- 加工面（正面：S，反面：C）
             t.is_value isValue,  -- 生效标识
             t.remark remark,  -- 变更说明
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
@@ -60,8 +60,8 @@
         <if test="p.pasterSpeed != null and p.pasterSpeed != ''">
             and t.paster_speed LIKE '%${p.pasterSpeed}%'
         </if>
-        <if test="p.pcbType != null and p.pcbType != ''">
-            and t.pcb_type LIKE '%${p.pcbType}%'
+        <if test="p.scFlag != null and p.scFlag != ''">
+            and t.sc_flag LIKE '%${p.scFlag}%'
         </if>
         <if test="p.isValue != null and p.isValue != ''">
             and t.is_value LIKE '%${p.isValue}%'
