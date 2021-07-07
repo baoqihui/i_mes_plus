@@ -63,7 +63,7 @@ public class PdtWmsPmMoBaseServiceImpl extends ServiceImpl<PdtWmsPmMoBaseMapper,
         Page<Map> pages = new Page<>(pageNum, pageSize);
         return pdtWmsPmMoBaseMapper.findList(pages, params);
     }
-    
+
     @Override
     public Map selDetailByMoNo(String moNo) {
         return pdtWmsPmMoBaseMapper.selDetailByMoNo(moNo);
@@ -71,7 +71,6 @@ public class PdtWmsPmMoBaseServiceImpl extends ServiceImpl<PdtWmsPmMoBaseMapper,
 
     @Override
     public Result saveNew(PdtWmsPmMoBase pdtWmsPmMoBase) {
-        saveOrUpdate(pdtWmsPmMoBase);
         if (pdtWmsPmMoBase.getId()==null){
             String projectId = pdtWmsPmMoBase.getProjectId();
             String scFlag = pdtWmsPmMoBase.getScFlag();
@@ -90,66 +89,70 @@ public class PdtWmsPmMoBaseServiceImpl extends ServiceImpl<PdtWmsPmMoBaseMapper,
 
             for (PdtFeedingStationDetail stationDetail : stationDetails) {
                 String itemCode = stationDetail.getItemCode();
-                for (WmsProjectDetail projectDetail : projectDetails) {
-                    if (itemCode.equals(projectDetail.getItemCode())){
-                        //pdt_feeding_station_detail.item_code = wms_project_detail.item_code
-                        String subItemCode = projectDetail.getSubItemCode();
-                        if (StrUtil.isNotBlank(subItemCode)){
-                            //寻找替代料存入replace字段
-                            String[] split = subItemCode.split("-");
-                            String suffix = split[split.length - 1];
-                            String prefix = StrUtil.removeSuffix(subItemCode, suffix);
-                            List<WmsProjectDetail> replaceProjectDetail = wmsProjectDetailService.list(new LambdaQueryWrapper<WmsProjectDetail>()
-                                    .eq(WmsProjectDetail::getProjectId, projectId)
-                                    .like(WmsProjectDetail::getSubItemCode, prefix)
-                                    .ne(WmsProjectDetail::getItemCode, itemCode)
-                            );
-                            String replaceItemCode = replaceProjectDetail.stream().map(WmsProjectDetail::getItemCode).collect(Collectors.joining(","));
-                            moFeedingStationDetail.setReplaceItemCode(replaceItemCode);
-                        }
-                        moFeedingStationDetail.setItemCode(itemCode);
-                        moFeedingStationDetail.setFeedingPointSn(stationDetail.getFeedingPointSn());
-                        moFeedingStationDetail.setPosition(stationDetail.getPosition());
-                        moFeedingStationDetail.setQty(stationDetail.getQty());
-                        moFeedingStationDetail.setChannel(stationDetail.getChannel());
-                        moFeedingStationDetail.setStatus(0);
-                        pdtMoFeedingStationDetailService.save(moFeedingStationDetail);
+                List<WmsProjectDetail> newProjectDetails=projectDetails.stream().filter(u->u.getItemCode().contains(itemCode)).collect(Collectors.toList());
+                if (newProjectDetails.size()==1){
+                    WmsProjectDetail projectDetail = newProjectDetails.get(0);
+                    //pdt_feeding_station_detail.item_code = wms_project_detail.item_code
+                    String subItemCode = projectDetail.getSubItemCode();
+                    if (StrUtil.isNotBlank(subItemCode)){
+                        //寻找替代料存入replace字段
+                        String[] split = subItemCode.split("-");
+                        String suffix = split[split.length - 1];
+                        String prefix = StrUtil.removeSuffix(subItemCode, suffix);
+                        List<WmsProjectDetail> replaceProjectDetail = wmsProjectDetailService.list(new LambdaQueryWrapper<WmsProjectDetail>()
+                                .eq(WmsProjectDetail::getProjectId, projectId)
+                                .like(WmsProjectDetail::getSubItemCode, prefix)
+                                .ne(WmsProjectDetail::getItemCode, itemCode)
+                        );
+                        String replaceItemCode = replaceProjectDetail.stream().map(WmsProjectDetail::getItemCode).collect(Collectors.joining(","));
+                        moFeedingStationDetail.setReplaceItemCode(replaceItemCode);
                     }else {
-                        List<PdtReplaceItem> placeItems = pdtReplaceItemService.getGroupItemListByItemCode(itemCode, modelCode, 1);
-                        for (PdtReplaceItem placeItem : placeItems) {
-                            String replaceItemCode2 = placeItem.getItemCode();
-                            for (WmsProjectDetail details : projectDetails) {
-                                if (replaceItemCode2.equals(details.getItemCode())){
-                                    String subItemCode = details.getSubItemCode();
+                        moFeedingStationDetail.setReplaceItemCode("");
+                    }
+                    moFeedingStationDetail.setItemCode(itemCode);
+                    moFeedingStationDetail.setFeedingPointSn(stationDetail.getFeedingPointSn());
+                    moFeedingStationDetail.setPosition(stationDetail.getPosition());
+                    moFeedingStationDetail.setQty(stationDetail.getQty());
+                    moFeedingStationDetail.setChannel(stationDetail.getChannel());
+                    moFeedingStationDetail.setStatus(0);
+                    pdtMoFeedingStationDetailService.save(moFeedingStationDetail);
+                }else {
+                    List<PdtReplaceItem> placeItems = pdtReplaceItemService.getGroupItemListByItemCode(itemCode, modelCode, 1);
+                    for (PdtReplaceItem placeItem : placeItems) {
+                        String replaceItemCode2 = placeItem.getItemCode();
+                        for (WmsProjectDetail detail : projectDetails) {
+                            if (replaceItemCode2.equals(detail.getItemCode())){
+                                String subItemCode = detail.getSubItemCode();
 
-                                    if (StrUtil.isNotBlank(subItemCode)){
-                                        //寻找替代料存入replace字段
-                                        String[] split = subItemCode.split("-");
-                                        String suffix = split[split.length - 1];
-                                        String prefix = StrUtil.removeSuffix(subItemCode, suffix);
-                                        List<WmsProjectDetail> replaceProjectDetail = wmsProjectDetailService.list(new LambdaQueryWrapper<WmsProjectDetail>()
-                                                .eq(WmsProjectDetail::getProjectId, projectId)
-                                                .like(WmsProjectDetail::getSubItemCode, prefix)
-                                                .ne(WmsProjectDetail::getItemCode, replaceItemCode2)
-                                        );
-                                        String replaceItemCode = replaceProjectDetail.stream().map(WmsProjectDetail::getItemCode).collect(Collectors.joining(","));
-                                        moFeedingStationDetail.setReplaceItemCode(replaceItemCode);
-                                    }
-                                    moFeedingStationDetail.setItemCode(replaceItemCode2);
-                                    moFeedingStationDetail.setFeedingPointSn(stationDetail.getFeedingPointSn());
-                                    moFeedingStationDetail.setPosition(stationDetail.getPosition());
-                                    moFeedingStationDetail.setQty(stationDetail.getQty());
-                                    moFeedingStationDetail.setChannel(stationDetail.getChannel());
-                                    moFeedingStationDetail.setStatus(0);
-                                    pdtMoFeedingStationDetailService.save(moFeedingStationDetail);
+                                if (StrUtil.isNotBlank(subItemCode)){
+                                    //寻找替代料存入replace字段
+                                    String[] split = subItemCode.split("-");
+                                    String suffix = split[split.length - 1];
+                                    String prefix = StrUtil.removeSuffix(subItemCode, suffix);
+                                    List<WmsProjectDetail> replaceProjectDetail = wmsProjectDetailService.list(new LambdaQueryWrapper<WmsProjectDetail>()
+                                            .eq(WmsProjectDetail::getProjectId, projectId)
+                                            .like(WmsProjectDetail::getSubItemCode, prefix)
+                                            .ne(WmsProjectDetail::getItemCode, replaceItemCode2)
+                                    );
+                                    String replaceItemCode = replaceProjectDetail.stream().map(WmsProjectDetail::getItemCode).collect(Collectors.joining(","));
+                                    moFeedingStationDetail.setReplaceItemCode(replaceItemCode);
+                                }else {
+                                    moFeedingStationDetail.setReplaceItemCode("");
                                 }
+                                moFeedingStationDetail.setItemCode(replaceItemCode2);
+                                moFeedingStationDetail.setFeedingPointSn(stationDetail.getFeedingPointSn());
+                                moFeedingStationDetail.setPosition(stationDetail.getPosition());
+                                moFeedingStationDetail.setQty(stationDetail.getQty());
+                                moFeedingStationDetail.setChannel(stationDetail.getChannel());
+                                moFeedingStationDetail.setStatus(0);
+                                pdtMoFeedingStationDetailService.save(moFeedingStationDetail);
                             }
                         }
                     }
-
                 }
             }
         }
+        save(pdtWmsPmMoBase);
         return Result.succeed("保存成功");
     }
     /**
