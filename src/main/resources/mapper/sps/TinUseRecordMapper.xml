@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.TinUseRecordMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.take_id takeId,  -- 回温主键
+            t.item_code itemCode,  -- 料号
+            t.tin_sn tinSn,  -- 红锡膏SN
+            t.use_time useTime,  -- 领用时间
+            t.use_name useName,  -- 领用人
+            t.team team,  -- 班别代码
+            t.line_code lineCode,  -- 线别
+            t.mo_no moNo,  -- 制令单号
+            t.open_time openTime,  -- 开罐时间（非原罐该时间为最后一次的回温时间）
+            t.open_name openName,  -- 开罐人
+            t.area_sn areaSn,  -- 区域SN
+            t.operator operator,  -- 操作员
+            t.supplier_code supplierCode,  -- 供应商代码
+            t.receive_time receiveTime,  -- 入库时间
+            t.expire_time expireTime,  -- 过期时间
+            t.lot_no lotNo,  -- 生产批次号
+            t.out_name outName,  -- 发料人
+            t.useing_time useingTime,  -- 上锡膏时间
+            t.useing_man useingMan,  -- 上锡膏人
+            t.useing_flag useingFlag,  -- 正在使用标志( 0未使用1使用中2退库)
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from tin_use_record t
+        where 1=1
+        <if test="p.takeId != null and p.takeId != ''">
+            and t.take_id LIKE '%${p.takeId}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.tinSn != null and p.tinSn != ''">
+            and t.tin_sn LIKE '%${p.tinSn}%'
+        </if>
+        <if test="p.useTime != null and p.useTime != ''">
+            and t.use_time LIKE '%${p.useTime}%'
+        </if>
+        <if test="p.useName != null and p.useName != ''">
+            and t.use_name LIKE '%${p.useName}%'
+        </if>
+        <if test="p.team != null and p.team != ''">
+            and t.team LIKE '%${p.team}%'
+        </if>
+        <if test="p.lineCode != null and p.lineCode != ''">
+            and t.line_code LIKE '%${p.lineCode}%'
+        </if>
+        <if test="p.moNo != null and p.moNo != ''">
+            and t.mo_no LIKE '%${p.moNo}%'
+        </if>
+        <if test="p.openTime != null and p.openTime != ''">
+            and t.open_time LIKE '%${p.openTime}%'
+        </if>
+        <if test="p.openName != null and p.openName != ''">
+            and t.open_name LIKE '%${p.openName}%'
+        </if>
+        <if test="p.areaSn != null and p.areaSn != ''">
+            and t.area_sn LIKE '%${p.areaSn}%'
+        </if>
+        <if test="p.operator != null and p.operator != ''">
+            and t.operator LIKE '%${p.operator}%'
+        </if>
+        <if test="p.supplierCode != null and p.supplierCode != ''">
+            and t.supplier_code LIKE '%${p.supplierCode}%'
+        </if>
+        <if test="p.receiveTime != null and p.receiveTime != ''">
+            and t.receive_time LIKE '%${p.receiveTime}%'
+        </if>
+        <if test="p.expireTime != null and p.expireTime != ''">
+            and t.expire_time LIKE '%${p.expireTime}%'
+        </if>
+        <if test="p.lotNo != null and p.lotNo != ''">
+            and t.lot_no LIKE '%${p.lotNo}%'
+        </if>
+        <if test="p.outName != null and p.outName != ''">
+            and t.out_name LIKE '%${p.outName}%'
+        </if>
+        <if test="p.useingTime != null and p.useingTime != ''">
+            and t.useing_time LIKE '%${p.useingTime}%'
+        </if>
+        <if test="p.useingMan != null and p.useingMan != ''">
+            and t.useing_man LIKE '%${p.useingMan}%'
+        </if>
+        <if test="p.useingFlag != null and p.useingFlag != ''">
+            and t.useing_flag LIKE '%${p.useingFlag}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

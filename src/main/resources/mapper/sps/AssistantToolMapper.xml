@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.AssistantToolMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.item_code itemCode,  -- 料号
+            t.item_name itemName,  -- 物料名称
+            t.type_code typeCode,  -- 类型
+            t.least_qty leastQty,  -- 安全库存量
+            t.qty qty,  -- 库存
+            t.open_discard_time openDiscardTime,  -- 锡膏开罐报废时间(分钟)
+            t.discard_time discardTime,  -- 锡膏未开罐报废时间(分钟)
+            t.back_time backTime,  -- 回温时间(分钟)
+            t.during_time duringTime,  -- 上锡膏到回焊炉前时间(分钟)
+            t.lead_flag leadFlag,  -- ROSH标识
+            t.use_times useTimes,  -- 回温次数
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from assistant_tool t
+        where 1=1
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.itemName != null and p.itemName != ''">
+            and t.item_name LIKE '%${p.itemName}%'
+        </if>
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and t.type_code LIKE '%${p.typeCode}%'
+        </if>
+        <if test="p.leastQty != null and p.leastQty != ''">
+            and t.least_qty LIKE '%${p.leastQty}%'
+        </if>
+        <if test="p.qty != null and p.qty != ''">
+            and t.qty LIKE '%${p.qty}%'
+        </if>
+        <if test="p.openDiscardTime != null and p.openDiscardTime != ''">
+            and t.open_discard_time LIKE '%${p.openDiscardTime}%'
+        </if>
+        <if test="p.discardTime != null and p.discardTime != ''">
+            and t.discard_time LIKE '%${p.discardTime}%'
+        </if>
+        <if test="p.backTime != null and p.backTime != ''">
+            and t.back_time LIKE '%${p.backTime}%'
+        </if>
+        <if test="p.duringTime != null and p.duringTime != ''">
+            and t.during_time LIKE '%${p.duringTime}%'
+        </if>
+        <if test="p.leadFlag != null and p.leadFlag != ''">
+            and t.lead_flag LIKE '%${p.leadFlag}%'
+        </if>
+        <if test="p.useTimes != null and p.useTimes != ''">
+            and t.use_times LIKE '%${p.useTimes}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

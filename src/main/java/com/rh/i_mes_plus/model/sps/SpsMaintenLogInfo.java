@@ -51,4 +51,10 @@ public class SpsMaintenLogInfo extends SuperEntity {
         @Excel(name = "保养状态（1.未保养 2. 已保养）")
         @ApiModelProperty(value = "保养状态（1.未保养 2. 已保养）")
         private String state;
+        @Excel(name = "类型（1，保养 2，点检）")
+        @ApiModelProperty(value = "类型（1，保养 2，点检）")
+        private Integer type;
+        @Excel(name = "备注")
+        @ApiModelProperty(value = "备注")
+        private String remark;
 }

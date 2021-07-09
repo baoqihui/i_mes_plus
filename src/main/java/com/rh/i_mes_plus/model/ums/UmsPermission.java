@@ -43,6 +43,9 @@ public class UmsPermission extends SuperEntity {
         @Excel(name = "状态 0 禁用 1 启用",replace ={"否_false","是_true"})
         @ApiModelProperty(value = "状态 0 禁用 1 启用")
         private Boolean status;
+        @Excel(name = "是否缓存")
+        @ApiModelProperty(value = "是否缓存")
+        private Integer keepAlive;
         @Excel(name = "描述")
         @ApiModelProperty(value = "描述")
         private String remark;

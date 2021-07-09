@@ -12,6 +12,7 @@
                 t.per_sort perSort,  -- 排序
                 t.per_type perType,  -- 权限类型 例如 0 菜单 1按钮
                 t.parent_id parentId,  -- 上级权限 默认 0
+                t.keep_alive keepAlive, -- 是否缓存
                 t.status status,  -- 状态 0 禁用 1 启用
                 t.remark remark,  -- 描述
                 t.create_time createTime,  -- 创建时间
@@ -57,6 +58,7 @@
             t.per_sort perSort,
             t.icon icon,
             t.status status,
+            t.keep_alive keepAlive,
             t.remark remark,
             t.parent_id parentId
         FROM
@@ -92,6 +94,7 @@
                 t.per_type perType,
                 t.icon icon,
                 t.status status,
+                t.keep_alive keepAlive,
                 t.remark remark,
                 t.parent_id parentId
             FROM

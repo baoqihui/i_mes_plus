@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.AssistantToolTypeMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.type_code typeCode,  -- 类型代码
+            t.type_name typeName,  -- 类型名
+            t.type_flag typeFlag,  -- 类型标识（0：助焊剂 3：钢网 4：刮刀 5：配件）
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from assistant_tool_type t
+        where 1=1
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and t.type_code LIKE '%${p.typeCode}%'
+        </if>
+        <if test="p.typeName != null and p.typeName != ''">
+            and t.type_name LIKE '%${p.typeName}%'
+        </if>
+        <if test="p.typeFlag != null and p.typeFlag != ''">
+            and t.type_flag LIKE '%${p.typeFlag}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

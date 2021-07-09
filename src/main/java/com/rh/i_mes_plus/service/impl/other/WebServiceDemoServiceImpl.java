@@ -14,6 +14,7 @@ import com.rh.i_mes_plus.service.pdt.IPdtWmsBoxBarcodeService;
 import com.rh.i_mes_plus.service.pdt.IPdtWmsOutStockDocService;
 import com.rh.i_mes_plus.service.pdt.IPdtWmsReceiveDocService;
 import com.rh.i_mes_plus.service.sms.*;
+import com.rh.i_mes_plus.service.sps.ITinTakeRecordService;
 import com.rh.i_mes_plus.service.ums.IUmsUserService;
 import com.rh.i_mes_plus.vo.UmsPermissionVO;
 import com.rh.i_mes_plus.vo.UmsUserVO;
@@ -62,7 +63,8 @@ public class WebServiceDemoServiceImpl implements WebServiceDemoService {
     private ISmsWmsStockInfoService smsWmsStockInfoService;
     @Autowired
     private ISmsWmsIoTypeService smsWmsIoTypeService;
-
+    @Autowired
+    private ITinTakeRecordService tinTakeRecordService;
     @Override
     public String login(String param) {
         Map<String,Object> map=(Map) JSON.parse(param);
@@ -304,7 +306,16 @@ public class WebServiceDemoServiceImpl implements WebServiceDemoService {
     @Override
     public String LightControl(String param) {
         List list = JSON.parseObject(param, List.class);
+        log.info("pda扫码控制亮灯：{}",list);
         Result result = smsWmsIoTypeService.LightControl(list);
+        return result.getResp_msg();
+    }
+
+    @Override
+    public String take(String param) {
+        Map<String,Object> map=JSON.parseObject(param, Map.class);
+        log.info("pda扫码锡膏回温：{}",map);
+        Result result = tinTakeRecordService.take(map);
         return result.getResp_msg();
     }
 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.TinTakeRecordMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  --
+            t.tin_sn tinSn, -- 红锡膏SN
+            t.take_start_time takeStartTime,  -- 回温时间
+            t.take_start_name takeStartName,  -- 回温人
+            t.take_end_time takeEndTime,  -- 结束时间
+            t.mo_no moNo,  -- 制令单号
+            t.item_code itemCode,  -- 料号
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from tin_take_record t
+        where 1=1
+        <if test="p.takeStartTime != null and p.takeStartTime != ''">
+            and t.take_start_time LIKE '%${p.takeStartTime}%'
+        </if>
+        <if test="p.takeStartName != null and p.takeStartName != ''">
+            and t.take_start_name LIKE '%${p.takeStartName}%'
+        </if>
+        <if test="p.takeEndTime != null and p.takeEndTime != ''">
+            and t.take_end_time LIKE '%${p.takeEndTime}%'
+        </if>
+        <if test="p.moNo != null and p.moNo != ''">
+            and t.mo_no LIKE '%${p.moNo}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

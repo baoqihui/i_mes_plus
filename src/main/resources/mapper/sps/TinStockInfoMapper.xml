@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.TinStockInfoMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.tin_sn tinSn,  -- 红锡膏SN
+            t.item_code itemCode,  -- 红锡膏料号
+            t.supplier_code supplierCode,  -- 供应商代码
+            t.receive_time receiveTime,  -- 入库时间
+            t.receive_name receiveName,  -- 入库人
+            t.manufacture_date manufactureDate, -- 生产日期
+            t.shelf_life shelfLife, -- 保质期（月）
+            t.expire_time expireTime,  -- 过期时间
+            t.use_times useTimes,  -- 回温次数
+            t.lot_no lotNo,  -- 生产批次号
+            t.status status,  -- 状态(0，在库 1，回温 2，回温完成  3，领用  4，报废 5，常温超时 )
+            t.area_sn areaSn,  -- 区域SN
+            t.is_open isOpen,  -- 开罐标识
+            t.is_check isCheck,  -- 盘点标识
+            t.is_value isValue,  -- 有效标识
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from tin_stock_info t
+        where 1=1
+        <if test="p.tinSn != null and p.tinSn != ''">
+            and t.tin_sn LIKE '%${p.tinSn}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.supplierCode != null and p.supplierCode != ''">
+            and t.supplier_code LIKE '%${p.supplierCode}%'
+        </if>
+        <if test="p.receiveTime != null and p.receiveTime != ''">
+            and t.receive_time LIKE '%${p.receiveTime}%'
+        </if>
+        <if test="p.receiveName != null and p.receiveName != ''">
+            and t.receive_name LIKE '%${p.receiveName}%'
+        </if>
+        <if test="p.expireTime != null and p.expireTime != ''">
+            and t.expire_time LIKE '%${p.expireTime}%'
+        </if>
+        <if test="p.useTimes != null and p.useTimes != ''">
+            and t.use_times LIKE '%${p.useTimes}%'
+        </if>
+        <if test="p.lotNo != null and p.lotNo != ''">
+            and t.lot_no LIKE '%${p.lotNo}%'
+        </if>
+        <if test="p.status != null and p.status != ''">
+            and t.status LIKE '%${p.status}%'
+        </if>
+        <if test="p.areaSn != null and p.areaSn != ''">
+            and t.area_sn LIKE '%${p.areaSn}%'
+        </if>
+        <if test="p.isOpen != null and p.isOpen != ''">
+            and t.is_open LIKE '%${p.isOpen}%'
+        </if>
+        <if test="p.isCheck != null and p.isCheck != ''">
+            and t.is_check LIKE '%${p.isCheck}%'
+        </if>
+        <if test="p.isValue != null and p.isValue != ''">
+            and t.is_value LIKE '%${p.isValue}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

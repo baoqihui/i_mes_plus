@@ -1,6 +1,8 @@
 package com.rh.i_mes_plus.service.impl.sps;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,18 +77,25 @@ public class SpsMaintenLogInfoServiceImpl extends ServiceImpl<SpsMaintenLogInfoM
         //新增时需要增加commentNames
         String commentCodes = spsMaintenLogInfo.getCommentCodes();
         if (StrUtil.isNotEmpty(commentCodes)) {
-            String commentNames = "";
-            String[] codes = commentCodes.split(",");
-            for (String code : codes) {
-                SpsMaintenCommentInfo commentInfo = spsMaintenCommentInfoService.getOne(new LambdaQueryWrapper<SpsMaintenCommentInfo>()
-                        .eq(SpsMaintenCommentInfo::getCommentCode, code)
-                );
-                if (commentInfo!=null){
-                    commentNames=commentNames+commentInfo.getCommentName()+",";
+            if (spsMaintenLogInfo.getType()==2){
+                Map map = JSON.parseObject(commentCodes, Map.class);
+                for (Object o : map.keySet()) {
+                    System.out.println(o);
                 }
+            }else{
+                String commentNames = "";
+                String[] codes = commentCodes.split(",");
+                for (String code : codes) {
+                    SpsMaintenCommentInfo commentInfo = spsMaintenCommentInfoService.getOne(new LambdaQueryWrapper<SpsMaintenCommentInfo>()
+                            .eq(SpsMaintenCommentInfo::getCommentCode, code)
+                    );
+                    if (commentInfo!=null){
+                        commentNames=commentNames+commentInfo.getCommentName()+",";
+                    }
+                }
+                commentNames = commentNames.substring(0, commentNames.length() - 1);
+                spsMaintenLogInfo.setCommentNames(commentNames);
             }
-            commentNames = commentNames.substring(0, commentNames.length() - 1);
-            spsMaintenLogInfo.setCommentNames(commentNames);
         }
         saveOrUpdate(spsMaintenLogInfo);
         //工装治具

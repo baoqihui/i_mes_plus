@@ -118,9 +118,21 @@ public interface WebServiceDemoService {
     @WebMethod
     public String getLocation(@WebParam(name = "param")String param);
 
+    /**
+     * pda扫码根据条码查库位
+     */
     @WebMethod
     public String getInfoBySnAndQty(@WebParam(name = "param")String param);
 
+    /**
+     * 亮灯控制
+     */
     @WebMethod
     public String LightControl(@WebParam(name = "param")String param);
+
+    /**
+     * 锡膏回温
+     */
+    @WebMethod
+    public String take(@WebParam(name = "param")String param);
 }

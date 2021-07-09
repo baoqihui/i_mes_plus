@@ -89,13 +89,15 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
     @Override
     public Result authLogin(Map<String, Object> map) {
         String userAccount = MapUtil.getStr(map, "userAccount");
+        UmsUser user = umsUserService.getOne(new LambdaQueryWrapper<UmsUser>().eq(UmsUser::getUserAccount, userAccount));
         String userPwd = MapUtil.getStr(map, "userPwd");
+        log.info("用户：{} 登录系统",userAccount);
         userPwd=SecureUtil.md5(userPwd);
         Subject currentUser = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(userAccount, userPwd);
         try {
             currentUser.login(token);
-            return Result.succeed("登录成功");
+            return Result.succeed(user,"登录成功");
         }  catch (UnknownAccountException e){
             return Result.failed("用户名或密码错误");
         } catch (IncorrectCredentialsException e){

@@ -17,6 +17,8 @@
             t.update_time updateTime,  -- 更新时间
             t.req_no reqNo,  -- 借用单号
             t.state state,  -- 保养状态（1.未保养 2. 已保养）
+            t.type type,    -- 类型（1，保养 2，点检）
+            t.remark remark,
             usti.type_name typeName,  -- 大类名
             usiti.item_type_name itemTypeName,  -- 小类名称
             smci.cycle_name cycleName,      -- 周期名称

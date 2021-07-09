@@ -32,6 +32,8 @@ public class PermissionTreeVO {
     private String remark;
     /** 排序 */
     private Integer perSort;
+    /** 是否缓存 */
+    private Integer keepAlive;
     /** 子权限 */
     private List<PermissionTreeVO> children;
 }
