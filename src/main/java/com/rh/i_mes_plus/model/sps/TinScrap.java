@@ -34,25 +34,4 @@ public class TinScrap extends SuperEntity {
         @Excel(name = "报废原因")
         @ApiModelProperty(value = "报废原因")
         private String scrapReason;
-        @Excel(name = "料号")
-        @ApiModelProperty(value = "料号")
-        private String itemCode;
-        @Excel(name = "供应商代码")
-        @ApiModelProperty(value = "供应商代码")
-        private String supplierCode;
-        @Excel(name = "入库时间",format="yyyy-MM-dd HH:mm:ss")
-        @ApiModelProperty(value = "入库时间")
-        private Date receiveTime;
-        @Excel(name = "入库单据号")
-        @ApiModelProperty(value = "入库单据号")
-        private String receiveDocNo;
-        @Excel(name = "入库人")
-        @ApiModelProperty(value = "入库人")
-        private String receiveName;
-        @Excel(name = "过期时间",format="yyyy-MM-dd HH:mm:ss")
-        @ApiModelProperty(value = "过期时间")
-        private Date expireTime;
-        @Excel(name = "区域SN")
-        @ApiModelProperty(value = "区域SN")
-        private String areaSn;
 }

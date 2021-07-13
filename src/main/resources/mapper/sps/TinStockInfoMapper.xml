@@ -4,10 +4,15 @@
 <mapper namespace="com.rh.i_mes_plus.mapper.sps.TinStockInfoMapper">
     <select id="findList" resultType="map">
         select
-            t.id id,  -- 
+            t.id id,  --
+            t.doc_no docNo,
             t.tin_sn tinSn,  -- 红锡膏SN
             t.item_code itemCode,  -- 红锡膏料号
+            a.item_name itemName,  -- 名称
+            a.item_spec itemSpec,   -- 描述
+            a.lead_flag leadFlag,   -- 类型
             t.supplier_code supplierCode,  -- 供应商代码
+            us.supplier_name supplierName,
             t.receive_time receiveTime,  -- 入库时间
             t.receive_name receiveName,  -- 入库人
             t.manufacture_date manufactureDate, -- 生产日期
@@ -17,12 +22,16 @@
             t.lot_no lotNo,  -- 生产批次号
             t.status status,  -- 状态(0，在库 1，回温 2，回温完成  3，领用  4，报废 5，常温超时 )
             t.area_sn areaSn,  -- 区域SN
+            uaa.AR_NAME arName,
             t.is_open isOpen,  -- 开罐标识
             t.is_check isCheck,  -- 盘点标识
             t.is_value isValue,  -- 有效标识
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.update_time updateTime  -- 更新时间
         from tin_stock_info t
+        left join ums_supplier us on t.supplier_code = us.supplier_code
+        left join assistant_tool a on t.item_code = a.item_code
+        left join ums_acce_area uaa on t.area_sn = uaa.AR_SN
         where 1=1
         <if test="p.tinSn != null and p.tinSn != ''">
             and t.tin_sn LIKE '%${p.tinSn}%'

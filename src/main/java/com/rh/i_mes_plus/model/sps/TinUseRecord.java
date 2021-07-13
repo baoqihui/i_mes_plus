@@ -37,9 +37,6 @@ public class TinUseRecord extends SuperEntity {
         @Excel(name = "领用人")
         @ApiModelProperty(value = "领用人")
         private String useName;
-        @Excel(name = "班别代码")
-        @ApiModelProperty(value = "班别代码")
-        private String team;
         @Excel(name = "线别")
         @ApiModelProperty(value = "线别")
         private String lineCode;
@@ -52,27 +49,9 @@ public class TinUseRecord extends SuperEntity {
         @Excel(name = "开罐人")
         @ApiModelProperty(value = "开罐人")
         private String openName;
-        @Excel(name = "区域SN")
-        @ApiModelProperty(value = "区域SN")
-        private String areaSn;
         @Excel(name = "操作员")
         @ApiModelProperty(value = "操作员")
         private String operator;
-        @Excel(name = "供应商代码")
-        @ApiModelProperty(value = "供应商代码")
-        private String supplierCode;
-        @Excel(name = "入库时间",format="yyyy-MM-dd HH:mm:ss")
-        @ApiModelProperty(value = "入库时间")
-        private Date receiveTime;
-        @Excel(name = "过期时间",format="yyyy-MM-dd HH:mm:ss")
-        @ApiModelProperty(value = "过期时间")
-        private Date expireTime;
-        @Excel(name = "生产批次号")
-        @ApiModelProperty(value = "生产批次号")
-        private String lotNo;
-        @Excel(name = "发料人")
-        @ApiModelProperty(value = "发料人")
-        private String outName;
         @Excel(name = "上锡膏时间",format="yyyy-MM-dd HH:mm:ss")
         @ApiModelProperty(value = "上锡膏时间")
         private Date useingTime;
@@ -82,4 +61,8 @@ public class TinUseRecord extends SuperEntity {
         @Excel(name = "正在使用标志( 0未使用1使用中2退库)")
         @ApiModelProperty(value = "正在使用标志( 0未使用1使用中2退库)")
         private Integer useingFlag;
+        @Excel(name = "领用状态（0，正常领用 1，异常领用 2，报废使用）")
+        @ApiModelProperty(value = "领用状态（0，正常领用 1，异常领用 2，报废使用）")
+        private Integer useState;
+
 }

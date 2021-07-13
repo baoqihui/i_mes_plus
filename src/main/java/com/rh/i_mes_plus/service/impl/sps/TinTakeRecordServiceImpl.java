@@ -14,6 +14,7 @@ import com.rh.i_mes_plus.service.sps.IAssistantToolService;
 import com.rh.i_mes_plus.service.sps.ITinStockInfoService;
 import com.rh.i_mes_plus.service.sps.ITinTakeRecordService;
 import com.rh.i_mes_plus.service.ums.IUmsUserService;
+import com.rh.i_mes_plus.vo.TinTakeRecordVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -47,7 +48,7 @@ public class TinTakeRecordServiceImpl extends ServiceImpl<TinTakeRecordMapper, T
      * @param params
      * @return
      */
-    public Page<Map> findList(Map<String, Object> params){
+    public Page<TinTakeRecordVO> findList(Map<String, Object> params){
         Integer pageNum = MapUtils.getInteger(params, "pageNum");
         Integer pageSize = MapUtils.getInteger(params, "pageSize");
         if (pageNum == null) {
@@ -56,7 +57,7 @@ public class TinTakeRecordServiceImpl extends ServiceImpl<TinTakeRecordMapper, T
         if (pageSize == null) {
             pageSize = -1;
         }
-        Page<Map> pages = new Page<>(pageNum, pageSize);
+        Page<TinTakeRecordVO> pages = new Page<>(pageNum, pageSize);
         return tinTakeRecordMapper.findList(pages, params);
     }
 
@@ -75,7 +76,7 @@ public class TinTakeRecordServiceImpl extends ServiceImpl<TinTakeRecordMapper, T
         if (stockInfo == null) {
             return Result.failed("锡膏不存在");
         }
-        if(stockInfo.getStatus()!=0){
+        if(stockInfo.getStatus()!=SysConst.TIN_STATUS.ZK){
             return Result.failed("锡膏非在库状态");
         }
         String itemCode = stockInfo.getItemCode();
@@ -84,13 +85,11 @@ public class TinTakeRecordServiceImpl extends ServiceImpl<TinTakeRecordMapper, T
         if (tool == null) {
             return Result.failed("物料不存在");
         }
-        Integer backTime = tool.getBackTime();
         //添加回温日志
         TinTakeRecord tinTakeRecord = new TinTakeRecord();
         tinTakeRecord.setTinSn(tinSn);
         tinTakeRecord.setTakeStartTime(new Date());
         tinTakeRecord.setTakeStartName(user.getUserName());
-        tinTakeRecord.setTakeEndTime(DateUtil.offsetMinute(new Date(),backTime));
         tinTakeRecord.setItemCode(stockInfo.getItemCode());
         save(tinTakeRecord);
         //更改库存状态

@@ -33,9 +33,6 @@ public class TinTakeRecord extends SuperEntity {
         @Excel(name = "结束时间",format="yyyy-MM-dd HH:mm:ss")
         @ApiModelProperty(value = "结束时间")
         private Date takeEndTime;
-        @Excel(name = "制令单号")
-        @ApiModelProperty(value = "制令单号")
-        private String moNo;
         @Excel(name = "料号")
         @ApiModelProperty(value = "料号")
         private String itemCode;

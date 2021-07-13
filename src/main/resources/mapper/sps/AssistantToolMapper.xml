@@ -7,13 +7,14 @@
             t.id id,  -- 
             t.item_code itemCode,  -- 料号
             t.item_name itemName,  -- 物料名称
+            t.item_spec itemSpec,   -- 物料描述
             t.type_code typeCode,  -- 类型
             t.least_qty leastQty,  -- 安全库存量
             t.qty qty,  -- 库存
-            t.open_discard_time openDiscardTime,  -- 锡膏开罐报废时间(分钟)
-            t.discard_time discardTime,  -- 锡膏未开罐报废时间(分钟)
-            t.back_time backTime,  -- 回温时间(分钟)
-            t.during_time duringTime,  -- 上锡膏到回焊炉前时间(分钟)
+            t.open_discard_time openDiscardTime,  -- 锡膏开罐报废时间(小时)
+            t.discard_time discardTime,  -- 锡膏未开罐报废时间(小时)
+            t.back_time backTime,  -- 回温时间(小时)
+            t.during_time duringTime,  -- 上锡膏到回焊炉前时间(小时)
             t.lead_flag leadFlag,  -- ROSH标识
             t.use_times useTimes,  -- 回温次数
             t.create_time createTime,  -- 创建时间:按当前时间自动创建

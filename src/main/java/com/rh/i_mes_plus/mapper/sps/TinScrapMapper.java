@@ -23,4 +23,6 @@ public interface TinScrapMapper extends SuperMapper<TinScrap> {
      * @return
      */
     Page<Map> findList(Page<Map> pages, @Param("p") Map<String, Object> params);
+
+    Page<Map> findListTotal(Page<Map> pages,@Param("p")  Map<String, Object> params);
 }

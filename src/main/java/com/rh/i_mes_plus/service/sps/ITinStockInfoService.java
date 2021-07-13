@@ -1,5 +1,6 @@
 package com.rh.i_mes_plus.service.sps;
 
+import com.rh.i_mes_plus.common.model.Result;
 import com.rh.i_mes_plus.model.sps.TinStockInfo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -19,5 +20,7 @@ public interface ITinStockInfoService extends IService<TinStockInfo> {
      * @return
      */
     Page<Map> findList(Map<String, Object> params);
+
+    Result getDocNo(Map<String, Object> map);
 }
 

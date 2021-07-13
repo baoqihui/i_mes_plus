@@ -1,5 +1,6 @@
 package com.rh.i_mes_plus.service.sps;
 
+import com.rh.i_mes_plus.common.model.Result;
 import com.rh.i_mes_plus.model.sps.TinUseRecord;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -19,5 +20,9 @@ public interface ITinUseRecordService extends IService<TinUseRecord> {
      * @return
      */
     Page<Map> findList(Map<String, Object> params);
+
+    Result use(Map<String, Object> params);
+
+    Result upTin(Map<String, Object> params);
 }
 

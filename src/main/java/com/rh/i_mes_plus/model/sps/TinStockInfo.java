@@ -21,7 +21,9 @@ import java.util.Date;
 @TableName("tin_stock_info")
 public class TinStockInfo extends SuperEntity {
     private static final long serialVersionUID=1L;
-
+        @Excel(name = "入库单号")
+        @ApiModelProperty(value = "入库单号")
+        private String docNo;
         @Excel(name = "红锡膏SN")
         @ApiModelProperty(value = "红锡膏SN")
         private String tinSn;

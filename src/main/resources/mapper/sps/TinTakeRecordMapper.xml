@@ -2,22 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.rh.i_mes_plus.mapper.sps.TinTakeRecordMapper">
-    <select id="findList" resultType="map">
+    <select id="findList" resultType="com.rh.i_mes_plus.vo.TinTakeRecordVO">
         select
             t.id id,  --
             t.tin_sn tinSn, -- 红锡膏SN
             t.take_start_time takeStartTime,  -- 回温时间
             t.take_start_name takeStartName,  -- 回温人
             t.take_end_time takeEndTime,  -- 结束时间
-            t.mo_no moNo,  -- 制令单号
+            date_add(t.take_start_time,INTERVAL a.back_time HOUR) preEndTime,   -- 预回温结束时间
+            date_add(t.take_start_time,INTERVAL a.discard_time HOUR) normalScrapTime, --  常温报废时间
+            CASE WHEN(0>=timestampdiff(MINUTE,NOW(),date_add(t.take_start_time,INTERVAL a.discard_time HOUR))) then 4
+            WHEN(60>=timestampdiff(MINUTE,NOW(),date_add(t.take_start_time,INTERVAL a.discard_time HOUR))) then 3
+            WHEN(0>=timestampdiff(MINUTE,NOW(),date_add(t.take_start_time,INTERVAL a.back_time HOUR))) then 2
+            ELSE 1 END AS state,    -- 状态（1，回温中 2，回温OK，可领用 3，回温OK，可领用，还差一小时报废 4，常温超时）
             t.item_code itemCode,  -- 料号
+            a.item_name itemName,   -- 物料名称
+            a.back_time backTime,  -- 回温时间（小时）
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.update_time updateTime  -- 更新时间
         from tin_take_record t
+        left join assistant_tool a on t.item_code = a.item_code
         where 1=1
-        <if test="p.takeStartTime != null and p.takeStartTime != ''">
-            and t.take_start_time LIKE '%${p.takeStartTime}%'
-        </if>
         <if test="p.takeStartName != null and p.takeStartName != ''">
             and t.take_start_name LIKE '%${p.takeStartName}%'
         </if>
@@ -37,5 +42,27 @@
             and '${p.endTime}' >= t.create_time
         </if>
         order by t.id desc
+    </select>
+    <select id="getTakeStateByTinSn" resultType="com.rh.i_mes_plus.vo.TinTakeRecordVO">
+        select
+            t.id id,  --
+            t.tin_sn tinSn, -- 红锡膏SN
+            t.take_start_time takeStartTime,  -- 回温时间
+            t.take_start_name takeStartName,  -- 回温人
+            t.take_end_time takeEndTime,  -- 结束时间
+            date_add(t.take_start_time,INTERVAL a.back_time HOUR) preEndTime,   -- 预回温结束时间
+            date_add(t.take_start_time,INTERVAL a.discard_time HOUR) normalScrapTime, --  常温报废时间
+            CASE WHEN(0>=timestampdiff(MINUTE,NOW(),date_add(t.take_start_time,INTERVAL a.discard_time HOUR))) then 4
+                 WHEN(60>=timestampdiff(MINUTE,NOW(),date_add(t.take_start_time,INTERVAL a.discard_time HOUR))) then 3
+                 WHEN(0>=timestampdiff(MINUTE,NOW(),date_add(t.take_start_time,INTERVAL a.back_time HOUR))) then 2
+                 ELSE 1 END AS state,    -- 状态（1，回温中 2，回温OK，可领用 3，回温OK，可领用，还差一小时报废 4，常温超时）
+            t.item_code itemCode,  -- 料号
+            a.item_name itemName,   -- 物料名称
+            a.back_time backTime,  -- 回温时间（小时）
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from tin_take_record t
+        left join assistant_tool a on t.item_code = a.item_code
+        where t.tin_sn=#{tinSn}
     </select>
 </mapper>

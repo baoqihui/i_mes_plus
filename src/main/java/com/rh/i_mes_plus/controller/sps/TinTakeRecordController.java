@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.util.List;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import com.rh.i_mes_plus.vo.TinTakeRecordVO;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,9 +37,9 @@ public class TinTakeRecordController {
     private ITinTakeRecordService tinTakeRecordService;
 
     /**
-     * 新增or更新
+     * 回温
      */
-    @ApiOperation(value = "新增or更新")
+    @ApiOperation(value = "回温")
     @PostMapping("/tinTakeRecord/take")
     public Result take(@RequestBody Map<String, Object> params) {
         return tinTakeRecordService.take(params);
@@ -49,7 +50,7 @@ public class TinTakeRecordController {
     @ApiOperation(value = "查询列表")
     @PostMapping("/tinTakeRecord/list")
     public Result<PageResult> list(@RequestBody Map<String, Object> params) {
-        Page<Map> list= tinTakeRecordService.findList(params);
+        Page<TinTakeRecordVO> list= tinTakeRecordService.findList(params);
         return Result.succeed(PageResult.restPage(list),"查询成功");
     }
 

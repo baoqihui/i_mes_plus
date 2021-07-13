@@ -36,6 +36,23 @@ public class TinUseRecordController {
     private ITinUseRecordService tinUseRecordService;
 
     /**
+     * 领用
+     */
+    @ApiOperation(value = "领用")
+    @PostMapping("/tinUseRecord/use")
+    public Result use(@RequestBody Map<String, Object> params) {
+        return tinUseRecordService.use(params);
+    }
+
+    /**
+     * 上锡膏
+     */
+    @ApiOperation(value = "上锡膏")
+    @PostMapping("/tinUseRecord/upTin")
+    public Result upTin(@RequestBody Map<String, Object> params) {
+        return tinUseRecordService.upTin(params);
+    }
+    /**
      * 列表
      */
     @ApiOperation(value = "查询列表")

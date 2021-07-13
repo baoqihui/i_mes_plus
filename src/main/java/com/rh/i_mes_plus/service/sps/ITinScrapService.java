@@ -19,5 +19,7 @@ public interface ITinScrapService extends IService<TinScrap> {
      * @return
      */
     Page<Map> findList(Map<String, Object> params);
+
+    Page<Map> findListTotal(Map<String, Object> params);
 }
 

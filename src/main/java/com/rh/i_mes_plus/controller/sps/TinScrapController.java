@@ -1,8 +1,13 @@
 package com.rh.i_mes_plus.controller.sps;
 import java.io.IOException;
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import com.rh.i_mes_plus.common.model.SysConst;
+import com.rh.i_mes_plus.model.sps.TinStockInfo;
+import com.rh.i_mes_plus.service.sps.ITinStockInfoService;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,7 +39,8 @@ import com.rh.i_mes_plus.common.model.Result;
 public class TinScrapController {
     @Autowired
     private ITinScrapService tinScrapService;
-
+    @Autowired
+    private ITinStockInfoService tinStockInfoService;
     /**
      * 列表
      */
@@ -45,6 +51,15 @@ public class TinScrapController {
         return Result.succeed(PageResult.restPage(list),"查询成功");
     }
 
+    /**
+     * 汇总
+     */
+    @ApiOperation(value = "汇总")
+    @PostMapping("/tinScrap/total")
+    public Result<PageResult> total(@RequestBody Map<String, Object> params) {
+        Page<Map> list= tinScrapService.findListTotal(params);
+        return Result.succeed(PageResult.restPage(list),"查询成功");
+    }
     /**
      * 查询
      */
@@ -62,6 +77,10 @@ public class TinScrapController {
     @PostMapping("/tinScrap/save")
     public Result save(@RequestBody TinScrap tinScrap) {
         tinScrapService.saveOrUpdate(tinScrap);
+        tinStockInfoService.update(new LambdaUpdateWrapper<TinStockInfo>()
+                .eq(TinStockInfo::getTinSn,tinScrap.getTinSn())
+                .set(TinStockInfo::getStatus, SysConst.TIN_STATUS.BF)
+        );
         return Result.succeed("保存成功");
     }
 
@@ -73,6 +92,12 @@ public class TinScrapController {
     public Result saveBatch(@RequestBody Map<String,List<TinScrap>> map) {
         List<TinScrap> models = map.get("models");
         tinScrapService.saveOrUpdateBatch(models);
+        for (TinScrap tinScrap : models) {
+            tinStockInfoService.update(new LambdaUpdateWrapper<TinStockInfo>()
+                    .eq(TinStockInfo::getTinSn,tinScrap.getTinSn())
+                    .set(TinStockInfo::getStatus, SysConst.TIN_STATUS.BF)
+            );
+        }
         return Result.succeed("保存成功");
     }
 

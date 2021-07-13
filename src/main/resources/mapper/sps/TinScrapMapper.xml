@@ -9,16 +9,21 @@
             t.scrap_time scrapTime,  -- 报废时间
             t.scrap_name scrapName,  -- 报废人
             t.scrap_reason scrapReason,  -- 报废原因
-            t.item_code itemCode,  -- 料号
-            t.supplier_code supplierCode,  -- 供应商代码
-            t.receive_time receiveTime,  -- 入库时间
-            t.receive_doc_no receiveDocNo,  -- 入库单据号
-            t.receive_name receiveName,  -- 入库人
-            t.expire_time expireTime,  -- 过期时间
-            t.area_sn areaSn,  -- 区域SN
-            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            tsi.item_code itemCode,  -- 料号
+            a.item_name itemName,  -- 名称
+            a.item_spec itemSpec,   -- 描述
+            a.lead_flag leadFlag,   -- 类型
+            tsi.doc_no docNo,  -- 入库单据号
+            tsi.receive_name receiveName,  -- 入库人
+            tsi.receive_time receiveTime,  -- 入库时间
+            tsi.expire_time expireTime,  -- 过期时间
+            tsi.area_sn areaSn,  -- 区域SN
+            tsi.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.update_time updateTime  -- 更新时间
         from tin_scrap t
+        left join tin_stock_info tsi on t.tin_sn = tsi.tin_sn
+        left join assistant_tool a on tsi.item_code = a.item_code
+        left join ums_supplier us on tsi.supplier_code = us.supplier_code
         where 1=1
         <if test="p.tinSn != null and p.tinSn != ''">
             and t.tin_sn LIKE '%${p.tinSn}%'
@@ -33,25 +38,25 @@
             and t.scrap_reason LIKE '%${p.scrapReason}%'
         </if>
         <if test="p.itemCode != null and p.itemCode != ''">
-            and t.item_code LIKE '%${p.itemCode}%'
+            and tsi.item_code LIKE '%${p.itemCode}%'
         </if>
         <if test="p.supplierCode != null and p.supplierCode != ''">
-            and t.supplier_code LIKE '%${p.supplierCode}%'
+            and tsi.supplier_code LIKE '%${p.supplierCode}%'
         </if>
         <if test="p.receiveTime != null and p.receiveTime != ''">
-            and t.receive_time LIKE '%${p.receiveTime}%'
+            and tsi.receive_time LIKE '%${p.receiveTime}%'
         </if>
-        <if test="p.receiveDocNo != null and p.receiveDocNo != ''">
-            and t.receive_doc_no LIKE '%${p.receiveDocNo}%'
+        <if test="p.docNo != null and p.docNo != ''">
+            and tsi.doc_no LIKE '%${p.docNo}%'
         </if>
         <if test="p.receiveName != null and p.receiveName != ''">
-            and t.receive_name LIKE '%${p.receiveName}%'
+            and tsi.receive_name LIKE '%${p.receiveName}%'
         </if>
         <if test="p.expireTime != null and p.expireTime != ''">
-            and t.expire_time LIKE '%${p.expireTime}%'
+            and tsi.expire_time LIKE '%${p.expireTime}%'
         </if>
         <if test="p.areaSn != null and p.areaSn != ''">
-            and t.area_sn LIKE '%${p.areaSn}%'
+            and tsi.area_sn LIKE '%${p.areaSn}%'
         </if>
         <if test="p.startTime != null and p.startTime != '' ">
             and t.create_time >= '${p.startTime}'
@@ -60,5 +65,57 @@
             and '${p.endTime}' >= t.create_time
         </if>
         order by t.id desc
+    </select>
+    <select id="findListTotal" resultType="java.util.Map">
+        select
+            tsi.item_code itemCode,  -- 料号
+            a.item_name itemName,  -- 名称
+            a.item_spec itemSpec,   -- 描述
+            count(1) total
+        from tin_scrap t
+        left join tin_stock_info tsi on t.tin_sn = tsi.tin_sn
+        left join assistant_tool a on tsi.item_code = a.item_code
+        left join ums_supplier us on tsi.supplier_code = us.supplier_code
+        where 1=1
+        <if test="p.tinSn != null and p.tinSn != ''">
+            and t.tin_sn LIKE '%${p.tinSn}%'
+        </if>
+        <if test="p.scrapTime != null and p.scrapTime != ''">
+            and t.scrap_time LIKE '%${p.scrapTime}%'
+        </if>
+        <if test="p.scrapName != null and p.scrapName != ''">
+            and t.scrap_name LIKE '%${p.scrapName}%'
+        </if>
+        <if test="p.scrapReason != null and p.scrapReason != ''">
+            and t.scrap_reason LIKE '%${p.scrapReason}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and tsi.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.supplierCode != null and p.supplierCode != ''">
+            and tsi.supplier_code LIKE '%${p.supplierCode}%'
+        </if>
+        <if test="p.receiveTime != null and p.receiveTime != ''">
+            and tsi.receive_time LIKE '%${p.receiveTime}%'
+        </if>
+        <if test="p.docNo != null and p.docNo != ''">
+            and tsi.doc_no LIKE '%${p.docNo}%'
+        </if>
+        <if test="p.receiveName != null and p.receiveName != ''">
+            and tsi.receive_name LIKE '%${p.receiveName}%'
+        </if>
+        <if test="p.expireTime != null and p.expireTime != ''">
+            and tsi.expire_time LIKE '%${p.expireTime}%'
+        </if>
+        <if test="p.areaSn != null and p.areaSn != ''">
+            and tsi.area_sn LIKE '%${p.areaSn}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        GROUP BY tsi.item_code
     </select>
 </mapper>

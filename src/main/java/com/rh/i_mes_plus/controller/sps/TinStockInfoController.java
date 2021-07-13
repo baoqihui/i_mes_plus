@@ -34,6 +34,14 @@ import com.rh.i_mes_plus.common.model.Result;
 public class TinStockInfoController {
     @Autowired
     private ITinStockInfoService tinStockInfoService;
+    /**
+     * 根据类型代码查询要生成的入库单号
+     */
+    @ApiOperation(value = "根据类型代码查询要生成的入库单号")
+    @PostMapping("/tinStockInfo/getDocNo")
+    public Result getDocNo(@RequestBody Map<String,Object> map) {
+        return tinStockInfoService.getDocNo(map);
+    }
 
     /**
      * 列表

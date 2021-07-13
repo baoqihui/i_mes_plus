@@ -39,4 +39,18 @@ public class TinScrapServiceImpl extends ServiceImpl<TinScrapMapper, TinScrap> i
         Page<Map> pages = new Page<>(pageNum, pageSize);
         return tinScrapMapper.findList(pages, params);
     }
+
+    @Override
+    public Page<Map> findListTotal(Map<String, Object> params) {
+        Integer pageNum = MapUtils.getInteger(params, "pageNum");
+        Integer pageSize = MapUtils.getInteger(params, "pageSize");
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        if (pageSize == null) {
+            pageSize = -1;
+        }
+        Page<Map> pages = new Page<>(pageNum, pageSize);
+        return tinScrapMapper.findListTotal(pages, params);
+    }
 }
