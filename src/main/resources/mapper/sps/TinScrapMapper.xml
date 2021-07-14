@@ -6,19 +6,19 @@
         select
             t.id id,  -- 
             t.tin_sn tinSn,  -- 红锡膏SN
-            t.scrap_time scrapTime,  -- 报废时间
-            t.scrap_name scrapName,  -- 报废人
-            t.scrap_reason scrapReason,  -- 报废原因
             tsi.item_code itemCode,  -- 料号
             a.item_name itemName,  -- 名称
             a.item_spec itemSpec,   -- 描述
-            a.lead_flag leadFlag,   -- 类型
+            a.type_code typeCode,   -- 类型
             tsi.doc_no docNo,  -- 入库单据号
             tsi.receive_name receiveName,  -- 入库人
             tsi.receive_time receiveTime,  -- 入库时间
             tsi.expire_time expireTime,  -- 过期时间
             tsi.area_sn areaSn,  -- 区域SN
-            tsi.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.scrap_time scrapTime,  -- 报废时间
+            t.scrap_name scrapName,  -- 报废人
+            t.scrap_reason scrapReason,  -- 报废原因
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.update_time updateTime  -- 更新时间
         from tin_scrap t
         left join tin_stock_info tsi on t.tin_sn = tsi.tin_sn
@@ -59,10 +59,13 @@
             and tsi.area_sn LIKE '%${p.areaSn}%'
         </if>
         <if test="p.startTime != null and p.startTime != '' ">
-            and t.create_time >= '${p.startTime}'
+            and t.scrap_time >= '${p.startTime}'
         </if>
         <if test="p.endTime !=null and p.endTime != '' ">
-            and '${p.endTime}' >= t.create_time
+            and '${p.endTime}' >= t.scrap_time
+        </if>
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and a.type_code LIKE '%${p.typeCode}%'
         </if>
         order by t.id desc
     </select>
@@ -111,10 +114,13 @@
             and tsi.area_sn LIKE '%${p.areaSn}%'
         </if>
         <if test="p.startTime != null and p.startTime != '' ">
-            and t.create_time >= '${p.startTime}'
+            and t.scrap_time >= '${p.startTime}'
         </if>
         <if test="p.endTime !=null and p.endTime != '' ">
-            and '${p.endTime}' >= t.create_time
+            and '${p.endTime}' >= t.scrap_time
+        </if>
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and a.type_code LIKE '%${p.typeCode}%'
         </if>
         GROUP BY tsi.item_code
     </select>

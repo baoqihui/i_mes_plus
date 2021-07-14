@@ -23,4 +23,8 @@ public interface TinStockInfoMapper extends SuperMapper<TinStockInfo> {
      * @return
      */
     Page<Map> findList(Page<Map> pages, @Param("p") Map<String, Object> params);
+
+    Page<Map> findListAll(Page<Map> pages,@Param("p") Map<String, Object> params);
+
+    Page<Map> findListTotal(Page<Map> pages,@Param("p") Map<String, Object> params);
 }

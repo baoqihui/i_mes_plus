@@ -1,5 +1,8 @@
 package com.rh.i_mes_plus.service.impl.sps;
 import java.util.Date;
+
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.api.R;
@@ -10,6 +13,7 @@ import com.rh.i_mes_plus.mapper.sps.TinUseRecordMapper;
 import com.rh.i_mes_plus.model.pdt.PdtWmsPmMoBase;
 import com.rh.i_mes_plus.model.sps.AssistantTool;
 import com.rh.i_mes_plus.model.sps.TinStockInfo;
+import com.rh.i_mes_plus.model.sps.TinTakeRecord;
 import com.rh.i_mes_plus.model.ums.UmsUser;
 import com.rh.i_mes_plus.service.pdt.IPdtWmsPmMoBaseService;
 import com.rh.i_mes_plus.service.sps.IAssistantToolService;
@@ -86,9 +90,16 @@ public class TinUseRecordServiceImpl extends ServiceImpl<TinUseRecordMapper, Tin
         if(stockInfo.getStatus()!= SysConst.TIN_STATUS.HW){
             return Result.failed("锡膏非回温状态");
         }
+        int compare = DateUtil.compare(stockInfo.getExpireTime(), new Date());
+        if (compare<0){
+            return Result.failed("锡膏过期");
+        }
         TinTakeRecordVO recordVO=tinTakeRecordMapper.getTakeStateByTinSn(tinSn);
         if (recordVO == null){
             return Result.failed("锡膏未回温");
+        }
+        if (recordVO.getState()!=2&&recordVO.getState()!=3){
+            return Result.failed("锡膏回温未完成或常温超时，不可领用");
         }
         Integer state = recordVO.getState();
         TinUseRecord tinUseRecord = new TinUseRecord();
@@ -111,6 +122,12 @@ public class TinUseRecordServiceImpl extends ServiceImpl<TinUseRecordMapper, Tin
         //库存状态改领用
         stockInfo.setStatus(SysConst.TIN_STATUS.LY);
         tinStockInfoService.updateById(stockInfo);
+        //修改回温状态
+        TinTakeRecord tinTakeRecord=new TinTakeRecord();
+        BeanUtil.copyProperties(recordVO,tinTakeRecord);
+        tinTakeRecord.setTakeEndTime(new Date());
+        tinTakeRecord.setStatus(1);
+        tinTakeRecordMapper.updateById(tinTakeRecord);
         return Result.succeed("保存成功");
     }
 
@@ -139,6 +156,9 @@ public class TinUseRecordServiceImpl extends ServiceImpl<TinUseRecordMapper, Tin
         if (recordVO == null){
             return Result.failed("锡膏未回温");
         }
+        if (recordVO.getState()==4){
+            return Result.failed("锡膏常温超时，请返回仓库报废");
+        }
         Integer state = recordVO.getState();
         useRecord.setMoNo(moNo);
         useRecord.setLineCode(moBase.getLineCode());
@@ -148,7 +168,7 @@ public class TinUseRecordServiceImpl extends ServiceImpl<TinUseRecordMapper, Tin
         useRecord.setOperator(user.getUserName());
         useRecord.setUseingTime(new Date());
         useRecord.setUseingMan(user.getUserName());
-        useRecord.setUseingFlag(1);
+        useRecord.setUseingFlag(2);
         int userState=0;
         if (state==2||state==3){
             userState=0;
@@ -164,4 +184,5 @@ public class TinUseRecordServiceImpl extends ServiceImpl<TinUseRecordMapper, Tin
         tinStockInfoService.updateById(stockInfo);
         return Result.succeed("保存成功");
     }
+
 }

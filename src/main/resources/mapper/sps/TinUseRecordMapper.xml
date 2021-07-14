@@ -7,6 +7,9 @@
             t.id id,  -- 
             t.take_id takeId,  -- 回温主键
             t.item_code itemCode,  -- 料号
+            a.item_name itemName,  -- 名称
+            a.item_spec itemSpec,   -- 描述
+            a.type_code typeCode,   -- 类型
             t.tin_sn tinSn,  -- 红锡膏SN
             t.use_time useTime,  -- 领用时间
             t.use_name useName,  -- 领用人
@@ -22,6 +25,7 @@
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.update_time updateTime  -- 更新时间
         from tin_use_record t
+        left join assistant_tool a on t.item_code = a.item_code
         where 1=1
         <if test="p.takeId != null and p.takeId != ''">
             and t.take_id LIKE '%${p.takeId}%'
@@ -59,17 +63,20 @@
         <if test="p.useingMan != null and p.useingMan != ''">
             and t.useing_man LIKE '%${p.useingMan}%'
         </if>
-        <if test="p.useingFlag != null and p.useingFlag != ''">
+        <if test="p.useingFlag != null ">
             and t.useing_flag LIKE '%${p.useingFlag}%'
         </if>
-        <if test="p.useState != null and p.useState != ''">
+        <if test="p.useState != null">
             and t.use_state LIKE '%${p.useState}%'
         </if>
         <if test="p.startTime != null and p.startTime != '' ">
-            and t.create_time >= '${p.startTime}'
+            and t.use_time >= '${p.startTime}'
         </if>
         <if test="p.endTime !=null and p.endTime != '' ">
-            and '${p.endTime}' >= t.create_time
+            and '${p.endTime}' >= t.use_time
+        </if>
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and a.type_code LIKE '%${p.typeCode}%'
         </if>
         order by t.id desc
     </select>

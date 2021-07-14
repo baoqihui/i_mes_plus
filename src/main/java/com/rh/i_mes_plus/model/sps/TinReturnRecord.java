@@ -34,7 +34,7 @@ public class TinReturnRecord extends SuperEntity {
         @Excel(name = "退仓人")
         @ApiModelProperty(value = "退仓人")
         private String returnName;
-        @Excel(name = "区域SN")
-        @ApiModelProperty(value = "区域SN")
-        private String areaSn;
+        @Excel(name = "状态（1，领用未上退库 2，未使用完退库 ）")
+        @ApiModelProperty(value = "状态（1，领用未上退库 2，未使用完退库 ）")
+        private Integer state;
 }

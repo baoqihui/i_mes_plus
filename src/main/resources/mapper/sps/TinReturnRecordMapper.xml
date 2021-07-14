@@ -7,12 +7,24 @@
             t.id id,  -- 
             t.use_id useId,  -- 领用主键
             t.tin_sn tinSn,  -- 红锡膏SN
+            tsi.item_code itemCode,  -- 料号
+            a.item_name itemName,  -- 名称
+            a.item_spec itemSpec,   -- 描述
+            a.type_code typeCode,   -- 类型
+            tsi.doc_no docNo,  -- 入库单据号
+            tsi.receive_name receiveName,  -- 入库人
+            tsi.receive_time receiveTime,  -- 入库时间
+            tsi.expire_time expireTime,  -- 过期时间
+            tsi.area_sn areaSn,  -- 区域SN
             t.return_time returnTime,  -- 退仓时间
             t.return_name returnName,  -- 退仓人
-            t.area_sn areaSn,  -- 区域SN
+            t.state state,  -- 状态（1，领用未上退库2，未使用完退库 ）
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.update_time updateTime  -- 更新时间
         from tin_return_record t
+        left join tin_stock_info tsi on t.tin_sn = tsi.tin_sn
+        left join assistant_tool a on tsi.item_code = a.item_code
+        left join ums_supplier us on tsi.supplier_code = us.supplier_code
         where 1=1
         <if test="p.useId != null and p.useId != ''">
             and t.use_id LIKE '%${p.useId}%'
@@ -26,14 +38,35 @@
         <if test="p.returnName != null and p.returnName != ''">
             and t.return_name LIKE '%${p.returnName}%'
         </if>
+        <if test="p.state != null and p.state != ''">
+            and t.state LIKE '%${p.state}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and tsi.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.supplierCode != null and p.supplierCode != ''">
+            and tsi.supplier_code LIKE '%${p.supplierCode}%'
+        </if>
+        <if test="p.receiveTime != null and p.receiveTime != ''">
+            and tsi.receive_time LIKE '%${p.receiveTime}%'
+        </if>
+        <if test="p.docNo != null and p.docNo != ''">
+            and tsi.doc_no LIKE '%${p.docNo}%'
+        </if>
+        <if test="p.receiveName != null and p.receiveName != ''">
+            and tsi.receive_name LIKE '%${p.receiveName}%'
+        </if>
+        <if test="p.expireTime != null and p.expireTime != ''">
+            and tsi.expire_time LIKE '%${p.expireTime}%'
+        </if>
         <if test="p.areaSn != null and p.areaSn != ''">
-            and t.area_sn LIKE '%${p.areaSn}%'
+            and tsi.area_sn LIKE '%${p.areaSn}%'
         </if>
         <if test="p.startTime != null and p.startTime != '' ">
-            and t.create_time >= '${p.startTime}'
+            and t.return_time >= '${p.startTime}'
         </if>
         <if test="p.endTime !=null and p.endTime != '' ">
-            and '${p.endTime}' >= t.create_time
+            and '${p.endTime}' >= t.return_time
         </if>
         order by t.id desc
     </select>

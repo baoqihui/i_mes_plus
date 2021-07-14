@@ -17,7 +17,9 @@
             ELSE 1 END AS state,    -- 状态（1，回温中 2，回温OK，可领用 3，回温OK，可领用，还差一小时报废 4，常温超时）
             t.item_code itemCode,  -- 料号
             a.item_name itemName,   -- 物料名称
+            a.item_spec itemSpec,
             a.back_time backTime,  -- 回温时间（小时）
+            t.status status,
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.update_time updateTime  -- 更新时间
         from tin_take_record t
@@ -29,11 +31,11 @@
         <if test="p.takeEndTime != null and p.takeEndTime != ''">
             and t.take_end_time LIKE '%${p.takeEndTime}%'
         </if>
-        <if test="p.moNo != null and p.moNo != ''">
-            and t.mo_no LIKE '%${p.moNo}%'
-        </if>
         <if test="p.itemCode != null and p.itemCode != ''">
             and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.status != null">
+            and t.status =#{p.status}
         </if>
         <if test="p.startTime != null and p.startTime != '' ">
             and t.create_time >= '${p.startTime}'

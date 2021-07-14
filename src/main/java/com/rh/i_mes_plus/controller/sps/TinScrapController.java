@@ -1,5 +1,6 @@
 package com.rh.i_mes_plus.controller.sps;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -7,7 +8,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.rh.i_mes_plus.common.model.SysConst;
 import com.rh.i_mes_plus.model.sps.TinStockInfo;
+import com.rh.i_mes_plus.model.sps.TinUseRecord;
 import com.rh.i_mes_plus.service.sps.ITinStockInfoService;
+import com.rh.i_mes_plus.service.sps.ITinUseRecordService;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,6 +44,8 @@ public class TinScrapController {
     private ITinScrapService tinScrapService;
     @Autowired
     private ITinStockInfoService tinStockInfoService;
+    @Autowired
+    private ITinUseRecordService tinUseRecordService;
     /**
      * 列表
      */
@@ -81,6 +86,10 @@ public class TinScrapController {
                 .eq(TinStockInfo::getTinSn,tinScrap.getTinSn())
                 .set(TinStockInfo::getStatus, SysConst.TIN_STATUS.BF)
         );
+        tinUseRecordService.update(new LambdaUpdateWrapper<TinUseRecord>()
+                .eq(TinUseRecord::getTinSn,tinScrap.getTinSn())
+                .set(TinUseRecord::getUseingFlag,2)
+        );
         return Result.succeed("保存成功");
     }
 
@@ -97,6 +106,10 @@ public class TinScrapController {
                     .eq(TinStockInfo::getTinSn,tinScrap.getTinSn())
                     .set(TinStockInfo::getStatus, SysConst.TIN_STATUS.BF)
             );
+            tinUseRecordService.update(new LambdaUpdateWrapper<TinUseRecord>()
+                    .eq(TinUseRecord::getTinSn,tinScrap.getTinSn())
+                    .set(TinUseRecord::getUseingFlag,2)
+            );
         }
         return Result.succeed("保存成功");
     }
@@ -108,6 +121,17 @@ public class TinScrapController {
     @PostMapping("/tinScrap/del")
     public Result delete(@RequestBody Map<String,List<Long>> map) {
         List<Long> ids = map.get("ids");
+        Collection<TinScrap> tinScraps = tinScrapService.listByIds(ids);
+        for (TinScrap tinScrap : tinScraps) {
+            tinStockInfoService.update(new LambdaUpdateWrapper<TinStockInfo>()
+                    .eq(TinStockInfo::getTinSn,tinScrap.getTinSn())
+                    .set(TinStockInfo::getStatus, SysConst.TIN_STATUS.LY)
+            );
+            tinUseRecordService.update(new LambdaUpdateWrapper<TinUseRecord>()
+                    .eq(TinUseRecord::getTinSn,tinScrap.getTinSn())
+                    .set(TinUseRecord::getUseingFlag,1)
+            );
+        }
         tinScrapService.removeByIds(ids);
         return Result.succeed("删除成功");
     }

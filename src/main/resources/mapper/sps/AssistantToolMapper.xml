@@ -9,6 +9,7 @@
             t.item_name itemName,  -- 物料名称
             t.item_spec itemSpec,   -- 物料描述
             t.type_code typeCode,  -- 类型
+            att.type_name typeName,
             t.least_qty leastQty,  -- 安全库存量
             t.qty qty,  -- 库存
             t.open_discard_time openDiscardTime,  -- 锡膏开罐报废时间(小时)
@@ -20,6 +21,7 @@
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.update_time updateTime  -- 更新时间
         from assistant_tool t
+        left join assistant_tool_type att on t.type_code = att.type_code
         where 1=1
         <if test="p.itemCode != null and p.itemCode != ''">
             and t.item_code LIKE '%${p.itemCode}%'

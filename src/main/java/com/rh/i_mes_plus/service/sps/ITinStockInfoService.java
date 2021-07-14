@@ -22,5 +22,9 @@ public interface ITinStockInfoService extends IService<TinStockInfo> {
     Page<Map> findList(Map<String, Object> params);
 
     Result getDocNo(Map<String, Object> map);
+
+    Page<Map> findListAll(Map<String, Object> params);
+
+    Page<Map> findListTotal(Map<String, Object> params);
 }
 

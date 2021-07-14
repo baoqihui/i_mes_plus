@@ -73,9 +73,8 @@ public class SysConst {
     public static class TIN_STATUS{
         public static final int ZK=0;
         public static final int HW=1;
-        public static final int HWWC=2;
+        public static final int TK=2;
         public static final int LY=3;
         public static final int BF=4;
-        public static final int CWCS=5;
     }
 }

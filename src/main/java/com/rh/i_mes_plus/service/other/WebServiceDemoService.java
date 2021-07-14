@@ -131,8 +131,28 @@ public interface WebServiceDemoService {
     public String LightControl(@WebParam(name = "param")String param);
 
     /**
+     * 查询制令单列表
+     */
+    @WebMethod
+    public List<String> getMoNoList(@WebParam(name = "param")String param);
+    /**
      * 锡膏回温
      */
     @WebMethod
     public String take(@WebParam(name = "param")String param);
+    /**
+     * 锡膏领用
+     */
+    @WebMethod
+    public String use(@WebParam(name = "param")String param);
+    /**
+     * 上锡膏
+     */
+    @WebMethod
+    public String upTin(@WebParam(name = "param")String param);
+    /**
+     * 退库
+     */
+    @WebMethod
+    public String returnRecord(@WebParam(name = "param")String param);
 }

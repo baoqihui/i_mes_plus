@@ -34,6 +34,14 @@ import com.rh.i_mes_plus.common.model.Result;
 public class TinReturnRecordController {
     @Autowired
     private ITinReturnRecordService tinReturnRecordService;
+    /**
+     * 退库
+     */
+    @ApiOperation(value = "退库")
+    @PostMapping("/tinUseRecord/returnRecord")
+    public Result returnRecord(@RequestBody Map<String, Object> params) {
+        return tinReturnRecordService.returnRecord(params);
+    }
 
     /**
      * 列表

@@ -3,8 +3,10 @@ package com.rh.i_mes_plus.service.impl.other;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.rh.i_mes_plus.common.model.Result;
+import com.rh.i_mes_plus.model.pdt.PdtWmsPmMoBase;
 import com.rh.i_mes_plus.model.sms.SmsWmsMoveDoc;
 import com.rh.i_mes_plus.model.sms.SmsWmsOutStockDoc;
 import com.rh.i_mes_plus.model.sms.SmsWmsReloadDoc;
@@ -12,9 +14,12 @@ import com.rh.i_mes_plus.model.ums.UmsUser;
 import com.rh.i_mes_plus.service.other.WebServiceDemoService;
 import com.rh.i_mes_plus.service.pdt.IPdtWmsBoxBarcodeService;
 import com.rh.i_mes_plus.service.pdt.IPdtWmsOutStockDocService;
+import com.rh.i_mes_plus.service.pdt.IPdtWmsPmMoBaseService;
 import com.rh.i_mes_plus.service.pdt.IPdtWmsReceiveDocService;
 import com.rh.i_mes_plus.service.sms.*;
+import com.rh.i_mes_plus.service.sps.ITinReturnRecordService;
 import com.rh.i_mes_plus.service.sps.ITinTakeRecordService;
+import com.rh.i_mes_plus.service.sps.ITinUseRecordService;
 import com.rh.i_mes_plus.service.ums.IUmsUserService;
 import com.rh.i_mes_plus.vo.UmsPermissionVO;
 import com.rh.i_mes_plus.vo.UmsUserVO;
@@ -65,6 +70,12 @@ public class WebServiceDemoServiceImpl implements WebServiceDemoService {
     private ISmsWmsIoTypeService smsWmsIoTypeService;
     @Autowired
     private ITinTakeRecordService tinTakeRecordService;
+    @Autowired
+    private ITinUseRecordService tinUseRecordService;
+    @Autowired
+    private IPdtWmsPmMoBaseService pdtWmsPmMoBaseService;
+    @Autowired
+    private ITinReturnRecordService tinReturnRecordService;
     @Override
     public String login(String param) {
         Map<String,Object> map=(Map) JSON.parse(param);
@@ -312,10 +323,45 @@ public class WebServiceDemoServiceImpl implements WebServiceDemoService {
     }
 
     @Override
+    public List<String> getMoNoList(String param) {
+        Map<String,Object> map=JSON.parseObject(param, Map.class);
+        log.info("pda查询制令单列表：{}",map);
+        List<PdtWmsPmMoBase> list = pdtWmsPmMoBaseService.list(new LambdaQueryWrapper<PdtWmsPmMoBase>().eq(PdtWmsPmMoBase::getMsCode,"SMT"));
+        List<String> tos=new ArrayList<>();
+        tos.add("");
+        tos.addAll(list.stream().map(PdtWmsPmMoBase::getMoNo).collect(Collectors.toList()));
+        return tos;
+    }
+
+    @Override
     public String take(String param) {
         Map<String,Object> map=JSON.parseObject(param, Map.class);
         log.info("pda扫码锡膏回温：{}",map);
         Result result = tinTakeRecordService.take(map);
+        return result.getResp_msg();
+    }
+
+    @Override
+    public String use(String param) {
+        Map<String,Object> map=JSON.parseObject(param, Map.class);
+        log.info("pda扫码锡膏领用：{}",map);
+        Result result = tinUseRecordService.use(map);
+        return result.getResp_msg();
+    }
+
+    @Override
+    public String upTin(String param) {
+        Map<String,Object> map=JSON.parseObject(param, Map.class);
+        log.info("pda扫码上锡膏：{}",map);
+        Result result = tinUseRecordService.upTin(map);
+        return result.getResp_msg();
+    }
+
+    @Override
+    public String returnRecord(String param) {
+        Map<String,Object> map=JSON.parseObject(param, Map.class);
+        log.info("pda扫码退库：{}",map);
+        Result result = tinReturnRecordService.returnRecord(map);
         return result.getResp_msg();
     }
 

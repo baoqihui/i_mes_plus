@@ -47,12 +47,29 @@ public class TinStockInfoController {
      * 列表
      */
     @ApiOperation(value = "查询列表")
+    @PostMapping("/tinStockInfo/listTotal")
+    public Result<PageResult> listTotal(@RequestBody Map<String, Object> params) {
+        Page<Map> list= tinStockInfoService.findListTotal(params);
+        return Result.succeed(PageResult.restPage(list),"查询成功");
+    }
+    /**
+     * 列表
+     */
+    @ApiOperation(value = "查询列表")
     @PostMapping("/tinStockInfo/list")
     public Result<PageResult> list(@RequestBody Map<String, Object> params) {
         Page<Map> list= tinStockInfoService.findList(params);
         return Result.succeed(PageResult.restPage(list),"查询成功");
     }
-
+    /**
+     * 生产追溯
+     */
+    @ApiOperation(value = "生产追溯")
+    @PostMapping("/tinStockInfo/listAll")
+    public Result<PageResult> listAll(@RequestBody Map<String, Object> params) {
+        Page<Map> list= tinStockInfoService.findListAll(params);
+        return Result.succeed(PageResult.restPage(list),"查询成功");
+    }
     /**
      * 查询
      */

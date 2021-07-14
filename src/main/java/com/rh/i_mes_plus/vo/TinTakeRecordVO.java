@@ -34,10 +34,16 @@ public class TinTakeRecordVO {
     @Excel(name = "物料名称")
     @ApiModelProperty(value = "物料名称")
     private String itemName;
+    @Excel(name = "物料规格")
+    @ApiModelProperty(value = "物料规格")
+    private String itemSpec;
     @Excel(name = "回温时间（小时）")
     @ApiModelProperty(value = "回温时间（小时）")
     private Integer backTime;
     @Excel(name = "状态（1，回温中 2，回温OK，可领用 3，回温OK，可领用，还差一小时报废 4，常温超时）")
     @ApiModelProperty(value = "状态（1，回温中 2，回温OK，可领用 3，回温OK，可领用，还差一小时报废 4，常温超时）")
     private Integer state;
+    @Excel(name = "回温状态（0，回温中 1，回温完成）")
+    @ApiModelProperty(value = "回温状态（0，回温中 1，回温完成）")
+    private Integer status;
 }

@@ -10,7 +10,8 @@
             t.item_code itemCode,  -- 红锡膏料号
             a.item_name itemName,  -- 名称
             a.item_spec itemSpec,   -- 描述
-            a.lead_flag leadFlag,   -- 类型
+            a.type_code typeCode,   -- 类型
+            att.type_name typeName,
             t.supplier_code supplierCode,  -- 供应商代码
             us.supplier_name supplierName,
             t.receive_time receiveTime,  -- 入库时间
@@ -31,6 +32,7 @@
         from tin_stock_info t
         left join ums_supplier us on t.supplier_code = us.supplier_code
         left join assistant_tool a on t.item_code = a.item_code
+        left join assistant_tool_type att on a.type_code = att.type_code
         left join ums_acce_area uaa on t.area_sn = uaa.AR_SN
         where 1=1
         <if test="p.tinSn != null and p.tinSn != ''">
@@ -39,8 +41,17 @@
         <if test="p.itemCode != null and p.itemCode != ''">
             and t.item_code LIKE '%${p.itemCode}%'
         </if>
+        <if test="p.itemName != null and p.itemName != ''">
+            and a.item_name LIKE '%${p.itemName}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
         <if test="p.supplierCode != null and p.supplierCode != ''">
             and t.supplier_code LIKE '%${p.supplierCode}%'
+        </if>
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and us.supplier_name LIKE '%${p.supplierName}%'
         </if>
         <if test="p.receiveTime != null and p.receiveTime != ''">
             and t.receive_time LIKE '%${p.receiveTime}%'
@@ -57,11 +68,14 @@
         <if test="p.lotNo != null and p.lotNo != ''">
             and t.lot_no LIKE '%${p.lotNo}%'
         </if>
-        <if test="p.status != null and p.status != ''">
+        <if test="p.status != null">
             and t.status LIKE '%${p.status}%'
         </if>
         <if test="p.areaSn != null and p.areaSn != ''">
             and t.area_sn LIKE '%${p.areaSn}%'
+        </if>
+        <if test="p.arName != null and p.arName != ''">
+            and uaa.AR_NAME LIKE '%${p.arName}%'
         </if>
         <if test="p.isOpen != null and p.isOpen != ''">
             and t.is_open LIKE '%${p.isOpen}%'
@@ -73,11 +87,138 @@
             and t.is_value LIKE '%${p.isValue}%'
         </if>
         <if test="p.startTime != null and p.startTime != '' ">
-            and t.create_time >= '${p.startTime}'
+            and t.receive_time >= '${p.startTime}'
         </if>
         <if test="p.endTime !=null and p.endTime != '' ">
-            and '${p.endTime}' >= t.create_time
+            and '${p.endTime}' >= t.receive_time
+        </if>
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and a.type_code LIKE '%${p.typeCode}%'
         </if>
         order by t.id desc
+    </select>
+    <select id="findListAll" resultType="java.util.Map">
+        select
+            t.id id,  --
+            t.tin_sn tinSn,  -- 红锡膏SN
+            t.item_code itemCode,  -- 红锡膏料号
+            a.item_name itemName,  -- 名称
+            a.item_spec itemSpec,   -- 描述
+            a.type_code typeCode,   -- 类型
+            att.type_name typeName, --
+            t.lot_no lotNo,  -- 生产批次号
+            t.supplier_code supplierCode,  -- 供应商代码
+            us.supplier_name supplierName,  -- 供应商
+            ttr.take_start_time  takeStartTime,    -- 回温开始时间
+            ttr.take_end_time    takeEndTime,   -- 回温结束时间
+            ttr.take_start_name takeStartName,  -- 回温人
+            tur.line_code lineCode,  -- 线别
+            ulb.line_name lineName,
+            tur.mo_no moNo,  -- 制令单号
+            pwpmb.project_id projectId, -- 工单号
+            pwpmb.model_code modelCode -- 机型
+        from tin_stock_info t
+        left join ums_supplier us on t.supplier_code = us.supplier_code
+        left join assistant_tool a on t.item_code = a.item_code
+        left join ums_acce_area uaa on t.area_sn = uaa.AR_SN
+        left join tin_take_record ttr on t.tin_sn = ttr.tin_sn
+        left join tin_use_record tur on t.tin_sn = tur.tin_sn
+        left join pdt_wms_pm_mo_base pwpmb on tur.mo_no = pwpmb.mo_no
+        left join assistant_tool_type att on a.type_code = att.type_code
+        left join ums_line_body ulb on tur.line_code = ulb.line_code
+        where 1=1
+        <if test="p.tinSn != null and p.tinSn != ''">
+            and t.tin_sn LIKE '%${p.tinSn}%'
+        </if>
+        <if test="p.moNo != null and p.moNo != ''">
+            and tur.mo_no LIKE '%${p.moNo}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and ttr.take_start_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= ttr.take_start_time
+        </if>
+        order by t.id desc
+    </select>
+    <select id="findListTotal" resultType="java.util.Map">
+        select
+            t.item_code itemCode,  -- 料号
+            a.item_name itemName,  -- 名称
+            a.item_spec itemSpec,   -- 描述
+            <if test="p.isGroupBySupplier == 1">
+                t.supplier_code supplierCode,
+                us.supplier_name supplierName,
+            </if>
+            count(1) total
+        from tin_stock_info t
+        left join assistant_tool a on t.item_code = a.item_code
+        left join ums_supplier us on t.supplier_code = us.supplier_code
+        left join ums_acce_area uaa on t.area_sn = uaa.AR_SN
+        where 1=1
+        <if test="p.tinSn != null and p.tinSn != ''">
+            and t.tin_sn LIKE '%${p.tinSn}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.itemName != null and p.itemName != ''">
+            and a.item_name LIKE '%${p.itemName}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.supplierCode != null and p.supplierCode != ''">
+            and t.supplier_code LIKE '%${p.supplierCode}%'
+        </if>
+        <if test="p.supplierName != null and p.supplierName != ''">
+            and us.supplier_name LIKE '%${p.supplierName}%'
+        </if>
+        <if test="p.receiveTime != null and p.receiveTime != ''">
+            and t.receive_time LIKE '%${p.receiveTime}%'
+        </if>
+        <if test="p.receiveName != null and p.receiveName != ''">
+            and t.receive_name LIKE '%${p.receiveName}%'
+        </if>
+        <if test="p.expireTime != null and p.expireTime != ''">
+            and t.expire_time LIKE '%${p.expireTime}%'
+        </if>
+        <if test="p.useTimes != null and p.useTimes != ''">
+            and t.use_times LIKE '%${p.useTimes}%'
+        </if>
+        <if test="p.lotNo != null and p.lotNo != ''">
+            and t.lot_no LIKE '%${p.lotNo}%'
+        </if>
+        <if test="p.status != null">
+            and t.status LIKE '%${p.status}%'
+        </if>
+        <if test="p.areaSn != null and p.areaSn != ''">
+            and t.area_sn LIKE '%${p.areaSn}%'
+        </if>
+        <if test="p.arName != null and p.arName != ''">
+            and uaa.AR_NAME LIKE '%${p.arName}%'
+        </if>
+        <if test="p.isOpen != null and p.isOpen != ''">
+            and t.is_open LIKE '%${p.isOpen}%'
+        </if>
+        <if test="p.isCheck != null and p.isCheck != ''">
+            and t.is_check LIKE '%${p.isCheck}%'
+        </if>
+        <if test="p.isValue != null and p.isValue != ''">
+            and t.is_value LIKE '%${p.isValue}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.receive_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.receive_time
+        </if>
+        <if test="p.typeCode != null and p.typeCode != ''">
+            and a.type_code LIKE '%${p.typeCode}%'
+        </if>
+        GROUP BY t.item_code
+        <if test="p.isGroupBySupplier == 1">
+            ,t.supplier_code
+        </if>
     </select>
 </mapper>

@@ -60,4 +60,32 @@ public class TinStockInfoServiceImpl extends ServiceImpl<TinStockInfoMapper, Tin
         }
         return Result.succeed(maxDocNo, "查询成功");
     }
+
+    @Override
+    public Page<Map> findListAll(Map<String, Object> params) {
+        Integer pageNum = MapUtils.getInteger(params, "pageNum");
+        Integer pageSize = MapUtils.getInteger(params, "pageSize");
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        if (pageSize == null) {
+            pageSize = -1;
+        }
+        Page<Map> pages = new Page<>(pageNum, pageSize);
+        return tinStockInfoMapper.findListAll(pages, params);
+    }
+
+    @Override
+    public Page<Map> findListTotal(Map<String, Object> params) {
+        Integer pageNum = MapUtils.getInteger(params, "pageNum");
+        Integer pageSize = MapUtils.getInteger(params, "pageSize");
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        if (pageSize == null) {
+            pageSize = -1;
+        }
+        Page<Map> pages = new Page<>(pageNum, pageSize);
+        return tinStockInfoMapper.findListTotal(pages, params);
+    }
 }

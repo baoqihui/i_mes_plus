@@ -36,4 +36,7 @@ public class TinTakeRecord extends SuperEntity {
         @Excel(name = "料号")
         @ApiModelProperty(value = "料号")
         private String itemCode;
+        @Excel(name = "回温状态（0，回温中 1，回温完成）")
+        @ApiModelProperty(value = "回温状态（0，回温中 1，回温完成）")
+        private Integer status;
 }
