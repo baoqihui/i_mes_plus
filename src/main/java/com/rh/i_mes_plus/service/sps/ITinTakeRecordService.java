@@ -23,5 +23,7 @@ public interface ITinTakeRecordService extends IService<TinTakeRecord> {
     Page<TinTakeRecordVO> findList(Map<String, Object> params);
 
     Result take(Map<String, Object> params);
+
+    Result cancelTake(Map<String, Object> params);
 }
 

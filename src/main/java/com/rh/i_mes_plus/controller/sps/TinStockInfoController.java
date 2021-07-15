@@ -1,8 +1,11 @@
 package com.rh.i_mes_plus.controller.sps;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import com.rh.i_mes_plus.model.sps.TinLog;
+import com.rh.i_mes_plus.service.sps.ITinLogService;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,6 +37,8 @@ import com.rh.i_mes_plus.common.model.Result;
 public class TinStockInfoController {
     @Autowired
     private ITinStockInfoService tinStockInfoService;
+    @Autowired
+    private ITinLogService tinLogService;
     /**
      * 根据类型代码查询要生成的入库单号
      */
@@ -97,6 +102,19 @@ public class TinStockInfoController {
     @PostMapping("/tinStockInfo/saveBatch")
     public Result saveBatch(@RequestBody Map<String,List<TinStockInfo>> map) {
         List<TinStockInfo> models = map.get("models");
+        for (TinStockInfo stockInfo : models) {
+            if (stockInfo.getId()==null){
+                //添加日志
+                TinLog tinLog=TinLog.builder()
+                        .tinSn(stockInfo.getTinSn())
+                        .itemCode(stockInfo.getItemCode())
+                        .manufactureDate(stockInfo.getManufactureDate())
+                        .lotNo(stockInfo.getLotNo())
+                        .content("操作人："+stockInfo.getReceiveName()+" 在"+new Date()+" 入库 操作")
+                        .build();
+                tinLogService.save(tinLog);
+            }
+        }
         tinStockInfoService.saveOrUpdateBatch(models);
         return Result.succeed("保存成功");
     }

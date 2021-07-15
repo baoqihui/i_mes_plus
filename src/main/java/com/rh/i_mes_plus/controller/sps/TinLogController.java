@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.util.List;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
-import com.rh.i_mes_plus.vo.TinTakeRecordVO;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,50 +15,33 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 import com.rh.i_mes_plus.util.EasyPoiExcelUtil;
-import com.rh.i_mes_plus.model.sps.TinTakeRecord;
-import com.rh.i_mes_plus.service.sps.ITinTakeRecordService;
+import com.rh.i_mes_plus.model.sps.TinLog;
+import com.rh.i_mes_plus.service.sps.ITinLogService;
 import com.rh.i_mes_plus.common.model.PageResult;
 import com.rh.i_mes_plus.common.model.Result;
 
 /**
- * 
+ * 锡膏操作日志
  *
  * @author hbq
- * @date 2021-07-08 19:48:01
+ * @date 2021-07-15 10:18:07
  */
 @Slf4j
 @CrossOrigin
 @RestController
-@Api(tags = "回温记录")
+@Api(tags = "锡膏操作日志")
 @RequestMapping("tin")
-public class TinTakeRecordController {
+public class TinLogController {
     @Autowired
-    private ITinTakeRecordService tinTakeRecordService;
+    private ITinLogService tinLogService;
 
-    /**
-     * 回温
-     */
-    @ApiOperation(value = "回温")
-    @PostMapping("/tinTakeRecord/take")
-    public Result take(@RequestBody Map<String, Object> params) {
-        return tinTakeRecordService.take(params);
-    }
-
-    /**
-     * 取消回温
-     */
-    @ApiOperation(value = "取消回温")
-    @PostMapping("/tinTakeRecord/cancelTake")
-    public Result cancelTake(@RequestBody Map<String, Object> params) {
-        return tinTakeRecordService.cancelTake(params);
-    }
     /**
      * 列表
      */
     @ApiOperation(value = "查询列表")
-    @PostMapping("/tinTakeRecord/list")
+    @PostMapping("/tinLog/list")
     public Result<PageResult> list(@RequestBody Map<String, Object> params) {
-        Page<TinTakeRecordVO> list= tinTakeRecordService.findList(params);
+        Page<Map> list= tinLogService.findList(params);
         return Result.succeed(PageResult.restPage(list),"查询成功");
     }
 
@@ -67,9 +49,9 @@ public class TinTakeRecordController {
      * 查询
      */
     @ApiOperation(value = "查询")
-    @PostMapping("/tinTakeRecord/sel/{id}")
+    @PostMapping("/tinLog/sel/{id}")
     public Result findUserById(@PathVariable Long id) {
-        TinTakeRecord model = tinTakeRecordService.getById(id);
+        TinLog model = tinLogService.getById(id);
         return Result.succeed(model, "查询成功");
     }
 
@@ -77,9 +59,9 @@ public class TinTakeRecordController {
      * 新增or更新
      */
     @ApiOperation(value = "新增or更新")
-    @PostMapping("/tinTakeRecord/save")
-    public Result save(@RequestBody TinTakeRecord tinTakeRecord) {
-        tinTakeRecordService.saveOrUpdate(tinTakeRecord);
+    @PostMapping("/tinLog/save")
+    public Result save(@RequestBody TinLog tinLog) {
+        tinLogService.saveOrUpdate(tinLog);
         return Result.succeed("保存成功");
     }
 
@@ -87,10 +69,10 @@ public class TinTakeRecordController {
      * 批量新增or更新
      */
     @ApiOperation(value = "批量新增or更新")
-    @PostMapping("/tinTakeRecord/saveBatch")
-    public Result saveBatch(@RequestBody Map<String,List<TinTakeRecord>> map) {
-        List<TinTakeRecord> models = map.get("models");
-        tinTakeRecordService.saveOrUpdateBatch(models);
+    @PostMapping("/tinLog/saveBatch")
+    public Result saveBatch(@RequestBody Map<String,List<TinLog>> map) {
+        List<TinLog> models = map.get("models");
+        tinLogService.saveOrUpdateBatch(models);
         return Result.succeed("保存成功");
     }
 
@@ -98,10 +80,10 @@ public class TinTakeRecordController {
      * 删除
      */
     @ApiOperation(value = "批量删除")
-    @PostMapping("/tinTakeRecord/del")
+    @PostMapping("/tinLog/del")
     public Result delete(@RequestBody Map<String,List<Long>> map) {
         List<Long> ids = map.get("ids");
-        tinTakeRecordService.removeByIds(ids);
+        tinLogService.removeByIds(ids);
         return Result.succeed("删除成功");
     }
     
@@ -109,15 +91,15 @@ public class TinTakeRecordController {
      * 导入
      */
     @ApiOperation(value = "导入")
-    @PostMapping("/tinTakeRecord/leadIn")
+    @PostMapping("/tinLog/leadIn")
     public  Result leadIn(MultipartFile excel) throws Exception {
         int rowNum = 0;
         if (!excel.isEmpty()) {
-            List<TinTakeRecord> list = EasyPoiExcelUtil.importExcel(excel, 1, 1, TinTakeRecord.class);
+            List<TinLog> list = EasyPoiExcelUtil.importExcel(excel, 1, 1, TinLog.class);
             rowNum = list.size();
             if (rowNum > 0) {
                 list.forEach(u -> {
-                        tinTakeRecordService.save(u);
+                        tinLogService.save(u);
                 });
                 return Result.succeed("成功导入信息"+rowNum+"行数据");
             }
@@ -129,11 +111,11 @@ public class TinTakeRecordController {
      * 导出（传入ids数组，选择指定id）
      */
     @ApiOperation(value = "导出（传入ids数组，选择指定id）")
-    @PostMapping("/tinTakeRecord/leadOut")
+    @PostMapping("/tinLog/leadOut")
     public void leadOut(@RequestBody Map<String,List<Long>> map,HttpServletResponse response) throws IOException {
         List<Long> ids = map.get("ids");
-        List<TinTakeRecord> tinTakeRecordList = ids==null||ids.isEmpty()? tinTakeRecordService.list():(List)tinTakeRecordService.listByIds(ids);
+        List<TinLog> tinLogList = ids==null||ids.isEmpty()? tinLogService.list():(List)tinLogService.listByIds(ids);
         //导出操作
-        EasyPoiExcelUtil.exportExcel(tinTakeRecordList, "导出", "导出", TinTakeRecord.class, "tinTakeRecord.xls", response);
+        EasyPoiExcelUtil.exportExcel(tinLogList, "锡膏操作日志导出", "锡膏操作日志导出", TinLog.class, "tinLog.xls", response);
     }
 }

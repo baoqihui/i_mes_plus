@@ -95,6 +95,9 @@
         <if test="p.typeCode != null and p.typeCode != ''">
             and a.type_code LIKE '%${p.typeCode}%'
         </if>
+        <if test="p.canToScrap == 1">
+            and t.status not in (1,4)
+        </if>
         order by t.id desc
     </select>
     <select id="findListAll" resultType="java.util.Map">

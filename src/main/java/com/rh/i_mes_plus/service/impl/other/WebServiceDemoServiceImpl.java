@@ -342,6 +342,14 @@ public class WebServiceDemoServiceImpl implements WebServiceDemoService {
     }
 
     @Override
+    public String cancelTake(String param) {
+        Map<String,Object> map=JSON.parseObject(param, Map.class);
+        log.info("pda扫码锡膏取消回温：{}",map);
+        Result result = tinTakeRecordService.cancelTake(map);
+        return result.getResp_msg();
+    }
+
+    @Override
     public String use(String param) {
         Map<String,Object> map=JSON.parseObject(param, Map.class);
         log.info("pda扫码锡膏领用：{}",map);

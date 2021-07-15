@@ -11,15 +11,10 @@ import com.rh.i_mes_plus.common.model.SysConst;
 import com.rh.i_mes_plus.mapper.sps.TinTakeRecordMapper;
 import com.rh.i_mes_plus.mapper.sps.TinUseRecordMapper;
 import com.rh.i_mes_plus.model.pdt.PdtWmsPmMoBase;
-import com.rh.i_mes_plus.model.sps.AssistantTool;
-import com.rh.i_mes_plus.model.sps.TinStockInfo;
-import com.rh.i_mes_plus.model.sps.TinTakeRecord;
+import com.rh.i_mes_plus.model.sps.*;
 import com.rh.i_mes_plus.model.ums.UmsUser;
 import com.rh.i_mes_plus.service.pdt.IPdtWmsPmMoBaseService;
-import com.rh.i_mes_plus.service.sps.IAssistantToolService;
-import com.rh.i_mes_plus.service.sps.ITinStockInfoService;
-import com.rh.i_mes_plus.service.sps.ITinTakeRecordService;
-import com.rh.i_mes_plus.service.sps.ITinUseRecordService;
+import com.rh.i_mes_plus.service.sps.*;
 import com.rh.i_mes_plus.service.ums.IUmsUserService;
 import com.rh.i_mes_plus.vo.TinTakeRecordVO;
 import okhttp3.Interceptor;
@@ -31,8 +26,6 @@ import javax.annotation.Resource;
 import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
 import lombok.extern.slf4j.Slf4j;
-
-import com.rh.i_mes_plus.model.sps.TinUseRecord;
 
 /**
  * 红锡膏领用记录
@@ -53,7 +46,8 @@ public class TinUseRecordServiceImpl extends ServiceImpl<TinUseRecordMapper, Tin
     private TinTakeRecordMapper tinTakeRecordMapper;
     @Autowired
     private IPdtWmsPmMoBaseService pdtWmsPmMoBaseService;
-
+    @Autowired
+    private ITinLogService tinLogService;
     /**
      * 列表
      * @param params
@@ -128,6 +122,15 @@ public class TinUseRecordServiceImpl extends ServiceImpl<TinUseRecordMapper, Tin
         tinTakeRecord.setTakeEndTime(new Date());
         tinTakeRecord.setStatus(1);
         tinTakeRecordMapper.updateById(tinTakeRecord);
+        //添加日志
+        TinLog tinLog=TinLog.builder()
+                .tinSn(stockInfo.getTinSn())
+                .itemCode(stockInfo.getItemCode())
+                .manufactureDate(stockInfo.getManufactureDate())
+                .lotNo(stockInfo.getLotNo())
+                .content("操作人："+user.getUserName()+" 在"+new Date()+" 领用 操作")
+                .build();
+        tinLogService.save(tinLog);
         return Result.succeed("保存成功");
     }
 
@@ -182,6 +185,15 @@ public class TinUseRecordServiceImpl extends ServiceImpl<TinUseRecordMapper, Tin
         //修改库存开罐标识
         stockInfo.setIsOpen(1);
         tinStockInfoService.updateById(stockInfo);
+        //添加日志
+        TinLog tinLog=TinLog.builder()
+                .tinSn(stockInfo.getTinSn())
+                .itemCode(stockInfo.getItemCode())
+                .manufactureDate(stockInfo.getManufactureDate())
+                .lotNo(stockInfo.getLotNo())
+                .content("操作人："+user.getUserName()+" 在"+new Date()+" 上锡膏 操作")
+                .build();
+        tinLogService.save(tinLog);
         return Result.succeed("保存成功");
     }
 

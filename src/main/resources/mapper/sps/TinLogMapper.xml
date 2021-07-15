@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rh.i_mes_plus.mapper.sps.TinLogMapper">
+    <select id="findList" resultType="map">
+        select
+            t.id id,  -- 
+            t.tin_sn tinSn,  -- 锡膏SN
+            t.item_code itemCode,  -- 料号
+            a.item_name itemName,  -- 名称
+            a.item_spec itemSpec,   -- 描述
+            a.type_code typeCode,   -- 类型
+            att.type_name typeName,
+            t.manufacture_date manufactureDate,  -- 生产日期
+            t.lot_no lotNo,  -- 生产批次号
+            t.content content,  -- 操作内容
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime  -- 更新时间
+        from tin_log t
+        left join assistant_tool a on t.item_code = a.item_code
+        left join assistant_tool_type att on a.type_code = att.type_code
+        where 1=1
+        <if test="p.tinSn != null and p.tinSn != ''">
+            and t.tin_sn LIKE '%${p.tinSn}%'
+        </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
+        <if test="p.manufactureDate != null and p.manufactureDate != ''">
+            and t.manufacture_date LIKE '%${p.manufactureDate}%'
+        </if>
+        <if test="p.lotNo != null and p.lotNo != ''">
+            and t.lot_no LIKE '%${p.lotNo}%'
+        </if>
+        <if test="p.content != null and p.content != ''">
+            and t.content LIKE '%${p.content}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        order by t.id desc
+    </select>
+</mapper>

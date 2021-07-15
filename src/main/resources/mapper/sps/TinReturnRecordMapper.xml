@@ -11,6 +11,7 @@
             a.item_name itemName,  -- 名称
             a.item_spec itemSpec,   -- 描述
             a.type_code typeCode,   -- 类型
+            att.type_name typeName,
             tsi.doc_no docNo,  -- 入库单据号
             tsi.receive_name receiveName,  -- 入库人
             tsi.receive_time receiveTime,  -- 入库时间
@@ -25,6 +26,7 @@
         left join tin_stock_info tsi on t.tin_sn = tsi.tin_sn
         left join assistant_tool a on tsi.item_code = a.item_code
         left join ums_supplier us on tsi.supplier_code = us.supplier_code
+        left join assistant_tool_type att on a.type_code = att.type_code
         where 1=1
         <if test="p.useId != null and p.useId != ''">
             and t.use_id LIKE '%${p.useId}%'

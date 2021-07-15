@@ -141,6 +141,11 @@ public interface WebServiceDemoService {
     @WebMethod
     public String take(@WebParam(name = "param")String param);
     /**
+     * 锡膏取消回温
+     */
+    @WebMethod
+    public String cancelTake(@WebParam(name = "param")String param);
+    /**
      * 锡膏领用
      */
     @WebMethod

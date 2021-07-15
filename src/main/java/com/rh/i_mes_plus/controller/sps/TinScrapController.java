@@ -1,14 +1,18 @@
 package com.rh.i_mes_plus.controller.sps;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.rh.i_mes_plus.common.model.SysConst;
+import com.rh.i_mes_plus.model.sps.TinLog;
 import com.rh.i_mes_plus.model.sps.TinStockInfo;
 import com.rh.i_mes_plus.model.sps.TinUseRecord;
+import com.rh.i_mes_plus.service.sps.ITinLogService;
 import com.rh.i_mes_plus.service.sps.ITinStockInfoService;
 import com.rh.i_mes_plus.service.sps.ITinUseRecordService;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +50,8 @@ public class TinScrapController {
     private ITinStockInfoService tinStockInfoService;
     @Autowired
     private ITinUseRecordService tinUseRecordService;
+    @Autowired
+    private ITinLogService tinLogService;
     /**
      * 列表
      */
@@ -82,10 +88,20 @@ public class TinScrapController {
     @PostMapping("/tinScrap/save")
     public Result save(@RequestBody TinScrap tinScrap) {
         tinScrapService.saveOrUpdate(tinScrap);
-        tinStockInfoService.update(new LambdaUpdateWrapper<TinStockInfo>()
-                .eq(TinStockInfo::getTinSn,tinScrap.getTinSn())
-                .set(TinStockInfo::getStatus, SysConst.TIN_STATUS.BF)
+        TinStockInfo stockInfo = tinStockInfoService.getOne(new LambdaQueryWrapper<TinStockInfo>()
+                .eq(TinStockInfo::getTinSn, tinScrap.getTinSn())
         );
+        stockInfo.setStatus(SysConst.TIN_STATUS.BF);
+        tinStockInfoService.updateById(stockInfo);
+        //添加日志
+        TinLog tinLog=TinLog.builder()
+                .tinSn(stockInfo.getTinSn())
+                .itemCode(stockInfo.getItemCode())
+                .manufactureDate(stockInfo.getManufactureDate())
+                .lotNo(stockInfo.getLotNo())
+                .content("操作人："+tinScrap.getScrapName()+" 在"+new Date()+" 报废 操作")
+                .build();
+        tinLogService.save(tinLog);
         tinUseRecordService.update(new LambdaUpdateWrapper<TinUseRecord>()
                 .eq(TinUseRecord::getTinSn,tinScrap.getTinSn())
                 .set(TinUseRecord::getUseingFlag,2)
@@ -102,10 +118,20 @@ public class TinScrapController {
         List<TinScrap> models = map.get("models");
         tinScrapService.saveOrUpdateBatch(models);
         for (TinScrap tinScrap : models) {
-            tinStockInfoService.update(new LambdaUpdateWrapper<TinStockInfo>()
-                    .eq(TinStockInfo::getTinSn,tinScrap.getTinSn())
-                    .set(TinStockInfo::getStatus, SysConst.TIN_STATUS.BF)
+            TinStockInfo stockInfo = tinStockInfoService.getOne(new LambdaQueryWrapper<TinStockInfo>()
+                    .eq(TinStockInfo::getTinSn, tinScrap.getTinSn())
             );
+            stockInfo.setStatus(SysConst.TIN_STATUS.BF);
+            tinStockInfoService.updateById(stockInfo);
+            //添加日志
+            TinLog tinLog=TinLog.builder()
+                    .tinSn(stockInfo.getTinSn())
+                    .itemCode(stockInfo.getItemCode())
+                    .manufactureDate(stockInfo.getManufactureDate())
+                    .lotNo(stockInfo.getLotNo())
+                    .content("操作人："+tinScrap.getScrapName()+" 在"+new Date()+" 报废 操作")
+                    .build();
+            tinLogService.save(tinLog);
             tinUseRecordService.update(new LambdaUpdateWrapper<TinUseRecord>()
                     .eq(TinUseRecord::getTinSn,tinScrap.getTinSn())
                     .set(TinUseRecord::getUseingFlag,2)
