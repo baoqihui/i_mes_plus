@@ -155,6 +155,15 @@ public class TinUseRecordServiceImpl extends ServiceImpl<TinUseRecordMapper, Tin
             return Result.failed("锡膏过期");
         }
         TinUseRecord useRecord = getOne(new LambdaQueryWrapper<TinUseRecord>().eq(TinUseRecord::getTinSn, tinSn));
+        if (useRecord==null){
+            return Result.failed("锡膏未领用");
+        }
+        if (useRecord.getUseingFlag()==1){
+            return Result.failed("已上锡膏");
+        }
+        if (useRecord.getUseingFlag()==2){
+            return Result.failed("已报废");
+        }
         PdtWmsPmMoBase moBase = pdtWmsPmMoBaseService.getOne(new LambdaQueryWrapper<PdtWmsPmMoBase>().eq(PdtWmsPmMoBase::getMoNo, moNo));
         if (moBase == null) {
             return Result.failed("制令单号不存在");
