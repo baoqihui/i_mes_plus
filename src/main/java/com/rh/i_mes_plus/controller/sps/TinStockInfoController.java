@@ -112,7 +112,7 @@ public class TinStockInfoController {
                         .itemCode(stockInfo.getItemCode())
                         .manufactureDate(stockInfo.getManufactureDate())
                         .lotNo(stockInfo.getLotNo())
-                        .content("操作人："+stockInfo.getReceiveName()+" 在"+ DateUtil.now()+" 入库 操作")
+                        .content("入库 "+stockInfo.getReceiveName()+" 在"+ DateUtil.now()+"操作")
                         .build();
                 tinLogService.save(tinLog);
             }

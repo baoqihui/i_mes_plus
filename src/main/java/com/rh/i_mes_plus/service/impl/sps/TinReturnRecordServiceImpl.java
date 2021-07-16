@@ -110,7 +110,7 @@ public class TinReturnRecordServiceImpl extends ServiceImpl<TinReturnRecordMappe
                 .itemCode(stockInfo.getItemCode())
                 .manufactureDate(stockInfo.getManufactureDate())
                 .lotNo(stockInfo.getLotNo())
-                .content("操作人："+user.getUserName()+" 在"+ DateUtil.now() +" 退库 操作")
+                .content("退库 "+user.getUserName()+" 在"+ DateUtil.now() +"操作")
                 .build();
         tinLogService.save(tinLog);
         return Result.succeed("保存成功");

@@ -106,7 +106,7 @@ public class TinTakeRecordServiceImpl extends ServiceImpl<TinTakeRecordMapper, T
                 .itemCode(stockInfo.getItemCode())
                 .manufactureDate(stockInfo.getManufactureDate())
                 .lotNo(stockInfo.getLotNo())
-                .content("操作人："+user.getUserName()+" 在"+DateUtil.now()+" 回温 操作")
+                .content("回温 "+user.getUserName()+" 在"+DateUtil.now()+"操作")
                 .build();
         tinLogService.save(tinLog);
         return Result.succeed("保存成功");
@@ -145,7 +145,7 @@ public class TinTakeRecordServiceImpl extends ServiceImpl<TinTakeRecordMapper, T
                 .itemCode(stockInfo.getItemCode())
                 .manufactureDate(stockInfo.getManufactureDate())
                 .lotNo(stockInfo.getLotNo())
-                .content("操作人："+user.getUserName()+" 在"+DateUtil.now()+" 取消回温 操作 回温时长为："+DateUtil.between(takeRecord.getTakeStartTime(),new Date(),DateUnit.HOUR)+"(h)")
+                .content("取消回温 "+user.getUserName()+" 在"+DateUtil.now()+"操作 回温时长为："+DateUtil.between(takeRecord.getTakeStartTime(),new Date(),DateUnit.HOUR)+"(h)")
                 .build();
         tinLogService.save(tinLog);
         return Result.succeed("保存成功");

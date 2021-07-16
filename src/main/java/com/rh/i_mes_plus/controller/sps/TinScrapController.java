@@ -100,7 +100,7 @@ public class TinScrapController {
                 .itemCode(stockInfo.getItemCode())
                 .manufactureDate(stockInfo.getManufactureDate())
                 .lotNo(stockInfo.getLotNo())
-                .content("操作人："+tinScrap.getScrapName()+" 在"+DateUtil.now()+" 报废 操作")
+                .content("报废 "+tinScrap.getScrapName()+" 在"+DateUtil.now()+"操作")
                 .build();
         tinLogService.save(tinLog);
         tinUseRecordService.update(new LambdaUpdateWrapper<TinUseRecord>()
@@ -130,7 +130,7 @@ public class TinScrapController {
                     .itemCode(stockInfo.getItemCode())
                     .manufactureDate(stockInfo.getManufactureDate())
                     .lotNo(stockInfo.getLotNo())
-                    .content("操作人："+tinScrap.getScrapName()+" 在"+ DateUtil.now()+" 报废 操作")
+                    .content("报废 "+tinScrap.getScrapName()+" 在"+ DateUtil.now()+"操作")
                     .build();
             tinLogService.save(tinLog);
             tinUseRecordService.update(new LambdaUpdateWrapper<TinUseRecord>()
