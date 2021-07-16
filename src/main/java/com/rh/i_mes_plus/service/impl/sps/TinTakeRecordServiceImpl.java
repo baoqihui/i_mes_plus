@@ -84,6 +84,10 @@ public class TinTakeRecordServiceImpl extends ServiceImpl<TinTakeRecordMapper, T
         if(stockInfo.getStatus()!=SysConst.TIN_STATUS.ZK&&stockInfo.getStatus()!=SysConst.TIN_STATUS.TK){
             return Result.failed("锡膏非在库或退库状态");
         }
+        int compare = DateUtil.compare(stockInfo.getExpireTime(), new Date());
+        if (compare<0){
+            return Result.failed("锡膏过期");
+        }
         String itemCode = stockInfo.getItemCode();
         AssistantTool tool = assistantToolService.getOne(new LambdaQueryWrapper<AssistantTool>()
                 .eq(AssistantTool::getItemCode,itemCode));
