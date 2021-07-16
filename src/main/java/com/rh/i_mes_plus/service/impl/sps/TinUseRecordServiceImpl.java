@@ -171,7 +171,7 @@ public class TinUseRecordServiceImpl extends ServiceImpl<TinUseRecordMapper, Tin
         useRecord.setOperator(user.getUserName());
         useRecord.setUseingTime(new Date());
         useRecord.setUseingMan(user.getUserName());
-        useRecord.setUseingFlag(2);
+        useRecord.setUseingFlag(1);
         int userState=0;
         if (state==2||state==3){
             userState=0;
@@ -191,7 +191,7 @@ public class TinUseRecordServiceImpl extends ServiceImpl<TinUseRecordMapper, Tin
                 .itemCode(stockInfo.getItemCode())
                 .manufactureDate(stockInfo.getManufactureDate())
                 .lotNo(stockInfo.getLotNo())
-                .content("上锡膏 "+user.getUserName()+" 在"+DateUtil.now()+"操作")
+                .content("上锡膏 "+"制令单号："+moNo+" "+user.getUserName()+" 在"+DateUtil.now()+"操作")
                 .build();
         tinLogService.save(tinLog);
         return Result.succeed("保存成功");
