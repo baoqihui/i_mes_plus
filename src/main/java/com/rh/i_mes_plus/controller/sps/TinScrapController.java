@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -99,7 +100,7 @@ public class TinScrapController {
                 .itemCode(stockInfo.getItemCode())
                 .manufactureDate(stockInfo.getManufactureDate())
                 .lotNo(stockInfo.getLotNo())
-                .content("操作人："+tinScrap.getScrapName()+" 在"+new Date()+" 报废 操作")
+                .content("操作人："+tinScrap.getScrapName()+" 在"+DateUtil.now()+" 报废 操作")
                 .build();
         tinLogService.save(tinLog);
         tinUseRecordService.update(new LambdaUpdateWrapper<TinUseRecord>()
@@ -129,7 +130,7 @@ public class TinScrapController {
                     .itemCode(stockInfo.getItemCode())
                     .manufactureDate(stockInfo.getManufactureDate())
                     .lotNo(stockInfo.getLotNo())
-                    .content("操作人："+tinScrap.getScrapName()+" 在"+new Date()+" 报废 操作")
+                    .content("操作人："+tinScrap.getScrapName()+" 在"+ DateUtil.now()+" 报废 操作")
                     .build();
             tinLogService.save(tinLog);
             tinUseRecordService.update(new LambdaUpdateWrapper<TinUseRecord>()

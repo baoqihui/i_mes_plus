@@ -1,18 +1,16 @@
 package com.rh.i_mes_plus.service.impl.sps;
 import java.util.Date;
+
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.rh.i_mes_plus.common.model.Result;
 import com.rh.i_mes_plus.common.model.SysConst;
 import com.rh.i_mes_plus.mapper.sps.TinReturnRecordMapper;
-import com.rh.i_mes_plus.model.sps.TinStockInfo;
-import com.rh.i_mes_plus.model.sps.TinTakeRecord;
-import com.rh.i_mes_plus.model.sps.TinUseRecord;
+import com.rh.i_mes_plus.model.sps.*;
 import com.rh.i_mes_plus.model.ums.UmsUser;
-import com.rh.i_mes_plus.service.sps.ITinReturnRecordService;
-import com.rh.i_mes_plus.service.sps.ITinStockInfoService;
-import com.rh.i_mes_plus.service.sps.ITinTakeRecordService;
-import com.rh.i_mes_plus.service.sps.ITinUseRecordService;
+import com.rh.i_mes_plus.service.sps.*;
 import com.rh.i_mes_plus.service.ums.IUmsUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +20,6 @@ import javax.annotation.Resource;
 import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
 import lombok.extern.slf4j.Slf4j;
-
-import com.rh.i_mes_plus.model.sps.TinReturnRecord;
 
 /**
  * 红锡膏退仓记录
@@ -44,6 +40,8 @@ public class TinReturnRecordServiceImpl extends ServiceImpl<TinReturnRecordMappe
     private ITinStockInfoService tinStockInfoService;
     @Autowired
     private ITinTakeRecordService tinTakeRecordService;
+    @Autowired
+    private ITinLogService tinLogService;
     /**
      * 列表
      * @param params
@@ -94,7 +92,8 @@ public class TinReturnRecordServiceImpl extends ServiceImpl<TinReturnRecordMappe
         Integer useingFlag = useRecord.getUseingFlag();
         if (useingFlag==0){
             returnRecord.setState(1);
-        }else if (useingFlag==1){
+        }
+        if (useingFlag==1){
             returnRecord.setState(2);
         }
         save(returnRecord);
@@ -104,6 +103,16 @@ public class TinReturnRecordServiceImpl extends ServiceImpl<TinReturnRecordMappe
         //修改库存
         stockInfo.setStatus(SysConst.TIN_STATUS.TK);
         tinStockInfoService.updateById(stockInfo);
+
+        //添加日志
+        TinLog tinLog=TinLog.builder()
+                .tinSn(stockInfo.getTinSn())
+                .itemCode(stockInfo.getItemCode())
+                .manufactureDate(stockInfo.getManufactureDate())
+                .lotNo(stockInfo.getLotNo())
+                .content("操作人："+user.getUserName()+" 在"+ DateUtil.now() +" 退库 操作")
+                .build();
+        tinLogService.save(tinLog);
         return Result.succeed("保存成功");
     }
 }
