@@ -19,7 +19,8 @@
             t.manufacture_date manufactureDate, -- 生产日期
             t.shelf_life shelfLife, -- 保质期（月）
             t.expire_time expireTime,  -- 过期时间
-            CASE WHEN (timestampdiff(day,t.expire_time,NOW())>=0) THEN '0' ELSE '1' END AS expireStatus,
+            CASE WHEN (timestampdiff(DAY,DATE_FORMAT(t.expire_time,'%Y-%m-%d'),DATE_FORMAT(NOW(),'%Y-%m-%d') )>=- 1 ) THEN '1' ELSE '0' END AS preExpireStatus,
+            CASE WHEN (timestampdiff(DAY,DATE_FORMAT(t.expire_time,'%Y-%m-%d'),DATE_FORMAT(NOW(),'%Y-%m-%d') )>= 0 ) THEN '1' ELSE '0' END AS expireStatus,
             t.use_times useTimes,  -- 回温次数
             t.lot_no lotNo,  -- 生产批次号
             t.status status,  -- 状态(0，在库 1，回温 2，回温完成  3，领用  4，报废 5，常温超时 )
