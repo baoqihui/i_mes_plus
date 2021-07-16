@@ -150,6 +150,10 @@ public class TinUseRecordServiceImpl extends ServiceImpl<TinUseRecordMapper, Tin
         if (stockInfo == null) {
             return Result.failed("锡膏不存在");
         }
+        int compare = DateUtil.compare(stockInfo.getExpireTime(), new Date());
+        if (compare<0){
+            return Result.failed("锡膏过期");
+        }
         TinUseRecord useRecord = getOne(new LambdaQueryWrapper<TinUseRecord>().eq(TinUseRecord::getTinSn, tinSn));
         PdtWmsPmMoBase moBase = pdtWmsPmMoBaseService.getOne(new LambdaQueryWrapper<PdtWmsPmMoBase>().eq(PdtWmsPmMoBase::getMoNo, moNo));
         if (moBase == null) {
