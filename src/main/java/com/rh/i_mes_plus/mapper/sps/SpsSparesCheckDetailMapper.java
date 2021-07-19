@@ -32,4 +32,6 @@ public interface SpsSparesCheckDetailMapper extends SuperMapper<SpsSparesCheckDe
     List<Map<String, Object>> getLQDetailByCheckNo(@Param("checkNo") String checkNo);
 
     List<Map<String, Object>> getDefaultDetailByCheckNo(@Param("checkNo") String checkNo);
+
+    List<Map<String, Object>> getGZZJDetailByCheckNo(@Param("checkNo") String checkNo);
 }

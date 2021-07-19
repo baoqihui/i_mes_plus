@@ -117,6 +117,9 @@ public class SpsSparesCheckDocController {
         if (SysConst.TYPE_CODE.GZBP.equals(typeCode)){
             sparesCheckDetails=spsSparesCheckDetailService.getGZBPDetailByCheckNo(checkNo);
         }
+        else if (SysConst.TYPE_CODE.GZZJ.equals(typeCode)){
+            sparesCheckDetails = spsSparesCheckDetailService.getGZZJDetailByCheckNo(checkNo);
+        }
         else if (SysConst.TYPE_CODE.GW.equals(typeCode)){
             sparesCheckDetails=spsSparesCheckDetailService.getGWDetailByCheckNo(checkNo);
         }

@@ -61,4 +61,9 @@ public class SpsSparesCheckDetailServiceImpl extends ServiceImpl<SpsSparesCheckD
     public List<Map<String, Object>> getDefaultDetailByCheckNo(String checkNo) {
         return spsSparesCheckDetailMapper.getDefaultDetailByCheckNo(checkNo);
     }
+
+    @Override
+    public List<Map<String, Object>> getGZZJDetailByCheckNo(String checkNo) {
+        return spsSparesCheckDetailMapper.getGZZJDetailByCheckNo(checkNo);
+    }
 }

@@ -78,7 +78,7 @@ public class GzkFixReqInfoController {
     public Result save(@RequestBody GzkFixReqInfo gzkFixReqInfo) {
         GzkFixDetailInfo fixDetailInfo = gzkFixDetailInfoService.getOne(new LambdaQueryWrapper<GzkFixDetailInfo>()
                 .eq(GzkFixDetailInfo::getFixNo, gzkFixReqInfo.getFixNo())
-                .eq(GzkFixDetailInfo::getState, 1)
+                .eq(GzkFixDetailInfo::getState, SysConst.FIX_STATE.ZK)
         );
         if (fixDetailInfo == null) {
             return Result.failed("备品不存在或已借出");

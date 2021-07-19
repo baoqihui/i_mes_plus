@@ -1,5 +1,6 @@
 package com.rh.i_mes_plus.controller.sps;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -83,14 +84,21 @@ public class GzkPartsReqInfoController {
     @ApiOperation(value = "借出")
     @PostMapping("/gzkPartsReqInfo/req")
     public Result req(@RequestBody GzkPartsReqInfo gzkPartsReqInfo) {
-        gzkPartsReqInfoService.updateById(gzkPartsReqInfo);
-        String kgtNo = gzkPartsReqInfo.getKgtNo();
-        //更改备品状态
-        gzkPartsDetailInfoService.update(new UpdateWrapper<GzkPartsDetailInfo>()
-                .eq("kgt_no",kgtNo)
-                .set("loc","4")
-                .set("state", SysConst.FIX_STATE.JC)
+        GzkPartsDetailInfo info = gzkPartsDetailInfoService.getOne(new LambdaQueryWrapper<GzkPartsDetailInfo>()
+                .eq(GzkPartsDetailInfo::getKgtNo, gzkPartsReqInfo.getKgtNo())
         );
+        if (info==null){
+            return Result.failed("无此备品");
+        }
+        if (!SysConst.FIX_STATE.JC.equals(info.getState())){
+            return Result.failed("备品非在库状态");
+        }
+        gzkPartsReqInfoService.updateById(gzkPartsReqInfo);
+        //更改备品状态
+        info.setLoc("4");
+        info.setState(SysConst.FIX_STATE.JC);
+        gzkPartsDetailInfoService.updateById(info);
+
         return Result.succeed("保存成功");
     }
     /**
