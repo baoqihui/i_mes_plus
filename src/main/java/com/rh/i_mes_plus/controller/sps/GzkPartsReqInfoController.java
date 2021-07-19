@@ -90,7 +90,7 @@ public class GzkPartsReqInfoController {
         if (info==null){
             return Result.failed("无此备品");
         }
-        if (!SysConst.FIX_STATE.JC.equals(info.getState())){
+        if (!SysConst.FIX_STATE.ZK.equals(info.getState())){
             return Result.failed("备品非在库状态");
         }
         gzkPartsReqInfoService.updateById(gzkPartsReqInfo);
