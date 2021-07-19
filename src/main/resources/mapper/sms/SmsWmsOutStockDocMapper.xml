@@ -154,7 +154,7 @@
             si.area_sn areaSn, -- 库位
             si.pdate pdate, -- 生产日期
             t.PROJECT_ID projectId, -- 工单号
-            d.doc_remark docRemark, -- 备注
+            d.doc_remark docRemark -- 备注
         from sms_wms_out_stock_list t
         LEFT JOIN sms_wms_out_stock_detail sd ON sd.id=t.osd_id
         LEFT JOIN sms_wms_out_stock_doc d ON d.doc_no=t.doc_no

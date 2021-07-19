@@ -28,6 +28,9 @@
         <if test="p.typeCode != null and p.typeCode != ''">
             and t.type_code LIKE '%${p.typeCode}%'
         </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code LIKE '%${p.itemCode}%'
+        </if>
         <if test="p.itemTypeCode != null and p.itemTypeCode != ''">
             and t.item_type_code LIKE '%${p.itemTypeCode}%'
         </if>
