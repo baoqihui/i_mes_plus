@@ -11,6 +11,7 @@ import com.rh.i_mes_plus.model.sms.SmsWmsMoveDoc;
 import com.rh.i_mes_plus.model.sms.SmsWmsOutStockDoc;
 import com.rh.i_mes_plus.model.sms.SmsWmsReloadDoc;
 import com.rh.i_mes_plus.model.ums.UmsUser;
+import com.rh.i_mes_plus.model.ums.UmsWmsArea;
 import com.rh.i_mes_plus.service.other.WebServiceDemoService;
 import com.rh.i_mes_plus.service.pdt.IPdtWmsBoxBarcodeService;
 import com.rh.i_mes_plus.service.pdt.IPdtWmsOutStockDocService;
@@ -21,6 +22,7 @@ import com.rh.i_mes_plus.service.sps.ITinReturnRecordService;
 import com.rh.i_mes_plus.service.sps.ITinTakeRecordService;
 import com.rh.i_mes_plus.service.sps.ITinUseRecordService;
 import com.rh.i_mes_plus.service.ums.IUmsUserService;
+import com.rh.i_mes_plus.service.ums.IUmsWmsAreaService;
 import com.rh.i_mes_plus.vo.UmsPermissionVO;
 import com.rh.i_mes_plus.vo.UmsUserVO;
 import lombok.extern.slf4j.Slf4j;
@@ -76,6 +78,8 @@ public class WebServiceDemoServiceImpl implements WebServiceDemoService {
     private IPdtWmsPmMoBaseService pdtWmsPmMoBaseService;
     @Autowired
     private ITinReturnRecordService tinReturnRecordService;
+    @Autowired
+    private IUmsWmsAreaService umsWmsAreaService;
     @Override
     public String login(String param) {
         Map<String,Object> map=(Map) JSON.parse(param);
@@ -371,6 +375,16 @@ public class WebServiceDemoServiceImpl implements WebServiceDemoService {
         log.info("pda扫码退库：{}",map);
         Result result = tinReturnRecordService.returnRecord(map);
         return result.getResp_msg();
+    }
+
+    @Override
+    public int arSnIsExist(String param) {
+        Map<String,Object> map=JSON.parseObject(param, Map.class);
+        String arSn = MapUtil.getStr(map, "arSn");
+        int count = umsWmsAreaService.count(new LambdaQueryWrapper<UmsWmsArea>()
+                .eq(UmsWmsArea::getArArea, arSn)
+        );
+        return count;
     }
 
 }

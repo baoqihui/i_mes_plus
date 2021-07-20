@@ -160,4 +160,10 @@ public interface WebServiceDemoService {
      */
     @WebMethod
     public String returnRecord(@WebParam(name = "param")String param);
+
+    /**
+     * 查询库位是否存在
+     */
+    @WebMethod
+    public int arSnIsExist(@WebParam(name = "param")String param);
 }
