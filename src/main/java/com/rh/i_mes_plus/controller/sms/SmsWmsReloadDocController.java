@@ -53,9 +53,25 @@ public class SmsWmsReloadDocController {
     private IUmsWmsAreaService umsWmsAreaService;
     @Autowired
     private ISmsWmsReloadDocDetailSubService smsWmsReloadDocDetailSubService;
-    
+
     @ApiOperation(value = "PDA扫码换料")
-    @PostMapping("/smsWmsReloadDoc/pdaReload")
+    @PostMapping("/mobile/getReloadDocListByDtCode")
+    public List<String> getReloadDocListByDtCode(@RequestBody Map<String, Object> params) {
+        List<SmsWmsReloadDoc> reloadDocs = smsWmsReloadDocService.list(new QueryWrapper<SmsWmsReloadDoc>()
+                .ne("reload_status", 4)
+                .orderByDesc("id")
+        );
+        List<String> outList=new ArrayList<>();
+        outList.add("ALL");
+        if (reloadDocs.size()>0){
+            for (SmsWmsReloadDoc smsWmsReloadDoc : reloadDocs) {
+                outList.add(smsWmsReloadDoc.getReloadNo());
+            }
+        }
+        return outList;
+    }
+    @ApiOperation(value = "PDA扫码换料")
+    @PostMapping("/mobile/pdaReload")
     public Result pdaReceive(@RequestBody Map<String,Object> map) {
         return smsWmsReloadDocService.pdaReload(map);
     }

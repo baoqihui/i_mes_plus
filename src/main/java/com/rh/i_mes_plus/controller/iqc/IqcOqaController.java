@@ -1,6 +1,8 @@
 package com.rh.i_mes_plus.controller.iqc;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -242,7 +244,20 @@ public class IqcOqaController {
                 .set("ok_num",okNum)
                 .set("oqc_audit",iqcOqa.getOqcAudit())
                 .set("oqc_status",3)
+                .set("oqc_audit_remark",iqcOqa.getOqcAuditRemark())
         );
+        //重工和烘烤
+        IqcOqa oqa = iqcOqaService.getOne(new LambdaQueryWrapper<IqcOqa>().eq(IqcOqa::getOqcNo, oqcNo));
+        String oqcAuditRemark = oqa.getOqcAuditRemark();
+        if (StrUtil.contains(oqcAuditRemark,"重工")||StrUtil.contains(oqcAuditRemark,"烘烤")){
+            for (IqcOqaBath iqcOqaBath : oqaBathList) {
+                String serialNumber = iqcOqaBath.getSerialNumber();
+                smsWmsStockInfoService.update(new UpdateWrapper<SmsWmsStockInfo>()
+                        .eq("TBL_BARCODE",serialNumber)
+                        .set("remark",oqcAuditRemark)
+                );
+            }
+        }
         return Result.succeed("已保存");
     }
     /**

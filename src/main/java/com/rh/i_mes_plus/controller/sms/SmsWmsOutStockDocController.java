@@ -54,7 +54,26 @@ public class SmsWmsOutStockDocController {
     private ISmsWmsOutStockPmItemService smsWmsOutStockPmItemService;
     @Autowired
     private ISmsWmsOutStockListService smsWmsOutStockListService;
-
+    /**
+     * 通过类型号获取出库单号
+     */
+    @ApiOperation(value = "通过类型号获取出库单号")
+    @PostMapping("/mobile/getOutList")
+    public List<String> getOutList(@RequestBody Map<String, Object> params) {
+        List<SmsWmsOutStockDoc> outStockDocs = smsWmsOutStockDocService.list(new QueryWrapper<SmsWmsOutStockDoc>()
+                .eq("dt_code",MapUtil.getStr(params,"dtCode"))
+                .ne("doc_status", 4)
+                .orderByDesc("id")
+        );
+        List<String> outList=new ArrayList<>();
+        outList.add("ALL");
+        if (outStockDocs.size()>0){
+            for (SmsWmsOutStockDoc outStockDoc : outStockDocs) {
+                outList.add(outStockDoc.getDocNo());
+            }
+        }
+        return outList;
+    }
     /**
      * 挑料亮灯
      */
@@ -117,7 +136,7 @@ public class SmsWmsOutStockDocController {
      * PDA扫码备料
      */
     @ApiOperation(value = "PDA扫码备料")
-    @PostMapping("/smsWmsOutStockDoc/pdaOutStock")
+    @PostMapping("/mobile/pdaOutStock")
     public Result pdaOutStock(@RequestBody Map<String,Object> map) {
         return smsWmsOutStockDocService.pdaOutStock(map);
     }
@@ -125,7 +144,7 @@ public class SmsWmsOutStockDocController {
      * PDA扫码取消备料
      */
     @ApiOperation(value = "PDA扫码取消备料")
-    @PostMapping("/smsWmsOutStockDoc/pdaCancelOutStock")
+    @PostMapping("/mobile/pdaCancelOutStock")
     public Result pdaCancelOutStock(@RequestBody Map<String,Object> map) {
         return smsWmsOutStockDocService.pdaCancelOutStock(map);
     }

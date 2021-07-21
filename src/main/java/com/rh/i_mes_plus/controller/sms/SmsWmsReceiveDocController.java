@@ -61,6 +61,15 @@ public class SmsWmsReceiveDocController {
     private IUmsItemSapService umsItemSapService;
     @Autowired
     private ISmsWmsBarcodeInfoService smsWmsBarcodeInfoService;
+
+    @ApiOperation(value = "通过类型号获取入库单号")
+    @PostMapping("/mobile/getReceiveList")
+    public List<String> getReceiveList(@RequestBody Map<String, Object> params) {
+        List<String> receiveList=new ArrayList<>();
+        receiveList.add("ALL");
+        receiveList.addAll(smsWmsReceiveDocService.getReceiveList(params));
+        return receiveList;
+    }
     /**
      * 通过sn查询条码详情
      */
@@ -110,13 +119,13 @@ public class SmsWmsReceiveDocController {
         return smsWmsReceiveDocService.updateAll(smsWmsReceiveAllDTO);
     }
     @ApiOperation(value = "PDA扫码")
-    @PostMapping("/smsWmsReceiveDoc/pdaReceive")
+    @PostMapping("/mobile/pdaReceive")
     public Result pdaReceive(@RequestBody Map<String,Object> map) {
         return smsWmsReceiveDocService.pdaReceive(map);
     }
 
     @ApiOperation(value = "PDA扫码取消")
-    @PostMapping("/smsWmsReceiveDoc/pdaReceiveCancel")
+    @PostMapping("/mobile/pdaReceiveCancel")
     public Result pdaReceiveCancel(@RequestBody Map<String,Object> map) {
         return smsWmsReceiveDocService.pdaReceiveCancel(map);
     }

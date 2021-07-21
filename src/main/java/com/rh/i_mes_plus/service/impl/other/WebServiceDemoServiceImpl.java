@@ -382,8 +382,9 @@ public class WebServiceDemoServiceImpl implements WebServiceDemoService {
         Map<String,Object> map=JSON.parseObject(param, Map.class);
         String arSn = MapUtil.getStr(map, "arSn");
         int count = umsWmsAreaService.count(new LambdaQueryWrapper<UmsWmsArea>()
-                .eq(UmsWmsArea::getArArea, arSn)
+                .eq(UmsWmsArea::getArSn, arSn)
         );
+        System.out.println(count);
         return count;
     }
 

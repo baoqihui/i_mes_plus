@@ -72,7 +72,7 @@ public class PdtWmsOutStockDocController {
      * PDA扫码备料
      */
     @ApiOperation(value = "成品PDA扫码出库")
-    @PostMapping("/pdtWmsOutStockDoc/pdaPdtOutStock")
+    @PostMapping("/mobile/pdaPdtOutStock")
     public Result pdaPdtOutStock(@RequestBody Map<String,Object> map) {
         return pdtWmsOutStockDocService.pdaPdtOutStock(map);
     }
@@ -85,7 +85,7 @@ public class PdtWmsOutStockDocController {
      * pda根据dtCode查询成品出库单号
      */
     @ApiOperation(value = "pda根据dtCode查询成品出库单号")
-    @PostMapping("/pdtWmsOutStockDoc/getOutStockDocListByDtCode")
+    @PostMapping("/mobile/getOutStockDocListByDtCode")
     public Result getOutStockDocListByDtCode(@RequestBody Map<String,Object> map) {
         List<String> strings=pdtWmsOutStockDocService.getOutStockDocListByDtCode(map);
         return Result.succeed(strings,"查询成功");

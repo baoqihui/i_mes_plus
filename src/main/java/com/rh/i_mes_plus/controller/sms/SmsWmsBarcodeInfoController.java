@@ -50,16 +50,16 @@ public class SmsWmsBarcodeInfoController {
      * 拆签
      */
     @ApiOperation(value = "拆签")
-    @PostMapping("/smsWmsBarcodeInfo/open")
-    public Result open(@RequestBody Map<String, Object> params) {
+    @PostMapping("/mobile/spilt")
+    public Result spilt(@RequestBody Map<String, Object> params) {
         return smsWmsBarcodeInfoService.spilt(params);
     }
     /**
      * 合签
      */
     @ApiOperation(value = "合签")
-    @PostMapping("/smsWmsBarcodeInfo/combine")
-    public Result close(@RequestBody Map<String, Object> params) {
+    @PostMapping("/mobile/combine")
+    public Result combine(@RequestBody Map<String, Object> params) {
         return smsWmsBarcodeInfoService.combine(params);
     }
     /**

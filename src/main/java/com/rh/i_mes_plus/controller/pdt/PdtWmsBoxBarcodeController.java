@@ -90,7 +90,7 @@ public class PdtWmsBoxBarcodeController {
      * 拆箱
      */
     @ApiOperation(value = "拆箱")
-    @PostMapping("/pdtWmsBoxBarcode/unboxing")
+    @PostMapping("/mobile/unboxing")
     public Result unboxing(@RequestBody Map<String,Object> map) {
         return pdtWmsBoxBarcodeService.unboxing(map);
     }
@@ -98,7 +98,7 @@ public class PdtWmsBoxBarcodeController {
      * 合箱
      */
     @ApiOperation(value = "合箱")
-    @PostMapping("/pdtWmsBoxBarcode/boxing")
+    @PostMapping("/mobile/boxing")
     public Result boxing(@RequestBody Map<String,Object> map) {
         return pdtWmsBoxBarcodeService.boxing(map);
     }

@@ -54,6 +54,22 @@ public class SmsWmsMoveDocController {
     @Autowired
     private IUmsWmsAreaService umsWmsAreaService;
 
+    @ApiOperation(value = "pda根据类型号查询调拨单号")
+    @PostMapping("/mobile/getMoveDocListByDtCode")
+    public List<String> getMoveDocListByDtCode(@RequestBody Map<String, Object> params) {
+        List<SmsWmsMoveDoc> moveDocs = smsWmsMoveDocService.list(new QueryWrapper<SmsWmsMoveDoc>()
+                .ne("move_status", 4)
+                .orderByDesc("id")
+        );
+        List<String> outList=new ArrayList<>();
+        outList.add("ALL");
+        if (moveDocs.size()>0){
+            for (SmsWmsMoveDoc smsWmsMoveDoc : moveDocs) {
+                outList.add(smsWmsMoveDoc.getMoveNo());
+            }
+        }
+        return outList;
+    }
     /**
      * 挑料亮灯
      */
@@ -105,7 +121,7 @@ public class SmsWmsMoveDocController {
      * PDA扫码调拨
      */
     @ApiOperation(value = "PDA扫码调拨")
-    @PostMapping("/smsWmsMoveDoc/pdaMove")
+    @PostMapping("/mobile/pdaMove")
     public Result pdaMove(@RequestBody Map<String,Object> map) {
         return smsWmsMoveDocService.pdaMove(map);
     }

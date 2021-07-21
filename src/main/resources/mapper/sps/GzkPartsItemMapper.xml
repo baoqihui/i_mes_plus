@@ -13,6 +13,7 @@
             usiti.item_type_name itemTypeName,  -- 小类名称
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
             t.update_time updateTime,  -- 更新时间
+            t.is_warn isWarn,   -- 是否预警
         ifnull((SELECT sum(a.qty) FROM gzk_parts_detail_info a WHERE a.item_code = t.item_code and a.loc='1'),0) productionQty, -- 量产库数量
         ifnull((SELECT sum(b.qty) FROM gzk_parts_detail_info b WHERE b.item_code = t.item_code and b.loc='2'),0) testQty,		  -- 实验库数量
         ifnull((SELECT sum(c.qty) FROM gzk_parts_detail_info c WHERE c.item_code = t.item_code and c.loc='3'),0) scrapQty,	  -- 报废库数量
@@ -28,6 +29,9 @@
         </if>
         <if test="p.itemDesc != null and p.itemDesc != ''">
             and t.item_desc LIKE '%${p.itemDesc}%'
+        </if>
+        <if test="p.isWarn != null and p.isWarn != ''">
+            and t.is_warn LIKE '%${p.isWarn}%'
         </if>
         <if test="p.itemTypeCode != null and p.itemTypeCode != ''">
             and t.item_type_code LIKE '%${p.itemTypeCode}%'

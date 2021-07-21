@@ -46,7 +46,7 @@ public class PdtWmsReceiveDocController {
     private IPdtWmsReceiveDetailService pdtWmsReceiveDetailService;
 
     @ApiOperation(value = "PDA箱码扫描")
-    @PostMapping("/pdtWmsReceiveDoc/pdaPdtReceive")
+    @PostMapping("/mobile/pdaPdtReceive")
     public Result pdaPdtReceive(@RequestBody Map<String,Object> map) {
         return pdtWmsReceiveDocService.pdaPdtReceive(map);
     }
@@ -59,7 +59,7 @@ public class PdtWmsReceiveDocController {
      * pda根据dtCode查询成品入库单号
      */
     @ApiOperation(value = "pda根据dtCode查询成品入库单号")
-    @PostMapping("/pdtWmsReceiveDoc/getReceiveDocListByDtCode")
+    @PostMapping("/mobile/getReceiveDocListByDtCode")
     public Result getReceiveDocListByDtCode(@RequestBody Map<String,Object> map) {
         List<String> strings=pdtWmsReceiveDocService.getReceiveDocListByDtCode(map);
         return Result.succeed(strings,"查询成功");

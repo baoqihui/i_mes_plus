@@ -103,4 +103,7 @@ public class SmsWmsStockInfo extends SuperEntity {
         @Excel(name = "部门名称")
         @ApiModelProperty(value = "部门名称")
         private String depaName;
+        @Excel(name = "备注")
+        @ApiModelProperty(value = "备注")
+        private String remark;
 }

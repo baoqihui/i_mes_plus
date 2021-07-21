@@ -25,7 +25,7 @@
             LEFT JOIN ums_wms_area c2 ON c2.AR_FATHER_SN = c1.AR_SN
             LEFT JOIN ums_wms_area c3 ON c3.AR_FATHER_SN = c2.AR_SN
         WHERE
-            c1.AR_FATHER_SN = '0' and c1.is_del =0
+            c1.AR_FATHER_SN = '0' and c1.is_del =0 and c2.is_del=0 and c3.is_del=0
         <if test="p.depaCode != null and p.depaCode != ''">
             and (
             c1.depa_code in

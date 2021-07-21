@@ -34,6 +34,7 @@
         t.project_id projectId,  -- 工单号
         t.create_time createTime,  -- 创建时间:按当前时间自动创建
         t.update_time updateTime,  -- 更新时间
+        t.remark remark,
         t.depa_code depaCode,  -- 部门代码
         t.depa_name depaName  -- 部门名称
         from sms_wms_stock_info t
@@ -80,6 +81,7 @@
         t.area_sn areaSn,  -- 库位
         t.freeze_flag freezeFlag,  -- 冻结标志（Y冻结/N解冻）
         t.have_check haveCheck,  -- 检验状态:Y为已检 N为未检
+        t.remark remark,
         t.in_stock_time inStockTime,  -- 入库时间
         t.in_stock_man inStockMan,  -- 入库人号
         u.user_name userName, -- 入库人名
