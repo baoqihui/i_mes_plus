@@ -3,6 +3,7 @@ package com.rh.i_mes_plus.controller.pdt;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 指令单号表
@@ -49,6 +51,18 @@ public class PdtWmsPmMoBaseController {
     public Result<PageResult> list(@RequestBody Map<String, Object> params) {
         Page<Map> list= pdtWmsPmMoBaseService.findList(params);
         return Result.succeed(PageResult.restPage(list),"查询成功");
+    }
+
+    @ApiOperation(value = "查询制令单列表")
+    @PostMapping("/mobile/getMoNoList")
+    public List<String> getMoNoList(String param) {
+        Map<String,Object> map=JSON.parseObject(param, Map.class);
+        log.info("pda查询制令单列表：{}",map);
+        List<PdtWmsPmMoBase> list = pdtWmsPmMoBaseService.list(new LambdaQueryWrapper<PdtWmsPmMoBase>().eq(PdtWmsPmMoBase::getMsCode,"SMT"));
+        List<String> tos=new ArrayList<>();
+        tos.add("");
+        tos.addAll(list.stream().map(PdtWmsPmMoBase::getMoNo).collect(Collectors.toList()));
+        return tos;
     }
     /**
      * 查询

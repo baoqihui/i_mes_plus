@@ -46,5 +46,6 @@ public interface ISmsWmsOutStockDocService extends IService<SmsWmsOutStockDoc> {
     Result lightUp(Map<String, Object> params);
 
     Result cancelLightUp(Map<String, Object> params);
+
 }
 

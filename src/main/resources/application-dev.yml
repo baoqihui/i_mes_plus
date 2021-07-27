@@ -66,4 +66,5 @@ shiro:
   session-id-cookie: MES_PLUS_COOKIE
 
 zhaoIpAndPort: 192.168.50.97:8003
-liIpAndPort: 192.168.61.202:8082
+lineBeforeLightsOnPort: 192.168.61.201:8082
+lineAfterLightsOnPort: 192.168.61.202:8082

@@ -84,7 +84,7 @@ public class SmsWmsStockInfoController {
      * 上架
      */
     @ApiOperation(value = "上架")
-    @PostMapping("/smsWmsStockInfo/putAway")
+    @PostMapping("/mobile/putAway")
     public Result putAway(@RequestBody Map<String, Object> params) {
         return smsWmsStockInfoService.putAway(params);
     }
@@ -92,7 +92,7 @@ public class SmsWmsStockInfoController {
      * 下架
      */
     @ApiOperation(value = "下架")
-    @PostMapping("/smsWmsStockInfo/soldOut")
+    @PostMapping("/mobile/soldOut")
     public Result soldOut(@RequestBody Map<String, Object> params) {
         return smsWmsStockInfoService.soldOut(params);
     }
@@ -106,7 +106,7 @@ public class SmsWmsStockInfoController {
         smsWmsStockInfoService.saveOrUpdate(smsWmsStockInfo);
         return Result.succeed("保存成功");
     }
-
+ 
     /**
          * 批量新增or更新
          */

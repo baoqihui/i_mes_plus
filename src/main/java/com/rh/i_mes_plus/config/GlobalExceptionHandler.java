@@ -41,17 +41,18 @@ public class GlobalExceptionHandler {
 	 * 空指针异常
 	 */
 	@ExceptionHandler(NullPointerException.class)
-	public Result nullPointerExceptionHandle(Exception e) {
+	public Result nullPointerExceptionHandle(NullPointerException e) {
+		System.out.println("------------------------------------------------------");
 		log.error("发生空指针异常！原因是：{} --- 位置为：{}",e.getMessage(),e.getStackTrace());
 		return Result.failedWith(e.getMessage(), ErrorEnum.E_500.getErrorCode(), ErrorEnum.E_500.getErrorMsg());
 	}
 	/**
 	 * 常规异常
 	 */
-/*	@ExceptionHandler(Exception.class)
+	@ExceptionHandler(Exception.class)
 	public Result exceptionHandle(Exception e) {
 		log.error("发生未知异常！原因是：{} --- 位置为：{}",e.getMessage(),e.getStackTrace());
 		return Result.failedWith(e.getMessage(), ErrorEnum.E_500.getErrorCode(), ErrorEnum.E_500.getErrorMsg());
-	}*/
+	}
 
 }

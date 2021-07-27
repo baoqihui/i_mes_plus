@@ -19,6 +19,7 @@
         t.WR_STATE wrState,
         t.PROJECT_ID projectId,
         t.customer customer,
+        t.WR_REMARK wrRemark,
         ar.AR_NAME whName -- 仓库名称
         FROM
         sms_wms_receive_doc t

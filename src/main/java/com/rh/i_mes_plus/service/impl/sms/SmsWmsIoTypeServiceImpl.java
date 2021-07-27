@@ -27,8 +27,10 @@ import java.util.Map;
 public class SmsWmsIoTypeServiceImpl extends ServiceImpl<SmsWmsIoTypeMapper, SmsWmsIoType> implements ISmsWmsIoTypeService {
     @Resource
     private SmsWmsIoTypeMapper smsWmsIoTypeMapper;
-    @Value("${liIpAndPort}")
-    private String liIpAndPort;
+    @Value("${lineAfterLightsOnPort}")
+    private String lineAfterLightsOnPort;
+    @Value("${lineBeforeLightsOnPort}")
+    private String lineBeforeLightsOnPort;
     /**
      * 列表
      * @param params
@@ -50,7 +52,8 @@ public class SmsWmsIoTypeServiceImpl extends ServiceImpl<SmsWmsIoTypeMapper, Sms
     @Override
     public Result LightControl(List<Map<String, Object>> params) {
         log.info("亮灯程序参数{}",params);
-        String result= HttpRequest.post(liIpAndPort+"/api/Light/LightControl").body(JSON.toJSONString(params)).execute().body();
-        return Result.succeed(result,"成功");
+        HttpRequest.post(lineAfterLightsOnPort+"/api/Light/LightControl").body(JSON.toJSONString(params)).execute().body();
+        HttpRequest.post(lineBeforeLightsOnPort+"/api/Light/LightControl").body(JSON.toJSONString(params)).execute().body();
+        return Result.succeed("成功");
     }
 }

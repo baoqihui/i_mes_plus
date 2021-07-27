@@ -46,9 +46,6 @@ public class GzkPartsDetailInfo extends SuperEntity {
         @Excel(name = "状态（在库/已借出/报废）",replace = {"在库_1", "借出_2","报废_3"})
         @ApiModelProperty(value = "状态（在库/已借出/报废）")
         private String state;
-        @Excel(name = "是否预警")
-        @ApiModelProperty(value = "是否预警")
-        private Integer isWarn;
         @Excel(name = "创建人")
         @ApiModelProperty(value = "创建人")
         private String createUser;

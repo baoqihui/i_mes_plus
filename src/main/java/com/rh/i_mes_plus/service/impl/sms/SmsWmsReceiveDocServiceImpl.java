@@ -257,7 +257,6 @@ public class SmsWmsReceiveDocServiceImpl extends ServiceImpl<SmsWmsReceiveDocMap
             String docNum = MapUtil.getStr(map, "docNum");
             String dtCode = MapUtil.getStr(map, "dtCode");
             Long amount = MapUtil.getLong(map, "amount");
-            System.out.println(map);
             SmsWmsIoType smsWmsIoType = smsWmsIoTypeService.getOne(new LambdaQueryWrapper<SmsWmsIoType>().eq(SmsWmsIoType::getDtCode, dtCode));
             String dtName="";
             if (smsWmsIoType!=null){

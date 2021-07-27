@@ -23,7 +23,7 @@ public interface IUmsWmsAreaService extends IService<UmsWmsArea> {
      * @param params
      * @return
      */
-    Page<UmsWmsArea> findList(Map<String, Object> params);
+    Page<Map> findList(Map<String, Object> params);
 
     List<OneVO> treeList(Map<String, Object> params);
 
@@ -32,5 +32,9 @@ public interface IUmsWmsAreaService extends IService<UmsWmsArea> {
     Result autoGenerate(UmsWmsAreaDTO umsWmsAreaDTO);
 
     Result leadIn(MultipartFile excel) throws Exception;
+
+    Result allLight(Map<String, Object> params);
+
+    Result allEmptyLight(Map<String, Object> params);
 }
 

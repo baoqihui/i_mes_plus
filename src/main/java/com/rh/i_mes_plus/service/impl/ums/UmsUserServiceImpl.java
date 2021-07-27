@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -216,5 +217,34 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
             return Result.succeed(umsUserVO,"登录成功");
         }
         return Result.failed("登录失败，账号或密码错误");
+    }
+
+    @Override
+    public String mobileLogin(Map map) {
+        String userAccount = MapUtil.getStr(map,"userAccount");
+        String userPwd = MapUtil.getStr(map,"userPwd");
+        userPwd= SecureUtil.md5(userPwd);
+        UmsUser umsUser = new UmsUser();
+        umsUser.setUserAccount(userAccount);
+        umsUser.setUserPwd(userPwd);
+        Result<UmsUserVO> result = umsUserService.pdaLogin(umsUser);
+        if (result.getResp_code()==1){
+            return "1";
+        }
+        List<UmsPermissionVO> umsPermissionVOS = result.getDatas().getUmsPermissionVOS();
+        if (umsPermissionVOS==null||umsPermissionVOS.size()<=0){
+            return "1";
+        }
+        List<String> tos=umsPermissionVOS.stream().map(u->u.getHref()).collect(Collectors.toList());
+        if (tos.contains("CangKuPDA")&&tos.contains("BaoZhuangPDA")){
+            return "4";
+        }
+        if (tos.contains("CangKuPDA")){
+            return "2";
+        }
+        if (tos.contains("BaoZhuangPDA")){
+            return "3";
+        }
+        return "1";
     }
 }

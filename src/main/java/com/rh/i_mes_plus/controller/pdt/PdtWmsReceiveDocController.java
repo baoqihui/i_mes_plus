@@ -60,9 +60,11 @@ public class PdtWmsReceiveDocController {
      */
     @ApiOperation(value = "pda根据dtCode查询成品入库单号")
     @PostMapping("/mobile/getReceiveDocListByDtCode")
-    public Result getReceiveDocListByDtCode(@RequestBody Map<String,Object> map) {
-        List<String> strings=pdtWmsReceiveDocService.getReceiveDocListByDtCode(map);
-        return Result.succeed(strings,"查询成功");
+    public List<String> getReceiveDocListByDtCode(@RequestBody Map<String,Object> map) {
+        List<String> receiveList=new ArrayList<>();
+        receiveList.add("ALL");
+        receiveList.addAll(pdtWmsReceiveDocService.getReceiveDocListByDtCode(map));
+        return receiveList;
     }
 
     /**

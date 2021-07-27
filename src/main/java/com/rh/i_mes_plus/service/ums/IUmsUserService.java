@@ -37,5 +37,7 @@ public interface IUmsUserService extends IService<UmsUser> {
     List<UmsUser> getManager(Map<String, Object> params);
 
     Result<UmsUserVO> pdaLogin(UmsUser umsUser);
+
+    String mobileLogin(Map<String, Object> map);
 }
 

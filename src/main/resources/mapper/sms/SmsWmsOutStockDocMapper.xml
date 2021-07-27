@@ -154,6 +154,7 @@
             si.area_sn areaSn, -- 库位
             si.pdate pdate, -- 生产日期
             t.PROJECT_ID projectId, -- 工单号
+            si.stock_flag stockFlag,
             d.doc_remark docRemark -- 备注
         from sms_wms_out_stock_list t
         LEFT JOIN sms_wms_out_stock_detail sd ON sd.id=t.osd_id
@@ -176,6 +177,7 @@
             si.reservoir_code reservoirCode, -- 库区SN
             si.area_sn areaSn, -- 库位
             si.pdate pdate, -- 生产日期
+            si.stock_flag stockFlag,
             si.PROJECT_ID projectId -- 工单号
         from sms_wms_stock_info si
         LEFT JOIN ums_wms_area aa on aa.AR_SN=si.wh_code

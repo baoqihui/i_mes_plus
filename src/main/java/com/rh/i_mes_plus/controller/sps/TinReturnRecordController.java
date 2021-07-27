@@ -38,7 +38,7 @@ public class TinReturnRecordController {
      * 退库
      */
     @ApiOperation(value = "退库")
-    @PostMapping("/tinUseRecord/returnRecord")
+    @PostMapping("/mobile/returnRecord")
     public Result returnRecord(@RequestBody Map<String, Object> params) {
         return tinReturnRecordService.returnRecord(params);
     }

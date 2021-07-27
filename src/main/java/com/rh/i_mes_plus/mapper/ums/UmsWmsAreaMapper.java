@@ -24,9 +24,13 @@ public interface UmsWmsAreaMapper extends SuperMapper<UmsWmsArea> {
      * @param params
      * @return
      */
-    Page<UmsWmsArea> findList(Page<UmsWmsArea> pages, @Param("p") Map<String, Object> params);
+    Page<Map> findList(Page<Map> pages, @Param("p") Map<String, Object> params);
 
     List<OneVO> treeList(@Param("p") Map<String, Object> params);
 
     UmsWmsArea getParent(String arSn);
+
+    List<String> findAllMainBoard();
+
+    List<UmsWmsArea> getEmptyStock();
 }

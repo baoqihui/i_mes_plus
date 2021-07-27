@@ -37,5 +37,8 @@ public class GzkPartsItem extends SuperEntity {
         @Excel(name = "最小库存")
         @ApiModelProperty(value = "最小库存")
         private String minQty;
+        @Excel(name = "是否预警")
+        @ApiModelProperty(value = "是否预警")
+        private Integer isWarn;
 
 }

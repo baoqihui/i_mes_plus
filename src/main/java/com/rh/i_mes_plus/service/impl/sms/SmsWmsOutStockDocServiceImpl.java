@@ -20,9 +20,11 @@ import com.rh.i_mes_plus.mapper.sms.SmsWmsOutStockDocMapper;
 import com.rh.i_mes_plus.model.other.PdaMesLog;
 import com.rh.i_mes_plus.model.sms.*;
 import com.rh.i_mes_plus.model.ums.UmsUser;
+import com.rh.i_mes_plus.model.ums.UmsWmsArea;
 import com.rh.i_mes_plus.service.other.IPdaMesLogService;
 import com.rh.i_mes_plus.service.sms.*;
 import com.rh.i_mes_plus.service.ums.IUmsUserService;
+import com.rh.i_mes_plus.service.ums.IUmsWmsAreaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +63,12 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
     private ISmsWmsIoTypeService smsWmsIoTypeService;
     @Autowired
     private ISmsLightColorService smsLightColorService;
-    @Value("${liIpAndPort}")
-    private String liIpAndPort;
+    @Autowired
+    private IUmsWmsAreaService umsWmsAreaService;
+    @Value("${lineBeforeLightsOnPort}")
+    private String lineBeforeLightsOnPort;
+    @Value("${lineAfterLightsOnPort}")
+    private String lineAfterLightsOnPort;
     /**
      * 列表
      * @param params
@@ -80,7 +86,7 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
         Page<Map> pages = new Page<>(pageNum, pageSize);
         return smsWmsOutStockDocMapper.findList(pages, params);
     }
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = ArithmeticException.class)
     @Override
     public Result saveAll(SmsWmsOutStockDocDTO smsWmsOutStockDocDTO) {
         String finalDocNo="";
@@ -284,7 +290,6 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
         SmsLightColor smsLightColor = lightColors.get(0);
         String docNo = MapUtil.getStr(params, "docNo");
         SmsWmsOutStockDoc stockDoc = getOne(new LambdaQueryWrapper<SmsWmsOutStockDoc>().eq(SmsWmsOutStockDoc::getDocNo, docNo));
-        String dtCode = stockDoc.getDtCode();
         List<SmsWmsOutStockDetail> outStockDocDetails = smsWmsOutStockDetailService.list(new LambdaQueryWrapper<SmsWmsOutStockDetail>()
                 .eq(SmsWmsOutStockDetail::getDocNo, docNo)
         );
@@ -294,6 +299,7 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
         if (stockDoc.getColorId()!=0){
             return Result.failed("已经挑料，无法重复挑料");
         }
+        String dtCode = stockDoc.getDtCode();
         //更新入库单亮灯数据
         stockDoc.setColorId(smsLightColor.getId());
         updateById(stockDoc);
@@ -310,7 +316,7 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
             wrapper.eq(SmsWmsStockInfo::getStockFlag, 1);
             wrapper.eq(SmsWmsStockInfo::getOutStockDoc,"");
             wrapper.orderByAsc(SmsWmsStockInfo::getId);
-            //2021.07.02加冻结物料无法冻结
+            //2021.07.02加冻结物料无法挑料
             if (SysConst.DT_CODE.BL.equals(dtCode)){
                 wrapper.eq(SmsWmsStockInfo::getFreezeFlag,"N");
             }
@@ -318,6 +324,8 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
             List<SmsWmsStockInfo> stockInfos = smsWmsStockInfoService.list(wrapper);
 
             if (!stockInfos.isEmpty()){
+                UmsWmsArea umsWmsArea = umsWmsAreaService.getOne(new LambdaQueryWrapper<UmsWmsArea>().eq(UmsWmsArea::getArSn, stockInfos.get(0)));
+                Integer storageRules = umsWmsArea.getStorageRules();
                 List<Map<String, Object>> lightMaps=new ArrayList<>();
                 for (SmsWmsStockInfo stockInfo : stockInfos) {
                     if (planQty>realQty){
@@ -325,18 +333,27 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
                         smsWmsStockInfoService.updateById(stockInfo);
                         //调取亮灯服务
                         String areaSn = stockInfo.getAreaSn();
+                        UmsWmsArea area = umsWmsAreaService.getOne(new LambdaQueryWrapper<UmsWmsArea>().eq(UmsWmsArea::getArSn,areaSn));
+                        Integer arArea = area.getArArea();
                         Map<String, Object> lightMap = new HashMap<>();
                         lightMap.put("MainBoard",Convert.toInt(areaSn.substring(0, 3)));
                         lightMap.put("Position", Convert.toInt(areaSn.substring(3)));
                         lightMap.put("LightState",1);
                         lightMap.put("LightColor",smsLightColor.getId());
+                        lightMap.put("Side",arArea);
                         lightMaps.add(lightMap);
                         realQty=realQty+stockInfo.getAmount();
                     }
                 }
                 String param = JSONUtil.toJsonStr(lightMaps);
                 log.info("亮灯参数{}",param);
-                HttpRequest.post(liIpAndPort+"/api/Light/LightControl").body(param).execute().body();
+                if (storageRules==1){
+                    HttpRequest.post(lineBeforeLightsOnPort+"/api/Light/LightControl").body(param).execute().body();
+                    HttpRequest.post(lineBeforeLightsOnPort+"/api/Light/LighthouseControl").body(param).execute().body();
+                }else {
+                    HttpRequest.post(lineAfterLightsOnPort+"/api/Light/LightControl").body(param).execute().body();
+                    HttpRequest.post(lineAfterLightsOnPort+"/api/Light/LighthouseControl").body(param).execute().body();
+                }
             }
         }
         return Result.succeed("亮灯成功");
@@ -369,7 +386,8 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
             lightMaps.add(lightMap);
             String param = JSONUtil.toJsonStr(lightMaps);
             log.info(param);
-            HttpRequest.post(liIpAndPort+"/api/Light/LightControl").body(param).execute().body();
+            HttpRequest.post(lineBeforeLightsOnPort+"/api/Light/LightControl").body(param).execute().body();
+            HttpRequest.post(lineAfterLightsOnPort+"/api/Light/LightControl").body(param).execute().body();
         }
         smsWmsStockInfoService.update(new LambdaUpdateWrapper<SmsWmsStockInfo>()
                 .eq(SmsWmsStockInfo::getOutStockDoc,docNo)
@@ -380,10 +398,8 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
         return Result.succeed("取消成功");
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public Result pdaOutStock(Map<String, Object> map) {
-        try{
             String barcode = MapUtil.getStr(map, "barcode");
             String empNo = MapUtil.getStr(map, "empNo");
             String docNum = MapUtil.getStr(map, "docNum");
@@ -401,18 +417,18 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
             if (stockInfo == null) {
                 return Result.failed("无此条码");
             }
-            /*2021.03.15需求更改去除限制
-            if (!"W-M-MPA".equals(stockInfo.getWhCode())) {
-                return Result.failed("此条码不在正式库");
-            }*/
             if (!("1".equals(stockInfo.getStockFlag()))) {
                 return Result.failed("此条码库存非在库状态");
             }
-            if (StrUtil.isBlank(stockInfo.getOutStockDoc())) {
-                return Result.failed("此条码未挑料");
+            if(stockInfo.getFreezeFlag().equals("Y")){
+                return Result.failed("条码冻结中");
+            }
+            if (StrUtil.isNotBlank(stockInfo.getOutStockDoc())&&!stockInfo.getOutStockDoc().equals(docNum)){
+                return Result.failed("此条码已被其他入库单绑定");
             }
             Long skAmount = stockInfo.getAmount();
             String coItemCode = stockInfo.getCoItemCode();
+            String areaSn = stockInfo.getAreaSn();
             if(skAmount<=0){
                 return Result.failed("剩余数量不足");
             }
@@ -436,22 +452,25 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
             smsWmsOutStockDetailService.updateById(outStockDetail);
 
             //修改仓库信息
+            stockInfo.setAreaSn("");
             stockInfo.setStockFlag("2");
             stockInfo.setOutStockDoc("");
             smsWmsStockInfoService.updateById(stockInfo);
 
             List<Map<String, Object>> lightMaps=new ArrayList<>();
             Map<String, Object> lightMap = new HashMap<>();
-            String areaSn = stockInfo.getAreaSn();
-            lightMap.put("MainBoard", Convert.toInt(areaSn.substring(0, 3)));
-            lightMap.put("Position", Convert.toInt(areaSn.substring(3)));
-            lightMap.put("LightState",0);
-            lightMap.put("LightColor",outStockDoc.getColorId());
-            lightMaps.add(lightMap);
-
-            String param = JSONUtil.toJsonStr(lightMaps);
-            log.info(param);
-            HttpRequest.post(liIpAndPort+"/api/Light/LightControl").body(param).execute().body();
+            //如果上架需要灭灯
+            if(StrUtil.isNotBlank(areaSn)){
+                lightMap.put("MainBoard", Convert.toInt(areaSn.substring(0, 3)));
+                lightMap.put("Position", Convert.toInt(areaSn.substring(3)));
+                lightMap.put("LightState",0);
+                lightMap.put("LightColor",outStockDoc.getColorId());
+                lightMaps.add(lightMap);
+                String param = JSONUtil.toJsonStr(lightMaps);
+                log.info(param);
+                HttpRequest.post(lineBeforeLightsOnPort+"/api/Light/LightControl").body(param).execute().body();
+                HttpRequest.post(lineAfterLightsOnPort+"/api/Light/LightControl").body(param).execute().body();
+            }
 
             //添加list表
             SmsWmsOutStockList smsWmsOutStockList = new SmsWmsOutStockList();
@@ -471,6 +490,14 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
             smsWmsOutStockList.setProjectId(stockInfo.getProjectId());
             smsWmsOutStockListService.save(smsWmsOutStockList);
 
+            int count = smsWmsStockInfoService.count(new LambdaQueryWrapper<SmsWmsStockInfo>().eq(SmsWmsStockInfo::getOutStockDoc, docNum));
+            if (count==0){
+                smsLightColorService.update(new LambdaUpdateWrapper<SmsLightColor>()
+                        .eq(SmsLightColor::getId, outStockDoc.getColorId())
+                        .set(SmsLightColor::getState,0)
+                );
+                outStockDoc.setColorId(0L);
+            }
             //修改出库单状态
             outStockDoc.setDocStatus("2");
             updateById(outStockDoc);
@@ -486,12 +513,7 @@ public class SmsWmsOutStockDocServiceImpl extends ServiceImpl<SmsWmsOutStockDocM
                     .createUser(user.getUserName())
                     .build()
             );
-            return Result.succeed("备料成功");
-        }catch (Exception e){
-            // 事务回滚
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return Result.failed( "备料失败");
-        }
+           return Result.succeed("备料成功");
     }
 
     @Override

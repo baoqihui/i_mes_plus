@@ -1,6 +1,8 @@
 package com.rh.i_mes_plus.controller.ums;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rh.i_mes_plus.common.model.PageResult;
@@ -41,6 +43,26 @@ public class UmsWmsAreaController {
     private IUmsWmsAreaService umsWmsAreaService;
     @Autowired
     private IUmsDepaService umsDepaService;
+
+    @ApiOperation(value = "全亮/灭")
+    @PostMapping("/umsWmsArea/allLight")
+    public Result allLight(@RequestBody Map<String, Object> params) {
+        return umsWmsAreaService.allLight(params);
+    }
+    @ApiOperation(value = "空库全亮")
+    @PostMapping("/umsWmsArea/allEmptyLight")
+    public Result allEmptyLight(@RequestBody Map<String, Object> params) {
+        return umsWmsAreaService.allEmptyLight(params);
+    }
+    @ApiOperation(value = "查询库位是否存在")
+    @PostMapping("/mobile/arSnIsExist")
+    public int arSnIsExist(@RequestBody Map<String, Object> params) {
+        String arSn = MapUtil.getStr(params, "arSn");
+        int count = umsWmsAreaService.count(new LambdaQueryWrapper<UmsWmsArea>()
+                .eq(UmsWmsArea::getArSn, arSn)
+        );
+        return count;
+    }
     @ApiOperation(value = "(三级)辅料储位树形列表")
     @PostMapping("/umsWmsArea/treeList")
     public Result treeList(@RequestBody Map<String, Object> params) {
@@ -56,7 +78,7 @@ public class UmsWmsAreaController {
     @ApiOperation(value = "查询列表")
     @PostMapping("/umsWmsArea/list")
     public Result<PageResult> list(@RequestBody Map<String, Object> params) {
-        Page<UmsWmsArea> list= umsWmsAreaService.findList(params);
+        Page<Map> list= umsWmsAreaService.findList(params);
         return Result.succeed(PageResult.restPage(list),"查询成功");
     }
     /**

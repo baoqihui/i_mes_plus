@@ -39,7 +39,7 @@ public class TinUseRecordController {
      * 领用
      */
     @ApiOperation(value = "领用")
-    @PostMapping("/tinUseRecord/use")
+    @PostMapping("/mobile/use")
     public Result use(@RequestBody Map<String, Object> params) {
         return tinUseRecordService.use(params);
     }
@@ -48,7 +48,7 @@ public class TinUseRecordController {
      * 上锡膏
      */
     @ApiOperation(value = "上锡膏")
-    @PostMapping("/tinUseRecord/upTin")
+    @PostMapping("/mobile/upTin")
     public Result upTin(@RequestBody Map<String, Object> params) {
         return tinUseRecordService.upTin(params);
     }

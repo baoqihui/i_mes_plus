@@ -54,7 +54,14 @@ public class UmsUserController {
     public Result authLogin(@RequestBody Map<String, Object> map) {
         return umsUserService.authLogin(map);
     }
-
+    /**
+     * 手机端登录
+     */
+    @ApiOperation(value = "手机端登录")
+    @PostMapping("/mobile/login")
+    public String mobileLogin(@RequestBody Map<String, Object> map) {
+        return umsUserService.mobileLogin(map);
+    }
     /**
      * 查询当前登录用户的信息
      */

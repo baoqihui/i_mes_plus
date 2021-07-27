@@ -1,5 +1,9 @@
 package com.rh.i_mes_plus.service.impl.ums;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,6 +17,7 @@ import com.rh.i_mes_plus.util.EasyPoiExcelUtil;
 import com.rh.i_mes_plus.vo.OneVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -20,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,12 +40,16 @@ import java.util.Map;
 public class UmsWmsAreaServiceImpl extends ServiceImpl<UmsWmsAreaMapper, UmsWmsArea> implements IUmsWmsAreaService {
     @Resource
     private UmsWmsAreaMapper umsWmsAreaMapper;
+    @Value("${lineBeforeLightsOnPort}")
+    private String lineBeforeLightsOnPort;
+    @Value("${lineAfterLightsOnPort}")
+    private String lineAfterLightsOnPort;
     /**
      * 列表
      * @param params
      * @return
      */
-    public Page<UmsWmsArea> findList(Map<String, Object> params){
+    public Page<Map> findList(Map<String, Object> params){
         Integer pageNum = MapUtils.getInteger(params, "pageNum");
         Integer pageSize = MapUtils.getInteger(params, "pageSize");
         if (pageNum == null) {
@@ -48,7 +58,7 @@ public class UmsWmsAreaServiceImpl extends ServiceImpl<UmsWmsAreaMapper, UmsWmsA
         if (pageSize == null) {
             pageSize = -1;
         }
-        Page<UmsWmsArea> pages = new Page<>(pageNum, pageSize);
+        Page<Map> pages = new Page<>(pageNum, pageSize);
         return umsWmsAreaMapper.findList(pages, params);
     }
 
@@ -140,5 +150,48 @@ public class UmsWmsAreaServiceImpl extends ServiceImpl<UmsWmsAreaMapper, UmsWmsA
             return Result.failed( "添加失败,请检查库位是否占用");
         }
         return Result.succeed("导入成功");
+    }
+
+    @Override
+    public Result allLight(Map<String, Object> params) {
+        Integer LightColor = MapUtil.getInt(params, "LightColor");
+        Integer LightState = MapUtil.getInt(params, "LightState");
+        List<String> mainBoards=umsWmsAreaMapper.findAllMainBoard();
+        List<Map<String, Object>> lightMaps=new ArrayList<>();
+        for (String mainBoard : mainBoards) {
+            //调取亮灯服务
+            Map<String, Object> lightMap = new HashMap<>();
+            lightMap.put("MainBoard", mainBoard);
+            lightMap.put("LightState",LightState);
+            lightMap.put("LightColor",LightColor);
+            lightMaps.add(lightMap);
+        }
+        String param = JSONUtil.toJsonStr(lightMaps);
+        log.info("亮灯参数{}",param);
+        HttpRequest.post(lineBeforeLightsOnPort+"/api/Light/ShelfControl").body(param).execute().body();
+        HttpRequest.post(lineAfterLightsOnPort+"/api/Light/ShelfControl").body(param).execute().body();
+        HttpRequest.post(lineBeforeLightsOnPort+"/api/Light/LighthouseControl").body(param).execute().body();
+        HttpRequest.post(lineAfterLightsOnPort+"/api/Light/LighthouseControl").body(param).execute().body();
+        return Result.succeed("保存成功");
+    }
+
+    @Override
+    public Result allEmptyLight(Map<String, Object> params) {
+        Integer LightColor = MapUtil.getInt(params, "LightColor");
+        List<UmsWmsArea> umsWmsAreas= umsWmsAreaMapper.getEmptyStock();
+        List<Map<String, Object>> lightMaps=new ArrayList<>();
+        for (UmsWmsArea umsWmsArea : umsWmsAreas) {
+            String arSn = umsWmsArea.getArSn();
+            Map<String, Object> lightMap = new HashMap<>();
+            lightMap.put("MainBoard",Convert.toInt(arSn.substring(0, 3)));
+            lightMap.put("Position", Convert.toInt(arSn.substring(3)));
+            lightMap.put("LightState",1);
+            lightMap.put("LightColor",LightColor);
+            lightMaps.add(lightMap);
+        }
+        String param = JSONUtil.toJsonStr(lightMaps);
+        HttpRequest.post(lineBeforeLightsOnPort+"/api/Light/LightControl").body(param).execute().body();
+        HttpRequest.post(lineAfterLightsOnPort+"/api/Light/LightControl").body(param).execute().body();
+        return Result.succeed("成功");
     }
 }

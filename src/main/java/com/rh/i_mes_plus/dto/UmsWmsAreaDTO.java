@@ -11,7 +11,7 @@ public class UmsWmsAreaDTO {
     private String arFatherSn;
     private String connector;
     private String arState;
-    private Long arArea;
+    private Integer arArea;
     private Long arAreaUnit;
     private Long arCubage;
     private Long arCubageUnit;

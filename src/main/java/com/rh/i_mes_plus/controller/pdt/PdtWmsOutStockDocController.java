@@ -86,9 +86,11 @@ public class PdtWmsOutStockDocController {
      */
     @ApiOperation(value = "pda根据dtCode查询成品出库单号")
     @PostMapping("/mobile/getOutStockDocListByDtCode")
-    public Result getOutStockDocListByDtCode(@RequestBody Map<String,Object> map) {
-        List<String> strings=pdtWmsOutStockDocService.getOutStockDocListByDtCode(map);
-        return Result.succeed(strings,"查询成功");
+    public List<String> getOutStockDocListByDtCode(@RequestBody Map<String,Object> map) {
+        List<String> receiveList=new ArrayList<>();
+        receiveList.add("ALL");
+        receiveList.addAll(pdtWmsOutStockDocService.getOutStockDocListByDtCode(map));
+        return receiveList;
     }
     /**
      * 根据机构代码查询要生成的出库单号

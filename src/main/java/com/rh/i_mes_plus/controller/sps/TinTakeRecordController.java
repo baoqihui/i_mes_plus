@@ -40,7 +40,7 @@ public class TinTakeRecordController {
      * 回温
      */
     @ApiOperation(value = "回温")
-    @PostMapping("/tinTakeRecord/take")
+    @PostMapping("/mobile/take")
     public Result take(@RequestBody Map<String, Object> params) {
         return tinTakeRecordService.take(params);
     }
@@ -49,7 +49,7 @@ public class TinTakeRecordController {
      * 取消回温
      */
     @ApiOperation(value = "取消回温")
-    @PostMapping("/tinTakeRecord/cancelTake")
+    @PostMapping("/mobile/cancelTake")
     public Result cancelTake(@RequestBody Map<String, Object> params) {
         return tinTakeRecordService.cancelTake(params);
     }

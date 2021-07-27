@@ -49,7 +49,7 @@ public class SmsWmsIoTypeController {
     private ISmsWmsErpDocTypeService smsWmsErpDocTypeService;
 
     @ApiOperation(value = "亮灯")
-    @PostMapping(value = "/LightControl")
+    @PostMapping(value = "/mobile/LightControl")
     protected Result ApiEcnCheckFai(@RequestBody List<Map<String, Object>> params)  {
         return smsWmsIoTypeService.LightControl(params);
     }

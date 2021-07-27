@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rh.i_mes_plus.common.model.Result;
+import com.rh.i_mes_plus.common.model.SysConst;
 import com.rh.i_mes_plus.mapper.sms.SmsWmsStockInfoMapper;
 import com.rh.i_mes_plus.model.other.PdaMesLog;
 import com.rh.i_mes_plus.model.sms.SmsWmsStockInfo;
@@ -43,8 +44,10 @@ public class SmsWmsStockInfoServiceImpl extends ServiceImpl<SmsWmsStockInfoMappe
     private IPdaMesLogService pdaMesLogService;
     @Autowired
     private IUmsUserService umsUserService;
-    @Value("${liIpAndPort}")
-    private String liIpAndPort;
+    @Value("${lineBeforeLightsOnPort}")
+    private String lineBeforeLightsOnPort;
+    @Value("${lineAfterLightsOnPort}")
+    private String lineAfterLightsOnPort;
     /**
      * 列表
      * @param params
@@ -103,6 +106,9 @@ public class SmsWmsStockInfoServiceImpl extends ServiceImpl<SmsWmsStockInfoMappe
         SmsWmsStockInfo stockInfo = getOne(new QueryWrapper<SmsWmsStockInfo>().eq("tbl_barcode", barcode));
         if (stockInfo==null){
             return Result.failed("无此条码");
+        }
+        if (!stockInfo.getWhCode().equals("W-M-MPA")){
+            return Result.failed("非MPA库");
         }
         if (StrUtil.isNotBlank(stockInfo.getAreaSn())){
             return Result.failed("该条码已绑定库位");
@@ -165,6 +171,9 @@ public class SmsWmsStockInfoServiceImpl extends ServiceImpl<SmsWmsStockInfoMappe
             return Result.failed("无此条码");
         }
         String areaSn = stockInfo.getAreaSn();
+        if (StrUtil.isBlank(areaSn)){
+            return Result.failed("未上架");
+        }
         List<Map<String, Object>> lightMaps=new ArrayList<>();
         Map<String, Object> lightMap = new HashMap<>();
         lightMap.put("MainBoard", Convert.toInt(areaSn.substring(0, 3)));
@@ -175,7 +184,8 @@ public class SmsWmsStockInfoServiceImpl extends ServiceImpl<SmsWmsStockInfoMappe
         lightMaps.add(lightMap);
         String param = JSONUtil.toJsonStr(lightMaps);
         log.info("亮灯参数{}",param);
-        HttpRequest.post(liIpAndPort+"/api/Light/LightControl").body(param).execute().body();
+        HttpRequest.post(lineBeforeLightsOnPort+"/api/Light/LightControl").body(param).execute().body();
+        HttpRequest.post(lineAfterLightsOnPort+"/api/Light/LightControl").body(param).execute().body();
         return Result.succeed(stockInfo.getAreaSn());
     }
 

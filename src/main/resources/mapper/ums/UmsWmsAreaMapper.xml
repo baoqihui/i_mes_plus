@@ -2,8 +2,131 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsWmsAreaMapper">
-    <select id="findList" resultType="com.rh.i_mes_plus.model.ums.UmsWmsArea">
-        select * from ums_wms_area t
+    <select id="findList" resultType="map">
+        select
+            t.id id,  --
+            t.AR_SN arSn,  -- 区域SN
+            t.AR_NAME arName,  -- 区域名称
+            t.COMMANDSET_ID commandsetId,  --
+            t.ST_CODE stCode,  -- 东贝特有，其他项目不使用
+            t.AT_CODE atCode,  -- 仓库、库区、库位区分标识（S:仓库、A:库区、P:库位）
+            t.AR_DEVICE arDevice,  --
+            t.AR_REMARK arRemark,  -- 备注
+            t.AR_AREA arArea,  -- 面积
+            t.AR_AREA_UNIT arAreaUnit,  -- 面积单位
+            t.AR_CUBAGE arCubage,  --
+            t.AR_CUBAGE_UNIT arCubageUnit,  --
+            t.AR_OUT_FLAG arOutFlag,  --
+            t.AR_IN_FLAG arInFlag,  --
+            t.AR_PATH arPath,  -- 路径
+            t.AR_STATE arState,  -- 状态（N禁用，Y）
+            t.AR_FATHER_SN arFatherSn,  -- 隶属区域
+            t.STORAGE_RULES storageRules,  -- 存储规则
+            t.STORAGE_BOX storageBox,  -- 存放箱数
+            t.EXISTING_BOX existingBox,  -- 限存箱数
+            t.AR_IS_AGING arIsAging,  -- 是否老化仓位
+            t.AREA_PROPERTY areaProperty,  --
+            t.AR_IS_LINEAREA arIsLinearea,  -- 是否为线边仓
+            t.HW_ADDR hwAddr,  -- 货架硬体编码
+            t.REEL_SHELF_IP reelShelfIp,  -- 货架服务IP
+            t.create_time createTime,  -- 创建时间:按当前时间自动创建
+            t.update_time updateTime,  -- 更新时间
+            t.is_del isDel,  --
+            t.depa_code depaCode,  -- 部门代码
+            t.depa_name depaName  -- 部门名称
+        from ums_wms_area t
+        left join sms_wms_stock_info swsi on swsi.area_sn=t.AR_SN
+        where 1=1
+        <if test="p.arSn != null and p.arSn != ''">
+            and t.AR_SN LIKE '%${p.arSn}%'
+        </if>
+        <if test="p.arName != null and p.arName != ''">
+            and t.AR_NAME LIKE '%${p.arName}%'
+        </if>
+        <if test="p.commandsetId != null and p.commandsetId != ''">
+            and t.COMMANDSET_ID LIKE '%${p.commandsetId}%'
+        </if>
+        <if test="p.stCode != null and p.stCode != ''">
+            and t.ST_CODE LIKE '%${p.stCode}%'
+        </if>
+        <if test="p.atCode != null and p.atCode != ''">
+            and t.AT_CODE LIKE '%${p.atCode}%'
+        </if>
+        <if test="p.arDevice != null and p.arDevice != ''">
+            and t.AR_DEVICE LIKE '%${p.arDevice}%'
+        </if>
+        <if test="p.arRemark != null and p.arRemark != ''">
+            and t.AR_REMARK LIKE '%${p.arRemark}%'
+        </if>
+        <if test="p.arArea != null and p.arArea != ''">
+            and t.AR_AREA LIKE '%${p.arArea}%'
+        </if>
+        <if test="p.arAreaUnit != null and p.arAreaUnit != ''">
+            and t.AR_AREA_UNIT LIKE '%${p.arAreaUnit}%'
+        </if>
+        <if test="p.arCubage != null and p.arCubage != ''">
+            and t.AR_CUBAGE LIKE '%${p.arCubage}%'
+        </if>
+        <if test="p.arCubageUnit != null and p.arCubageUnit != ''">
+            and t.AR_CUBAGE_UNIT LIKE '%${p.arCubageUnit}%'
+        </if>
+        <if test="p.arOutFlag != null and p.arOutFlag != ''">
+            and t.AR_OUT_FLAG LIKE '%${p.arOutFlag}%'
+        </if>
+        <if test="p.arInFlag != null and p.arInFlag != ''">
+            and t.AR_IN_FLAG LIKE '%${p.arInFlag}%'
+        </if>
+        <if test="p.arPath != null and p.arPath != ''">
+            and t.AR_PATH LIKE '%${p.arPath}%'
+        </if>
+        <if test="p.arState != null and p.arState != ''">
+            and t.AR_STATE LIKE '%${p.arState}%'
+        </if>
+        <if test="p.arFatherSn != null and p.arFatherSn != ''">
+            and t.AR_FATHER_SN LIKE '%${p.arFatherSn}%'
+        </if>
+        <if test="p.storageRules != null and p.storageRules != ''">
+            and t.STORAGE_RULES LIKE '%${p.storageRules}%'
+        </if>
+        <if test="p.storageBox != null and p.storageBox != ''">
+            and t.STORAGE_BOX LIKE '%${p.storageBox}%'
+        </if>
+        <if test="p.existingBox != null and p.existingBox != ''">
+            and t.EXISTING_BOX LIKE '%${p.existingBox}%'
+        </if>
+        <if test="p.arIsAging != null and p.arIsAging != ''">
+            and t.AR_IS_AGING LIKE '%${p.arIsAging}%'
+        </if>
+        <if test="p.areaProperty != null and p.areaProperty != ''">
+            and t.AREA_PROPERTY LIKE '%${p.areaProperty}%'
+        </if>
+        <if test="p.arIsLinearea != null and p.arIsLinearea != ''">
+            and t.AR_IS_LINEAREA LIKE '%${p.arIsLinearea}%'
+        </if>
+        <if test="p.hwAddr != null and p.hwAddr != ''">
+            and t.HW_ADDR LIKE '%${p.hwAddr}%'
+        </if>
+        <if test="p.reelShelfIp != null and p.reelShelfIp != ''">
+            and t.REEL_SHELF_IP LIKE '%${p.reelShelfIp}%'
+        </if>
+        <if test="p.isDel != null and p.isDel != ''">
+            and t.is_del LIKE '%${p.isDel}%'
+        </if>
+        <if test="p.depaCode != null and p.depaCode != ''">
+            and t.depa_code LIKE '%${p.depaCode}%'
+        </if>
+        <if test="p.depaName != null and p.depaName != ''">
+            and t.depa_name LIKE '%${p.depaName}%'
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.create_time >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.create_time
+        </if>
+        <if test="p.isEmptyStock == 1">
+            and swsi.area_sn is null
+        </if>
         order by t.id desc
     </select>
     <select id="treeList" resultMap="OneVOMap">
@@ -22,10 +145,10 @@
             c3.AR_STATE ='Y' statusThr
         FROM
             ums_wms_area c1
-            LEFT JOIN ums_wms_area c2 ON c2.AR_FATHER_SN = c1.AR_SN
-            LEFT JOIN ums_wms_area c3 ON c3.AR_FATHER_SN = c2.AR_SN
+            LEFT JOIN ums_wms_area c2 ON c2.AR_FATHER_SN = c1.AR_SN and c2.is_del=0
+            LEFT JOIN ums_wms_area c3 ON c3.AR_FATHER_SN = c2.AR_SN and c3.is_del=0
         WHERE
-            c1.AR_FATHER_SN = '0' and c1.is_del =0 and c2.is_del=0 and c3.is_del=0
+            c1.AR_FATHER_SN = '0' and c1.is_del =0
         <if test="p.depaCode != null and p.depaCode != ''">
             and (
             c1.depa_code in
@@ -46,6 +169,17 @@
     </select>
     <select id="getParent" resultType="com.rh.i_mes_plus.model.ums.UmsWmsArea">
         SELECT * FROM ums_wms_area d1 WHERE d1.`AR_SN`=#{arSn}
+    </select>
+    <select id="findAllMainBoard" resultType="java.lang.String">
+        SELECT left(t.AR_SN,3) FROM ums_wms_area t where t.AT_CODE='P' GROUP BY left(t.AR_SN,3)
+    </select>
+    <select id="getEmptyStock" resultType="com.rh.i_mes_plus.model.ums.UmsWmsArea">
+        select
+            t.id id,  --
+            t.AR_SN arSn  -- 区域SN
+        from ums_wms_area t
+        left join sms_wms_stock_info swsi on swsi.area_sn=t.AR_SN
+        where swsi.area_sn is null
     </select>
     <resultMap id="OneVOMap" type="com.rh.i_mes_plus.vo.OneVO">
         <id column="idOne" property="id"/>

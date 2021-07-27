@@ -43,7 +43,7 @@ public class UmsWmsArea extends SuperEntity {
         private String arRemark;
         @Excel(name = "")
         @ApiModelProperty(value = "")
-        private Long arArea;
+        private Integer arArea;
         @Excel(name = "")
         @ApiModelProperty(value = "")
         private Long arAreaUnit;
@@ -70,7 +70,7 @@ public class UmsWmsArea extends SuperEntity {
         private String arFatherSn;
         @Excel(name = "存储规则")
         @ApiModelProperty(value = "存储规则")
-        private Long storageRules;
+        private Integer storageRules;
         @Excel(name = "存放箱数")
         @ApiModelProperty(value = "存放箱数")
         private Long storageBox;
