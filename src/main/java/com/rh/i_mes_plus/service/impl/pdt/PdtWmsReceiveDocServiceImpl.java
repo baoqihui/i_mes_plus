@@ -11,8 +11,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rh.i_mes_plus.common.model.Result;
 import com.rh.i_mes_plus.dto.PdtWmsReceiveDocDTO;
 import com.rh.i_mes_plus.mapper.pdt.PdtWmsReceiveDocMapper;
+import com.rh.i_mes_plus.model.other.WmsProjectBase;
 import com.rh.i_mes_plus.model.pdt.*;
 import com.rh.i_mes_plus.model.ums.UmsUser;
+import com.rh.i_mes_plus.service.other.IWmsProjectBaseService;
 import com.rh.i_mes_plus.service.pdt.*;
 import com.rh.i_mes_plus.service.ums.IUmsUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -94,8 +96,8 @@ public class PdtWmsReceiveDocServiceImpl extends ServiceImpl<PdtWmsReceiveDocMap
             saveOrUpdate(pdtWmsReceiveDoc);
             //删除原有docNo的详情
             pdtWmsReceiveDetailService.remove(new QueryWrapper<PdtWmsReceiveDetail>().eq("doc_no",docNo));
-
             List<PdtWmsReceiveDetail> pdtWmsReceiveDetails = pdtWmsReceiveDocDTO.getPdtWmsReceiveDetails();
+            System.out.println(pdtWmsReceiveDetails);
             pdtWmsReceiveDetails.forEach(u->u.setDocNo(docNo));
             pdtWmsReceiveDetailService.saveBatch(pdtWmsReceiveDetails);
             return Result.succeed("保存成功");

@@ -141,6 +141,7 @@ public class SmsWmsReceiveDocServiceImpl extends ServiceImpl<SmsWmsReceiveDocMap
             SmsWmsReceiveDoc smsWmsReceiveDoc = smsWmsReceiveAllDTO.getSmsWmsReceiveDoc();
             SmsWmsReceiveDoc existSmsWmsReceiveDoc = getById(smsWmsReceiveDoc.getId());
             existSmsWmsReceiveDoc.setWrDate(smsWmsReceiveDoc.getWrDate());
+            existSmsWmsReceiveDoc.setWrRemark(smsWmsReceiveDoc.getWrRemark());
             String wrDocNum = existSmsWmsReceiveDoc.getWrDocNum();
             //List<SmsWmsReceiveDetail> smsWmsReceiveDetails = smsWmsReceiveAllDTO.getSmsWmsReceiveDetails();
             List<SmsWmsBarcodeInfo> smsWmsBarcodeInfos = smsWmsReceiveAllDTO.getSmsWmsBarcodeInfos();

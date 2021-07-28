@@ -83,11 +83,9 @@ public class PdtWmsOutStockDocServiceImpl extends ServiceImpl<PdtWmsOutStockDocM
     @Override
     public Result saveAll(PdtWmsOutStockDocDTO pdtWmsOutStockDocDTO) {
         String finalDocNo="";
-        try{
         PdtWmsOutStockDoc pdtWmsOutStockDoc=pdtWmsOutStockDocDTO;
         String docNo = pdtWmsOutStockDoc.getDocNo();
         finalDocNo=docNo;
-        hasPda(docNo);
         saveOrUpdate(pdtWmsOutStockDoc);
         //删除原有docNo的详情
         pdtWmsOutStockDetailService.remove(new QueryWrapper<PdtWmsOutStockDetail>().eq("doc_no",docNo));
@@ -95,12 +93,7 @@ public class PdtWmsOutStockDocServiceImpl extends ServiceImpl<PdtWmsOutStockDocM
         List<PdtWmsOutStockDetail> pdtWmsOutStockDetails = pdtWmsOutStockDocDTO.getPdtWmsOutStockDetails();
         pdtWmsOutStockDetails.forEach(u->u.setDocNo(docNo));
         pdtWmsOutStockDetailService.saveBatch(pdtWmsOutStockDetails);
-           return Result.succeed("保存成功");
-        }catch (Exception e){
-            // 事务回滚
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return Result.failed(  "单号："+finalDocNo+"已扫码，无法修改");
-        }
+        return Result.succeed("保存成功");
     }
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -123,10 +116,8 @@ public class PdtWmsOutStockDocServiceImpl extends ServiceImpl<PdtWmsOutStockDocM
             return Result.failed("单号："+finalDocNo+"已扫码，无法删除");
         }
     }
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public Result pdaPdtOutStock(Map<String, Object> map) {
-        try{
             //此处boxNo是箱码
             String boxNo = MapUtil.getStr(map, "boxNo");
             String empNo = MapUtil.getStr(map, "empNo");
@@ -248,11 +239,6 @@ public class PdtWmsOutStockDocServiceImpl extends ServiceImpl<PdtWmsOutStockDocM
                     .build()
             );*/
             return Result.succeed("出库成功");
-        }catch (Exception e){
-            // 事务回滚
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return Result.failed( "出库失败");
-        }
     }
 
     @Override
@@ -293,7 +279,7 @@ public class PdtWmsOutStockDocServiceImpl extends ServiceImpl<PdtWmsOutStockDocM
         }
         int totalCount = pdtWmsOutStockDetailService.count(new QueryWrapper<PdtWmsOutStockDetail>().eq("doc_no", docNum));
         int outedCount = pdtWmsOutStockDetailService.count(new QueryWrapper<PdtWmsOutStockDetail>().eq("doc_no", docNum).last("and plan_num=receive_num"));
-        if (totalCount==outedCount) {
+        if (totalCount!=outedCount) {
             return Result.failed("实收数量不符");
         }
         outStockDoc.setDocStatus("4");

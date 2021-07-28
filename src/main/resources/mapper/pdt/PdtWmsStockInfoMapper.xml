@@ -25,7 +25,6 @@
             t.have_check haveCheck,  -- 检验状态:Y为已检 N为未检
             t.subatch subatch,  -- 
             t.in_stock_time inStockTime,  -- 入库时间
-
             t.in_stock_man inStockMan,  -- 入库人
             t.number_type numberType,  -- SN类型：0表示工单  1表示批次  2表示单个
             t.vmi vmi,  -- VMI标志
@@ -40,7 +39,8 @@
     </select>
     <select id="findList2" resultType="com.rh.i_mes_plus.model.ums.UmsItemMes">
         select
-            m.*
+            m.*,
+            t.model_ver modelVer
         from pdt_wms_stock_info t
         left join ums_item_sap m on t.model_code=m.CO_ITEM_CODE
         where t.stock_flag='1'
@@ -72,8 +72,6 @@
             t.quality quality,  -- 品质标识Y:良品 N:不良品
             sa.MPN mpn,  -- mpn
             s.supplier_name supplierName,  -- 供应商名称
-            right(t.barcode,3) ver,
-
             t.id id,  -- 仓库主键ID
             t.cust_code custCode,  -- 客户代码
             t.model_ver modelVer,  --
@@ -103,6 +101,9 @@
         where 1=1
         <if test="p.modelCode != null and p.modelCode != ''">
             and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.modelVer != null and p.modelVer != ''">
+            and t.model_ver LIKE '%${p.modelVer}%'
         </if>
         <if test="p.boxNo != null and p.boxNo != ''">
             and t.box_no LIKE '%${p.boxNo}%'
@@ -239,6 +240,7 @@
         SELECT
             t.box_no boxNo, -- 箱码
             t.model_code modelCode, -- 物料编码
+            t.model_ver modelVer,
             left(barcode,8) batch,
             SUM(t.amount) amount, -- 数量
             t.stock_flag stockFlag,  -- 库存状态（1：在库，2：已备料，3：调拨，4盘点）
@@ -323,7 +325,8 @@
         t.wh_code,
         t.stock_flag,
         t.cust_code,
-        t.supplier_code
+        t.supplier_code,
+        t.model_ver
     </select>
 
 </mapper>

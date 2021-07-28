@@ -31,6 +31,7 @@
             t.barcode barcode, -- 条码
             t.model_code modelCode,  -- 物料代码
             t.model_name modelName,  -- 物料名称
+            i.model_ver modelVer,
             t.batch batch,  -- 批次
             t.remark remark,  -- 备注
             t.create_time createTime,  -- 创建时间:按当前时间自动创建
@@ -54,6 +55,9 @@
         </if>
         <if test="p.modelCode != null and p.modelCode != ''">
             and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.modelVer != null and p.modelVer != ''">
+            and i.model_ver LIKE '%${p.modelVer}%'
         </if>
         <if test="p.barcode != null and p.barcode != ''">
             and t.barcode LIKE '%${p.barcode}%'

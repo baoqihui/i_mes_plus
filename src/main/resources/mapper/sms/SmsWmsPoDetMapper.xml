@@ -33,6 +33,9 @@
         <if test="p.twdPoNo != null and p.twdPoNo != ''">
             and t.twd_po_no = #{p.twdPoNo}
         </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and t.item_code = #{p.itemCode}
+        </if>
         order by t.id desc
     </select>
 </mapper>

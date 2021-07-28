@@ -49,4 +49,10 @@ public class PdtWmsOutStockDetail extends SuperEntity {
         @Excel(name = "供应商代码")
         @ApiModelProperty(value = "供应商代码")
         private String supplierCode;
+        @Excel(name = "SAP出货单")
+        @ApiModelProperty(value = "SAP出货单")
+        private String sapOutStockDoc;
+        @Excel(name = "SAP出货单行号")
+        @ApiModelProperty(value = "SAP出货单行号")
+        private String sapOutStockLine;
 }

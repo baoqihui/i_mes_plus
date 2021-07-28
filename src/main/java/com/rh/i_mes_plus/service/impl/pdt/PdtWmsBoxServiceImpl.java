@@ -69,7 +69,7 @@ public class PdtWmsBoxServiceImpl extends ServiceImpl<PdtWmsBoxMapper, PdtWmsBox
     public Result saveAll(PdtWmsBoxDTO pdtWmsBoxDTO) {
         PdtWmsBox pdtWmsBox = pdtWmsBoxDTO;
         Map<String, Object> map=new HashMap<>();
-        map.put("code","aaaa");
+        map.put("code","0005");
         String boxNo = getBoxNoByCode(map);
         pdtWmsBox.setBoxNo(boxNo);
         saveOrUpdate(pdtWmsBox);

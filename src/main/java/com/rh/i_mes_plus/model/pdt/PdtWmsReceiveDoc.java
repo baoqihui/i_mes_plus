@@ -33,6 +33,9 @@ public class PdtWmsReceiveDoc extends SuperEntity {
         @Excel(name = "物料名称")
         @ApiModelProperty(value = "物料名称")
         private String modelName;
+        @Excel(name = "版本")
+        @ApiModelProperty(value = "版本")
+        private String modelVer;
         @Excel(name = "批次")
         @ApiModelProperty(value = "批次")
         private String batch;

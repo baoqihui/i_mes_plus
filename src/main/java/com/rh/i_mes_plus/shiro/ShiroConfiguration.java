@@ -73,6 +73,7 @@ public class ShiroConfiguration {
 		filterChainDefinitionMap.put("/gzk/gzkFixDetailInfo/list", "anon");
 		filterChainDefinitionMap.put("/sps/spsMaintenCommentInfo/list", "anon");
 		filterChainDefinitionMap.put("/sps/spsMaintenLogInfo/save", "anon");
+		filterChainDefinitionMap.put("/pdt/pdtWmsPmMoBase/saveBatch", "anon");
 		//放行移动端接口
 		filterChainDefinitionMap.put("/**/mobile/**", "anon");
 		//放行webservice

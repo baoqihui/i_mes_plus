@@ -52,6 +52,8 @@
             t.box_no boxNo,  -- 箱号
             t.model_code modelCode,  -- 物料编码
             t.model_name modelName,  -- 物料名称
+            pwsi.model_ver modelVer,
+            pwsi.project_id projectId,
             i.wh_code whCode, -- 仓库代码
             aa.AR_NAME whName,  -- 仓库名称
             i.dt_code dtCode,  -- 出库类型
@@ -68,6 +70,7 @@
             t.out_stock_time outStockTime,  -- 出库时间
             t.create_time createTime  -- 创建时间:按当前时间自动创建
         from pdt_wms_out_stock_list t
+        left join pdt_wms_stock_info pwsi on t.barcode = pwsi.barcode
         left join pdt_wms_out_stock_doc i on i.doc_no=t.doc_no
         left join pdt_wms_out_stock_detail pwosd on pwosd.id=t.osd_id
         LEFT JOIN ums_wms_area aa on aa.AR_SN=i.wh_code
@@ -81,6 +84,12 @@
         </if>
         <if test="p.modelCode != null and p.modelCode != ''">
             and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.modelVer != null and p.modelVer != ''">
+            and pwsi.model_ver LIKE '%${p.modelVer}%'
+        </if>
+        <if test="p.projectId != null and p.projectId != ''">
+            and pwsi.project_id LIKE '%${p.projectId}%'
         </if>
         <if test="p.barcode != null and p.barcode != ''">
             and t.barcode LIKE '%${p.barcode}%'
@@ -103,12 +112,15 @@
         select
             t.model_code modelCode,  -- 物料编码
             t.model_name modelName,  -- 物料名称
+            pwsi.model_ver modelVer,
+            pwsi.batch batch,
             i.wh_code whCode, -- 仓库代码
             aa.AR_NAME whName,  -- 仓库名称
             count(t.model_code) amount
         from pdt_wms_out_stock_list t
         left join pdt_wms_out_stock_doc i on i.doc_no=t.doc_no
         LEFT JOIN ums_wms_area aa on aa.AR_SN=i.wh_code
+        left join pdt_wms_stock_info pwsi on t.barcode = pwsi.barcode
         where 1=1
         <if test="p.boxNo != null and p.boxNo != ''">
             and t.box_no LIKE '%${p.boxNo}%'
@@ -118,6 +130,12 @@
         </if>
         <if test="p.modelCode != null and p.modelCode != ''">
             and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.modelVer != null and p.modelVer != ''">
+            and pwsi.model_ver LIKE '%${p.modelVer}%'
+        </if>
+        <if test="p.batch != null and p.batch != ''">
+            and pwsi.batch LIKE '%${p.batch}%'
         </if>
         <if test="p.barcode != null and p.barcode != ''">
             and t.barcode LIKE '%${p.barcode}%'
@@ -134,13 +152,12 @@
         <if test="p.endTime !=null and p.endTime != '' ">
             and '${p.endTime}' >= t.create_time
         </if>
-        group by  t.model_code
+        group by  t.model_code,pwsi.model_ver,pwsi.batch
     </select>
     <select id="listAllCollectByBoxNo" resultType="java.util.Map">
         select
             t.box_no boxNo,  -- 箱号
             t.model_code modelCode,  -- 机型
-            LEFT(barcode,8) batch,
             count(t.box_no) amount,
             i.doc_no docNo,
             t.model_name modelName,  -- 机型名称
@@ -149,11 +166,14 @@
             i.doc_ship_address docShipAddress,
             t.out_stock_man_name outStockManName,
             t.create_time createTime,
+            pwsi.model_ver modelVer,
+            pwsi.batch batch,
             t.remark remark
         from pdt_wms_out_stock_list t
         left join pdt_wms_out_stock_detail pwosd on pwosd.id=t.osd_id
         left join pdt_wms_out_stock_doc i on i.doc_no=t.doc_no
         LEFT JOIN ums_wms_area aa on aa.AR_SN=i.wh_code
+        left join pdt_wms_stock_info pwsi on t.barcode = pwsi.barcode
         where 1=1
         <if test="p.boxNo != null and p.boxNo != ''">
             and t.box_no LIKE '%${p.boxNo}%'
@@ -163,6 +183,12 @@
         </if>
         <if test="p.modelCode != null and p.modelCode != ''">
             and t.model_code LIKE '%${p.modelCode}%'
+        </if>
+        <if test="p.modelVer != null and p.modelVer != ''">
+            and pwsi.model_ver LIKE '%${p.modelVer}%'
+        </if>
+        <if test="p.batch != null and p.batch != ''">
+            and pwsi.batch LIKE '%${p.batch}%'
         </if>
         <if test="p.barcode != null and p.barcode != ''">
             and t.barcode LIKE '%${p.barcode}%'
@@ -179,7 +205,7 @@
         <if test="p.endTime !=null and p.endTime != '' ">
             and '${p.endTime}' >= t.create_time
         </if>
-        group by  t.box_no,t.model_code
+        group by  t.box_no,t.model_code,pwsi.model_ver
     </select>
 
 </mapper>

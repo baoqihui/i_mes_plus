@@ -90,7 +90,7 @@
         CASE WHEN(datediff(NOW(),t.pdate)-i.Io_ITEM_AVAIL)>0
         THEN (datediff(NOW(),t.pdate)-i.Io_ITEM_AVAIL)
         ELSE 0 END AS exceedDate, -- 超期时长
-
+        sa.MCR_MSD_CODE mcrMsdCode, -- 湿敏等级
         i.CO_ITEM_SPEC coItemSpec, -- 物料描述
         i.CO_UNIT coUnit, -- 单位
         t.cust_code custCode,  -- 客户编码
@@ -124,6 +124,9 @@
         </if>
         <if test="p.docNum != null and p.docNum != ''">
             and t.doc_num LIKE '%${p.docNum}%'
+        </if>
+        <if test="p.mcrMsdCode != null and p.mcrMsdCode != ''">
+            and sa.MCR_MSD_CODE LIKE '%${p.mcrMsdCode}%'
         </if>
 
         <if test="p.orderNo != null and p.orderNo != ''">

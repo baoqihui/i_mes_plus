@@ -9,6 +9,7 @@
             t.mo_no moNo, -- 指令单号
             t.model_code modelCode,  -- 物料代码
             t.model_name modelName,  -- 物料名称
+            t.model_ver modelVer,  -- 版本
             t.batch batch,  -- 批次
             t.in_date inDate,  -- 入库日期
             t.dt_code dtCode,  -- 单据类型代码
@@ -30,6 +31,12 @@
         </if>
         <if test="p.modelCode != null and p.modelCode != ''">
             and t.model_code = #{p.modelCode}
+        </if>
+        <if test="p.startTime != null and p.startTime != '' ">
+            and t.in_date >= '${p.startTime}'
+        </if>
+        <if test="p.endTime !=null and p.endTime != '' ">
+            and '${p.endTime}' >= t.in_date
         </if>
         order by t.status asc,t.id desc
     </select>
