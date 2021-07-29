@@ -31,6 +31,9 @@
         <if test="p.itemCode != null and p.itemCode != ''">
             and t.item_code LIKE '%${p.itemCode}%'
         </if>
+        <if test="p.pos != null and p.pos != ''">
+            and t.pos LIKE '%${p.pos}%'
+        </if>
         <if test="p.itemTypeCode != null and p.itemTypeCode != ''">
             and t.item_type_code LIKE '%${p.itemTypeCode}%'
         </if>
