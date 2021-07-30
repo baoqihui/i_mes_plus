@@ -166,7 +166,8 @@
             s.supplier_name supplierName, -- 供应商名称
             t.cust_code custCode, -- 客户编码
             c.CUSTOMER custName, -- 客户名称
-
+            t.batch batch,
+            t.model_ver modelVer,
             i.CO_ITEM_SPEC modelSpec, -- 物料描述
             i.CO_UNIT coUnit, -- 单位
             t.depa_code depaCode, -- 部门代码
@@ -184,14 +185,17 @@
         <if test="p.boxNo != null and p.boxNo != ''">
             and t.box_no LIKE '%${p.boxNo}%'
         </if>
+        <if test="p.batch != null and p.batch != ''">
+            and t.batch LIKE '%${p.batch}%'
+        </if>
+        <if test="p.modelVer != null and p.modelVer != ''">
+            and t.model_ver LIKE '%${p.modelVer}%'
+        </if>
         <if test="p.supplierName != null and p.supplierName != ''">
             and s.supplier_name LIKE '%${p.supplierName}%'
         </if>
         <if test="p.docNo != null and p.docNo != ''">
             and t.doc_no LIKE '%${p.docNo}%'
-        </if>
-        <if test="p.batch != null and p.batch != ''">
-            and t.batch LIKE '%${p.batch}%'
         </if>
         <if test="p.orderNo != null and p.orderNo != ''">
             and t.order_no LIKE '%${p.orderNo}%'
@@ -322,6 +326,7 @@
         </if>
         GROUP BY
         t.box_no,
+        t.doc_no,
         t.wh_code,
         t.stock_flag,
         t.cust_code,

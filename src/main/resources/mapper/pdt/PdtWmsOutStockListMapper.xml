@@ -100,6 +100,9 @@
         <if test="p.dtCode != null and p.dtCode != ''">
             and i.dt_code LIKE '%${p.dtCode}%'
         </if>
+        <if test="p.docNo != null and p.docNo != ''">
+            and t.doc_no LIKE '%${p.docNo}%'
+        </if>
         <if test="p.startTime != null and p.startTime != '' ">
             and t.create_time >= '${p.startTime}'
         </if>
@@ -177,6 +180,9 @@
         where 1=1
         <if test="p.boxNo != null and p.boxNo != ''">
             and t.box_no LIKE '%${p.boxNo}%'
+        </if>
+        <if test="p.docNo != null and p.docNo != ''">
+            and i.doc_no LIKE '%${p.docNo}%'
         </if>
         <if test="p.whCode != null and p.whCode != ''">
             and i.wh_code LIKE '%${p.whCode}%'
