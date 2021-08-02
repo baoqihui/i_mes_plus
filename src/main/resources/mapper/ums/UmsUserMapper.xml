@@ -4,6 +4,7 @@
 <mapper namespace="com.rh.i_mes_plus.mapper.ums.UmsUserMapper">
     <select id="findList" resultType="com.rh.i_mes_plus.model.ums.UmsUser">
         select * from ums_user t
+        where 1=1
         <if test="p.depaCode != null and p.depaCode != ''">
             and t.depa_code in
             <foreach collection="p.umsDepas" separator="," close=")" open="(" item="item" index="index">

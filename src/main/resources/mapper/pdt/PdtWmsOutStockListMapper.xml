@@ -211,7 +211,7 @@
         <if test="p.endTime !=null and p.endTime != '' ">
             and '${p.endTime}' >= t.create_time
         </if>
-        group by  t.box_no,t.model_code,pwsi.model_ver
+        group by  i.doc_no,t.box_no,t.model_code,pwsi.model_ver
     </select>
 
 </mapper>

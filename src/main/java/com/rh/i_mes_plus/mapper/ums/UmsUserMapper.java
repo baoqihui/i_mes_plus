@@ -20,7 +20,7 @@ public interface UmsUserMapper extends SuperMapper<UmsUser> {
     /**
      * 分页查询用户列表
      * @param pages
-     * @param params
+     * @param param
      * @return
      */
     Page<UmsUser> findList(Page<UmsUser> pages, @Param("p") Map<String, Object> params);
