@@ -34,6 +34,9 @@
         <if test="p.kgtNo != null and p.kgtNo != ''">
             and t.kgt_no LIKE '%${p.kgtNo}%'
         </if>
+        <if test="p.itemCode != null and p.itemCode != ''">
+            and gpdi.item_code LIKE '%${p.itemCode}%'
+        </if>
         <if test="p.startTime != null and p.startTime != '' ">
             and t.time_lend >= '${p.startTime}'
         </if>
