@@ -44,7 +44,12 @@ public class GzkPartsItemController {
         Page<Map> list= gzkPartsItemService.findList(params);
         return Result.succeed(PageResult.restPage(list),"查询成功");
     }
-
+    @ApiOperation(value = "查询全部列表")
+    @PostMapping("/gzkPartsItem/listAll")
+    public Result listAll(@RequestBody Map<String, Object> params) {
+        List<GzkPartsItem> list = gzkPartsItemService.list();
+        return Result.succeed(list,"查询成功");
+    }
     /**
      * 查询
      */
